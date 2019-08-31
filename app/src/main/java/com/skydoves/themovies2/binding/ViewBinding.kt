@@ -32,11 +32,9 @@ import co.lujun.androidtagview.TagContainerLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.skydoves.themovies2.api.Api
-import com.skydoves.themovies2.extension.bindResource
 import com.skydoves.themovies2.extension.requestGlideListener
 import com.skydoves.themovies2.extension.visible
 import com.skydoves.themovies2.models.Keyword
-import com.skydoves.themovies2.models.Resource
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
@@ -63,17 +61,15 @@ fun bindMapKeywordList(view: TagContainerLayout, keywords: List<Keyword>?) {
 }
 
 @BindingAdapter("biography")
-fun bindBiography(view: TextView, resource: Resource<PersonDetail>?) {
-  view.bindResource(resource) {
-    view.text = resource?.data?.biography
-  }
+fun bindBiography(view: TextView, personDetail: PersonDetail?) {
+  view.text = personDetail?.biography
 }
 
 @BindingAdapter("nameTags")
-fun bindTags(view: TagContainerLayout, resource: Resource<PersonDetail>?) {
-  view.bindResource(resource) {
-    view.tags = resource?.data?.also_known_as
-    if (resource?.data?.also_known_as?.isNotEmpty()!!) {
+fun bindTags(view: TagContainerLayout, personDetail: PersonDetail?) {
+  personDetail?.also_known_as?.let {
+    view.tags = it
+    if (it.isNotEmpty()) {
       view.visible()
     }
   }

@@ -23,9 +23,12 @@
  */
 package com.skydoves.themovies2.repository
 
+import androidx.lifecycle.MutableLiveData
 import com.skydoves.themovies2.api.ApiResponse
 import com.skydoves.themovies2.api.client.TheDiscoverClient
 import com.skydoves.themovies2.api.message
+import com.skydoves.themovies2.models.entity.Movie
+import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.room.MovieDao
 import com.skydoves.themovies2.room.TvDao
 import kotlinx.coroutines.Dispatchers
@@ -47,6 +50,7 @@ constructor(
   }
 
   suspend fun loadMovies(page: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
+    val liveDate = MutableLiveData<List<Movie>>()
     var movies = movieDao.getMovieList(page)
     if (movies.isEmpty()) {
       discoverClient.fetchDiscoverMovie(page) { response ->
@@ -55,6 +59,7 @@ constructor(
             response.data?.let { data ->
               movies = data.results
               movies.forEach { it.page = page }
+              liveDate.postValue(movies)
               movieDao.insertMovieList(movies)
             }
           }
@@ -63,10 +68,12 @@ constructor(
         }
       }
     }
-    movies
+    liveDate.postValue(movies)
+    liveDate
   }
 
   suspend fun loadTvs(page: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
+    val liveDate = MutableLiveData<List<Tv>>()
     var tvs = tvDao.getTvList(page)
     if (tvs.isEmpty()) {
       discoverClient.fetchDiscoverTv(page) { response ->
@@ -75,6 +82,7 @@ constructor(
             response.data?.let { data ->
               tvs = data.results
               tvs.forEach { it.page = page }
+              liveDate.postValue(tvs)
               tvDao.insertTv(tvs)
             }
           }
@@ -83,6 +91,7 @@ constructor(
         }
       }
     }
-    tvs
+    liveDate.postValue(tvs)
+    liveDate
   }
 }

@@ -23,9 +23,12 @@
  */
 package com.skydoves.themovies2.repository
 
+import androidx.lifecycle.MutableLiveData
 import com.skydoves.themovies2.api.ApiResponse
 import com.skydoves.themovies2.api.client.PeopleClient
 import com.skydoves.themovies2.api.message
+import com.skydoves.themovies2.models.entity.Person
+import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.room.PeopleDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -45,6 +48,7 @@ constructor(
   }
 
   suspend fun loadPeople(page: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
+    val liveData = MutableLiveData<List<Person>>()
     var people = peopleDao.getPeople(page)
     if (people.isEmpty()) {
       peopleClient.fetchPopularPeople(page) { response ->
@@ -53,6 +57,7 @@ constructor(
             response.data?.let { data ->
               people = data.results
               people.forEach { it.page = page }
+              liveData.postValue(people)
               peopleDao.insertPeople(people)
             }
           }
@@ -61,16 +66,19 @@ constructor(
         }
       }
     }
-    people
+    liveData.postValue(people)
+    liveData
   }
 
   suspend fun loadPersonDetail(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
+    val liveData = MutableLiveData<PersonDetail>()
     val person = peopleDao.getPerson(id)
     peopleClient.fetchPersonDetai(id) { response ->
       when (response) {
         is ApiResponse.Success -> {
           response.data?.let { data ->
             person.personDetail = data
+            liveData.postValue(person.personDetail)
             peopleDao.updatePerson(person)
           }
         }
@@ -78,6 +86,7 @@ constructor(
         is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
-    person.personDetail
+    liveData.postValue(person.personDetail)
+    liveData
   }
 }

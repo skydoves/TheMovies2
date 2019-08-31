@@ -23,6 +23,7 @@
  */
 package com.skydoves.themovies2.repository
 
+import androidx.lifecycle.MutableLiveData
 import com.skydoves.themovies2.api.ApiResponse
 import com.skydoves.themovies2.api.client.MovieClient
 import com.skydoves.themovies2.api.message
@@ -48,14 +49,14 @@ constructor(
   }
 
   suspend fun loadKeywordList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val keywords = mutableListOf<Keyword>()
+    val liveData = MutableLiveData<List<Keyword>>()
     movieClient.fetchKeywords(id) { response ->
       when (response) {
         is ApiResponse.Success -> {
           response.data?.let { data ->
             val movie = movieDao.getMovie(id)
             movie.keywords = data.keywords
-            keywords.addAll(data.keywords)
+            liveData.postValue(data.keywords)
             movieDao.updateMovie(movie)
           }
         }
@@ -63,18 +64,18 @@ constructor(
         is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
-    keywords.toList()
+    liveData
   }
 
   suspend fun loadVideoList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val videos = mutableListOf<Video>()
+    val liveData = MutableLiveData<List<Video>>()
     movieClient.fetchVideos(id) { response ->
       when (response) {
         is ApiResponse.Success -> {
           response.data?.let { data ->
             val movie = movieDao.getMovie(id)
             movie.videos = data.results
-            videos.addAll(data.results)
+            liveData.postValue(data.results)
             movieDao.updateMovie(movie)
           }
         }
@@ -82,18 +83,18 @@ constructor(
         is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
-    videos.toList()
+    liveData
   }
 
   suspend fun loadReviewsList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val reviews = mutableListOf<Review>()
+    val liveData = MutableLiveData<List<Review>>()
     movieClient.fetchReviews(id) { response ->
       when (response) {
         is ApiResponse.Success -> {
           response.data?.let { data ->
             val movie = movieDao.getMovie(id)
             movie.reviews = data.results
-            reviews.addAll(data.results)
+            liveData.postValue(data.results)
             movieDao.updateMovie(movie)
           }
         }
@@ -101,6 +102,6 @@ constructor(
         is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
-    reviews.toList()
+    liveData
   }
 }

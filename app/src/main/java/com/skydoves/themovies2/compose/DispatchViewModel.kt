@@ -31,9 +31,9 @@ import kotlinx.coroutines.Dispatchers
 
 open class DispatchViewModel : ViewModel() {
 
-  internal fun <T> launchOnViewModelScope(block: suspend () -> T): LiveData<T> {
+  internal fun <T> launchOnViewModelScope(block: suspend () -> LiveData<T>): LiveData<T> {
     return liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
-      emit(block())
+      emitSource(block())
     }
   }
 }

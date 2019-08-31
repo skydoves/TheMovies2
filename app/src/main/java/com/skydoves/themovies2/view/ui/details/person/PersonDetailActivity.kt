@@ -29,6 +29,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.observe
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.compose.ViewModelActivity
 import com.skydoves.themovies2.databinding.ActivityPersonDetailBinding
@@ -36,8 +37,8 @@ import com.skydoves.themovies2.extension.checkIsMaterialVersion
 import com.skydoves.themovies2.models.entity.Person
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 
-@Suppress("MemberVisibilityCanBePrivate")
 class PersonDetailActivity : ViewModelActivity() {
 
   private val vm by viewModel<PersonDetailViewModel>()
@@ -52,6 +53,7 @@ class PersonDetailActivity : ViewModelActivity() {
       person = getPersonFromIntent()
     }
     initializeUI()
+    observeMessages()
   }
 
   private fun initializeUI() {
@@ -59,13 +61,15 @@ class PersonDetailActivity : ViewModelActivity() {
     toolbar_title.text = getPersonFromIntent().name
   }
 
-  private fun getPersonFromIntent(): Person {
-    return intent.getParcelableExtra(personId) as Person
-  }
+  private fun getPersonFromIntent() =
+    intent.getParcelableExtra(personId) as Person
+
+  private fun observeMessages() =
+    vm.toastLiveData.observe(this) { toast(it) }
 
   companion object {
     const val personId = "person"
-    const val intent_requestCode = 1000
+    private const val intent_requestCode = 1000
 
     fun startActivity(activity: Activity?, person: Person, view: View) {
       if (activity != null) {

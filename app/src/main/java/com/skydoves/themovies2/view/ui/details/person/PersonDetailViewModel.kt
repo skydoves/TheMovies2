@@ -25,23 +25,28 @@ package com.skydoves.themovies2.view.ui.details.person
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.skydoves.themovies2.models.Resource
+import androidx.lifecycle.switchMap
+import com.skydoves.themovies2.compose.DispatchViewModel
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.repository.PeopleRepository
 import timber.log.Timber
 import javax.inject.Inject
 
 class PersonDetailViewModel @Inject
-constructor(private val repository: PeopleRepository) : ViewModel() {
+constructor(private val peopleRepository: PeopleRepository) : DispatchViewModel() {
 
   private val personIdLiveData: MutableLiveData<Int> = MutableLiveData()
-  val personLiveData: LiveData<Resource<PersonDetail>>
+  val personLiveData: LiveData<PersonDetail>
+  val toastLiveData: MutableLiveData<String> = MutableLiveData()
 
   init {
     Timber.d("Injection : PersonDetailViewModel")
 
-    personLiveData = MutableLiveData()
+    this.personLiveData = personIdLiveData.switchMap { id ->
+      launchOnViewModelScope {
+        peopleRepository.loadPersonDetail(id) { toastLiveData.postValue(it) }
+      }
+    }
   }
 
   fun postPersonId(id: Int) = personIdLiveData.postValue(id)
