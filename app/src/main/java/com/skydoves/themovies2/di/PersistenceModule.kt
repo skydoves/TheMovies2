@@ -24,7 +24,6 @@
 package com.skydoves.themovies2.di
 
 import android.app.Application
-import androidx.annotation.NonNull
 import androidx.room.Room
 import com.skydoves.themovies2.room.AppDatabase
 import com.skydoves.themovies2.room.MovieDao

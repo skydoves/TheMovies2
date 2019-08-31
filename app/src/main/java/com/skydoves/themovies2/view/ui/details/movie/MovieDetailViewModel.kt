@@ -25,31 +25,45 @@ package com.skydoves.themovies2.view.ui.details.movie
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.switchMap
+import com.skydoves.themovies2.compose.DispatchViewModel
 import com.skydoves.themovies2.models.Keyword
-import com.skydoves.themovies2.models.Resource
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.repository.MovieRepository
-import com.skydoves.themovies2.utils.AbsentLiveData
 import timber.log.Timber
 import javax.inject.Inject
 
 class MovieDetailViewModel @Inject
-constructor(private val repository: MovieRepository) : ViewModel() {
+constructor(private val movieRepository: MovieRepository) : DispatchViewModel() {
 
   private val movieIdLiveData: MutableLiveData<Int> = MutableLiveData()
-  val keywordListLiveData: LiveData<Resource<List<Keyword>>>
-  val videoListLiveData: LiveData<Resource<List<Video>>>
-  val reviewListLiveData: LiveData<Resource<List<Review>>>
+  val keywordListLiveData: LiveData<List<Keyword>>
+  val videoListLiveData: LiveData<List<Video>>
+  val reviewListLiveData: LiveData<List<Review>>
+  val toastLiveData: MutableLiveData<String> = MutableLiveData()
 
   init {
     Timber.d("Injection MovieDetailViewModel")
 
-    this.keywordListLiveData = MutableLiveData()
-    this.videoListLiveData = MutableLiveData()
-    this.reviewListLiveData = MutableLiveData()
+    this.keywordListLiveData = movieIdLiveData.switchMap { id ->
+      launchOnViewModelScope {
+        movieRepository.loadKeywordList(id) { toastLiveData.postValue(it) }
+      }
+    }
+
+    this.videoListLiveData = movieIdLiveData.switchMap { id ->
+      launchOnViewModelScope {
+        movieRepository.loadVideoList(id) { toastLiveData.postValue(it) }
+      }
+    }
+
+    this.reviewListLiveData = movieIdLiveData.switchMap { id ->
+      launchOnViewModelScope {
+        movieRepository.loadReviewsList(id) { toastLiveData.postValue(it) }
+      }
+    }
   }
+
   fun postMovieId(id: Int) = movieIdLiveData.postValue(id)
 }

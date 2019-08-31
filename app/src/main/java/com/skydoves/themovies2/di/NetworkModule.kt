@@ -25,8 +25,10 @@ package com.skydoves.themovies2.di
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.skydoves.themovies2.api.RequestInterceptor
+import com.skydoves.themovies2.api.client.MovieClient
 import com.skydoves.themovies2.api.client.PeopleClient
 import com.skydoves.themovies2.api.client.TheDiscoverClient
+import com.skydoves.themovies2.api.client.TvClient
 import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.api.service.TheDiscoverService
@@ -92,7 +94,19 @@ class NetworkModule {
 
   @Provides
   @Singleton
+  fun provideMovieClient(service: MovieService): MovieClient {
+    return MovieClient(service)
+  }
+
+  @Provides
+  @Singleton
   fun provideTvService(retrofit: Retrofit): TvService {
     return retrofit.create(TvService::class.java)
+  }
+
+  @Provides
+  @Singleton
+  fun provideTvClient(service: TvService): TvClient {
+    return TvClient(service)
   }
 }

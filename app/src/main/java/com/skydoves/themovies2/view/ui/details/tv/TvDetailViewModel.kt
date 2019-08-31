@@ -26,13 +26,10 @@ package com.skydoves.themovies2.view.ui.details.tv
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
 import com.skydoves.themovies2.models.Keyword
-import com.skydoves.themovies2.models.Resource
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.repository.TvRepository
-import com.skydoves.themovies2.utils.AbsentLiveData
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -40,18 +37,18 @@ class TvDetailViewModel @Inject
 constructor(private val repository: TvRepository) : ViewModel() {
 
   private val tvIdLiveData: MutableLiveData<Int> = MutableLiveData()
-  val keywordListLiveData: LiveData<Resource<List<Keyword>>>
-  val videoListLiveData: LiveData<Resource<List<Video>>>
-  val reviewListLiveData: LiveData<Resource<List<Review>>>
+  val keywordListLiveData: LiveData<List<Keyword>>
+  val videoListLiveData: LiveData<List<Video>>
+  val reviewListLiveData: LiveData<List<Review>>
 
   init {
     Timber.d("Injection TvDetailViewModel")
 
-    this.keywordListLiveData =  MutableLiveData()
+    this.keywordListLiveData = MutableLiveData()
 
-    this.videoListLiveData =  MutableLiveData()
+    this.videoListLiveData = MutableLiveData()
 
-    this.reviewListLiveData =  MutableLiveData()
+    this.reviewListLiveData = MutableLiveData()
   }
 
   fun postTvId(id: Int) = tvIdLiveData.postValue(id)

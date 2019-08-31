@@ -21,28 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.skydoves.themovies2.view.ui.details.person
+package com.skydoves.themovies2.compose
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.skydoves.themovies2.models.Resource
-import com.skydoves.themovies2.models.network.PersonDetail
-import com.skydoves.themovies2.repository.PeopleRepository
-import timber.log.Timber
-import javax.inject.Inject
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 
-class PersonDetailViewModel @Inject
-constructor(private val repository: PeopleRepository) : ViewModel() {
+open class DispatchViewModel : ViewModel() {
 
-  private val personIdLiveData: MutableLiveData<Int> = MutableLiveData()
-  val personLiveData: LiveData<Resource<PersonDetail>>
-
-  init {
-    Timber.d("Injection : PersonDetailViewModel")
-
-    personLiveData = MutableLiveData()
+  internal fun <T> launchOnViewModelScope(block: suspend () -> T): LiveData<T> {
+    return liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+      emit(block())
+    }
   }
-
-  fun postPersonId(id: Int) = personIdLiveData.postValue(id)
 }

@@ -23,20 +23,7 @@
  */
 package com.skydoves.themovies2.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.skydoves.themovies2.api.ApiResponse
 import com.skydoves.themovies2.api.service.TvService
-import com.skydoves.themovies2.mappers.KeywordResponseMapper
-import com.skydoves.themovies2.mappers.ReviewResponseMapper
-import com.skydoves.themovies2.mappers.VideoResponseMapper
-import com.skydoves.themovies2.models.Keyword
-import com.skydoves.themovies2.models.Resource
-import com.skydoves.themovies2.models.Review
-import com.skydoves.themovies2.models.Video
-import com.skydoves.themovies2.models.network.KeywordListResponse
-import com.skydoves.themovies2.models.network.ReviewListResponse
-import com.skydoves.themovies2.models.network.VideoListResponse
 import com.skydoves.themovies2.room.TvDao
 import timber.log.Timber
 import javax.inject.Inject

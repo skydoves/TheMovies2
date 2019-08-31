@@ -25,10 +25,8 @@ package com.skydoves.themovies2.view.adapter
 
 import android.view.View
 import com.skydoves.baserecyclerviewadapter.BaseAdapter
-import com.skydoves.baserecyclerviewadapter.BaseViewHolder
 import com.skydoves.baserecyclerviewadapter.SectionRow
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.models.Resource
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.view.viewholder.ReviewListViewHolder
 
@@ -38,18 +36,12 @@ class ReviewListAdapter : BaseAdapter() {
     addSection(ArrayList<Review>())
   }
 
-  fun addReviewList(resource: Resource<List<Review>>) {
-    resource.data?.let {
-      sections()[0].addAll(it)
-    }
+  fun addReviewList(reviews: List<Review>) {
+    sections()[0].addAll(reviews)
     notifyDataSetChanged()
   }
 
-  override fun layout(sectionRow: SectionRow): Int {
-    return R.layout.item_review
-  }
+  override fun layout(sectionRow: SectionRow) = R.layout.item_review
 
-  override fun viewHolder(layout: Int, view: View): BaseViewHolder {
-    return ReviewListViewHolder(view)
-  }
+  override fun viewHolder(layout: Int, view: View) = ReviewListViewHolder(view)
 }

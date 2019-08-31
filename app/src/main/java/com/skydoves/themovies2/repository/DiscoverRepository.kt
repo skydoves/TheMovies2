@@ -38,7 +38,7 @@ import javax.inject.Singleton
 class DiscoverRepository @Inject
 constructor(
   private val discoverClient: TheDiscoverClient,
-  private val movieDao: MovieDao,
+  val movieDao: MovieDao,
   private val tvDao: TvDao
 ) : Repository {
 

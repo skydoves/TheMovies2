@@ -25,32 +25,25 @@ package com.skydoves.themovies2.view.adapter
 
 import android.view.View
 import com.skydoves.baserecyclerviewadapter.BaseAdapter
-import com.skydoves.baserecyclerviewadapter.BaseViewHolder
 import com.skydoves.baserecyclerviewadapter.SectionRow
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.models.Resource
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.view.viewholder.VideoListViewHolder
 
-class VideoListAdapter(private val delegate: VideoListViewHolder.Delegate) :
-  BaseAdapter() {
+class VideoListAdapter(
+  private val delegate: VideoListViewHolder.Delegate
+) : BaseAdapter() {
 
   init {
     addSection(ArrayList<Video>())
   }
 
-  fun addVideoList(resource: Resource<List<Video>>) {
-    resource.data?.let {
-      sections()[0].addAll(it)
-    }
+  fun addVideoList(videos: List<Video>) {
+    sections()[0].addAll(videos)
     notifyDataSetChanged()
   }
 
-  override fun layout(sectionRow: SectionRow): Int {
-    return R.layout.item_video
-  }
+  override fun layout(sectionRow: SectionRow) = R.layout.item_video
 
-  override fun viewHolder(layout: Int, view: View): BaseViewHolder {
-    return VideoListViewHolder(view, delegate)
-  }
+  override fun viewHolder(layout: Int, view: View) = VideoListViewHolder(view, delegate)
 }

@@ -28,6 +28,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.themovies2.R
@@ -44,6 +45,7 @@ import com.skydoves.themovies2.view.viewholder.VideoListViewHolder
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import kotlinx.android.synthetic.main.layout_movie_detail_body.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 
 class MovieDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
 
@@ -62,6 +64,7 @@ class MovieDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
       detailBody.movie = getMovieFromIntent()
     }
     initializeUI()
+    observeMessages()
   }
 
   private fun initializeUI() {
@@ -75,10 +78,6 @@ class MovieDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
     detail_body_recyclerView_reviews.setHasFixedSize(true)
   }
 
-  private fun getMovieFromIntent(): Movie {
-    return intent.getParcelableExtra(movieId) as Movie
-  }
-
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     if (item?.itemId == android.R.id.home) onBackPressed()
     return false
@@ -88,6 +87,12 @@ class MovieDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
     val playVideoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(video.key)))
     startActivity(playVideoIntent)
   }
+
+  private fun getMovieFromIntent() =
+    intent.getParcelableExtra(movieId) as Movie
+
+  private fun observeMessages() =
+    vm.toastLiveData.observe(this) { toast(it) }
 
   companion object {
     private const val movieId = "movie"

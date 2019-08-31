@@ -44,19 +44,19 @@ import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.utils.KeywordListMapper
 
 @BindingAdapter("visibilityByResource")
-fun bindVisibilityByResource(view: View, resource: Resource<List<Any>>?) {
-  view.bindResource(resource) {
-    if (resource?.data?.isNotEmpty()!!) {
+fun bindVisibilityByResource(view: View, anyList: List<Any>?) {
+  anyList?.let {
+    if (it.isNotEmpty()) {
       view.visible()
     }
   }
 }
 
 @BindingAdapter("mapKeywordList")
-fun bindMapKeywordList(view: TagContainerLayout, resource: Resource<List<Keyword>>?) {
-  view.bindResource(resource) {
-    view.tags = KeywordListMapper.mapToStringList(resource?.data!!)
-    if (resource.data.isNotEmpty()) {
+fun bindMapKeywordList(view: TagContainerLayout, keywords: List<Keyword>?) {
+  keywords?.let {
+    view.tags = KeywordListMapper.mapToStringList(it)
+    if (it.isNotEmpty()) {
       view.visible()
     }
   }
