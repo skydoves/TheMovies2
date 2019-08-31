@@ -32,9 +32,8 @@ import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.repository.MovieRepository
 import timber.log.Timber
-import javax.inject.Inject
 
-class MovieDetailViewModel @Inject
+class MovieDetailViewModel
 constructor(private val movieRepository: MovieRepository) : DispatchViewModel() {
 
   private val movieIdLiveData: MutableLiveData<Int> = MutableLiveData()

@@ -33,12 +33,8 @@ import com.skydoves.themovies2.room.PeopleDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PeopleRepository @Inject
-constructor(
+class PeopleRepository constructor(
   private val peopleClient: PeopleClient,
   private val peopleDao: PeopleDao
 ) : Repository {

@@ -40,6 +40,7 @@ import com.skydoves.themovies2.view.ui.details.person.PersonDetailActivity
 import com.skydoves.themovies2.view.viewholder.PeopleViewHolder
 import kotlinx.android.synthetic.main.main_fragment_movie.*
 import org.jetbrains.anko.support.v4.toast
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class PersonListFragment : ViewModelFragment(), PeopleViewHolder.Delegate {
 

@@ -23,41 +23,16 @@
  */
 package com.skydoves.themovies2.di
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.skydoves.themovies2.factory.AppViewModelFactory
 import com.skydoves.themovies2.view.ui.details.movie.MovieDetailViewModel
 import com.skydoves.themovies2.view.ui.details.person.PersonDetailViewModel
 import com.skydoves.themovies2.view.ui.details.tv.TvDetailViewModel
 import com.skydoves.themovies2.view.ui.main.MainActivityViewModel
-import dagger.Binds
-import dagger.Module
-import dagger.multibindings.IntoMap
+import org.koin.android.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 
-@Suppress("unused")
-@Module
-internal abstract class ViewModelModule {
-
-  @Binds
-  @IntoMap
-  @ViewModelKey(MainActivityViewModel::class)
-  internal abstract fun bindMainActivityViewModels(mainActivityViewModel: MainActivityViewModel): ViewModel
-
-  @Binds
-  @IntoMap
-  @ViewModelKey(MovieDetailViewModel::class)
-  internal abstract fun bindMovieDetailViewModel(movieDetailViewModel: MovieDetailViewModel): ViewModel
-
-  @Binds
-  @IntoMap
-  @ViewModelKey(TvDetailViewModel::class)
-  internal abstract fun bindTvDetailViewModel(tvDetailViewModel: TvDetailViewModel): ViewModel
-
-  @Binds
-  @IntoMap
-  @ViewModelKey(PersonDetailViewModel::class)
-  internal abstract fun bindPersonDetailViewModel(personDetailViewModel: PersonDetailViewModel): ViewModel
-
-  @Binds
-  internal abstract fun bindViewModelFactory(factory: AppViewModelFactory): ViewModelProvider.Factory
+val viewModelModule = module {
+  viewModel { MainActivityViewModel(get(), get()) }
+  viewModel { MovieDetailViewModel(get()) }
+  viewModel { TvDetailViewModel(get()) }
+  viewModel { PersonDetailViewModel(get()) }
 }

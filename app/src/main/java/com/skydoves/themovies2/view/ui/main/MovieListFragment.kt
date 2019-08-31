@@ -40,6 +40,7 @@ import com.skydoves.themovies2.view.ui.details.movie.MovieDetailActivity
 import com.skydoves.themovies2.view.viewholder.MovieListViewHolder
 import kotlinx.android.synthetic.main.main_fragment_movie.*
 import org.jetbrains.anko.support.v4.toast
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MovieListFragment : ViewModelFragment(), MovieListViewHolder.Delegate {
 

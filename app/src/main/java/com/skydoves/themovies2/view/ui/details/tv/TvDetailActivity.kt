@@ -42,11 +42,11 @@ import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
 import com.skydoves.themovies2.view.viewholder.VideoListViewHolder
-import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_tv_detail.*
 import kotlinx.android.synthetic.main.layout_tv_detail_body.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class TvDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
 
@@ -54,7 +54,6 @@ class TvDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
   private val binding by binding<ActivityTvDetailBinding>(R.layout.activity_tv_detail)
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    AndroidInjection.inject(this)
     super.onCreate(savedInstanceState)
     vm.postTvId(getTvFromIntent().id)
     with(binding) {

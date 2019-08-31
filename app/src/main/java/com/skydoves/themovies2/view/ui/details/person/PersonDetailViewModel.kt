@@ -30,9 +30,8 @@ import com.skydoves.themovies2.compose.DispatchViewModel
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.repository.PeopleRepository
 import timber.log.Timber
-import javax.inject.Inject
 
-class PersonDetailViewModel @Inject
+class PersonDetailViewModel
 constructor(private val peopleRepository: PeopleRepository) : DispatchViewModel() {
 
   private val personIdLiveData: MutableLiveData<Int> = MutableLiveData()

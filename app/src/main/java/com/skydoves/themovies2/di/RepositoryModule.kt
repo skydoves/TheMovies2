@@ -23,30 +23,15 @@
  */
 package com.skydoves.themovies2.di
 
-import android.app.Application
-import dagger.BindsInstance
-import dagger.Component
-import dagger.android.AndroidInjectionModule
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
-import javax.inject.Singleton
+import com.skydoves.themovies2.repository.DiscoverRepository
+import com.skydoves.themovies2.repository.MovieRepository
+import com.skydoves.themovies2.repository.PeopleRepository
+import com.skydoves.themovies2.repository.TvRepository
+import org.koin.dsl.module
 
-@Singleton
-@Component(modules = [
-  AndroidInjectionModule::class,
-  ComposeModule::class,
-  ActivityModule::class,
-  ViewModelModule::class,
-  NetworkModule::class,
-  PersistenceModule::class])
-interface AppComponent : AndroidInjector<DaggerApplication> {
-  @Component.Builder
-  interface Builder {
-    @BindsInstance
-    fun application(application: Application): Builder
-
-    fun build(): AppComponent
-  }
-
-  override fun inject(instance: DaggerApplication)
+val repositoryModule = module {
+  single(createdAtStart = false) { DiscoverRepository(get(), get(), get()) }
+  single(createdAtStart = false) { MovieRepository(get(), get()) }
+  single(createdAtStart = false) { PeopleRepository(get(), get()) }
+  single(createdAtStart = false) { TvRepository(get(), get()) }
 }

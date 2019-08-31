@@ -38,6 +38,7 @@ import com.skydoves.themovies2.models.entity.Person
 import kotlinx.android.synthetic.main.toolbar_default.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class PersonDetailActivity : ViewModelActivity() {
 

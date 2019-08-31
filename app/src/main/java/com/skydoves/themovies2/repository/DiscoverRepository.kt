@@ -34,12 +34,8 @@ import com.skydoves.themovies2.room.TvDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class DiscoverRepository @Inject
-constructor(
+class DiscoverRepository constructor(
   private val discoverClient: TheDiscoverClient,
   private val movieDao: MovieDao,
   private val tvDao: TvDao

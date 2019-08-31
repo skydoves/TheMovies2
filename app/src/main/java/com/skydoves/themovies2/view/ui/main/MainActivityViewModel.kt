@@ -33,9 +33,8 @@ import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.repository.DiscoverRepository
 import com.skydoves.themovies2.repository.PeopleRepository
 import timber.log.Timber
-import javax.inject.Inject
 
-class MainActivityViewModel @Inject
+class MainActivityViewModel
 constructor(
   private val discoverRepository: DiscoverRepository,
   private val peopleRepository: PeopleRepository

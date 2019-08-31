@@ -46,6 +46,7 @@ import kotlinx.android.synthetic.main.activity_movie_detail.*
 import kotlinx.android.synthetic.main.layout_movie_detail_body.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MovieDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
 

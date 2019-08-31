@@ -19,7 +19,7 @@ buildscript {
         archCompomentVersion = '2.0.0'
         roomVersion = '2.2.0-beta01'
         lifecycleVersion = '2.2.0-alpha03'
-        daggerVersion = '2.23.1'
+        koinVersion = '2.0.1'
         retrofitVersion = '2.3.0'
         okhttpVersion = '3.11.0'
         gsonVersion = '2.8.2'

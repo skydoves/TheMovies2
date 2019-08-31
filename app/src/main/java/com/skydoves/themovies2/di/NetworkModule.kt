@@ -33,80 +33,48 @@ import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.api.service.TheDiscoverService
 import com.skydoves.themovies2.api.service.TvService
-import dagger.Module
-import dagger.Provides
 import okhttp3.OkHttpClient
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
-@Module
-class NetworkModule {
-
-  @Provides
-  @Singleton
-  fun provideHttpClient(): OkHttpClient {
-    return OkHttpClient.Builder()
+val networkModule = module {
+  single {
+    OkHttpClient.Builder()
       .addInterceptor(RequestInterceptor())
       .addNetworkInterceptor(StethoInterceptor())
       .build()
   }
 
-  @Provides
-  @Singleton
-  fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder()
-      .client(okHttpClient)
+  single {
+    Retrofit.Builder()
+      .client(get<OkHttpClient>())
       .baseUrl("https://api.themoviedb.org/")
       .addConverterFactory(GsonConverterFactory.create())
       .build()
   }
 
-  @Provides
-  @Singleton
-  fun provideDiscoverService(retrofit: Retrofit): TheDiscoverService {
-    return retrofit.create(TheDiscoverService::class.java)
+  single(createdAtStart = false) {
+    get<Retrofit>().create(TheDiscoverService::class.java)
   }
 
-  @Provides
-  @Singleton
-  fun provideDiscoverClient(service: TheDiscoverService): TheDiscoverClient {
-    return TheDiscoverClient(service)
+  single(createdAtStart = false) {
+    get<Retrofit>().create(PeopleService::class.java)
   }
 
-  @Provides
-  @Singleton
-  fun providePeopleService(retrofit: Retrofit): PeopleService {
-    return retrofit.create(PeopleService::class.java)
+  single(createdAtStart = false) {
+    get<Retrofit>().create(MovieService::class.java)
   }
 
-  @Provides
-  @Singleton
-  fun providePeopleClient(service: PeopleService): PeopleClient {
-    return PeopleClient(service)
+  single(createdAtStart = false) {
+    get<Retrofit>().create(TvService::class.java)
   }
 
-  @Provides
-  @Singleton
-  fun provideMovieService(retrofit: Retrofit): MovieService {
-    return retrofit.create(MovieService::class.java)
-  }
+  single(createdAtStart = false) { TheDiscoverClient(get()) }
 
-  @Provides
-  @Singleton
-  fun provideMovieClient(service: MovieService): MovieClient {
-    return MovieClient(service)
-  }
+  single(createdAtStart = false) { PeopleClient(get()) }
 
-  @Provides
-  @Singleton
-  fun provideTvService(retrofit: Retrofit): TvService {
-    return retrofit.create(TvService::class.java)
-  }
+  single(createdAtStart = false) { MovieClient(get()) }
 
-  @Provides
-  @Singleton
-  fun provideTvClient(service: TvService): TvClient {
-    return TvClient(service)
-  }
+  single(createdAtStart = false) { TvClient(get()) }
 }

@@ -34,12 +34,8 @@ import com.skydoves.themovies2.room.MovieDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class MovieRepository @Inject
-constructor(
+class MovieRepository constructor(
   private val movieClient: MovieClient,
   private val movieDao: MovieDao
 ) : Repository {

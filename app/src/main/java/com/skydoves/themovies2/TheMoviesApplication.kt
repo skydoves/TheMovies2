@@ -23,31 +23,34 @@
  */
 package com.skydoves.themovies2
 
+import android.app.Application
 import com.facebook.stetho.Stetho
-import com.skydoves.themovies2.di.DaggerAppComponent
-import dagger.android.AndroidInjector
-import dagger.android.DaggerApplication
+import com.skydoves.themovies2.di.networkModule
+import com.skydoves.themovies2.di.persistenceModule
+import com.skydoves.themovies2.di.repositoryModule
+import com.skydoves.themovies2.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 import timber.log.Timber
 
 @Suppress("unused")
-class TheMoviesApplication : DaggerApplication() {
-
-  private val appComponent = DaggerAppComponent.builder()
-    .application(this)
-    .build()
+class TheMoviesApplication : Application() {
 
   override fun onCreate() {
     super.onCreate()
-    appComponent.inject(this)
+
+    startKoin {
+      androidContext(this@TheMoviesApplication)
+      modules(networkModule)
+      modules(persistenceModule)
+      modules(repositoryModule)
+      modules(viewModelModule)
+    }
 
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
     }
 
     Stetho.initializeWithDefaults(this)
-  }
-
-  override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-    return appComponent
   }
 }

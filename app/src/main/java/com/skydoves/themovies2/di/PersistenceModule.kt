@@ -23,43 +23,20 @@
  */
 package com.skydoves.themovies2.di
 
-import android.app.Application
 import androidx.room.Room
 import com.skydoves.themovies2.room.AppDatabase
-import com.skydoves.themovies2.room.MovieDao
-import com.skydoves.themovies2.room.PeopleDao
-import com.skydoves.themovies2.room.TvDao
-import dagger.Module
-import dagger.Provides
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidApplication
+import org.koin.dsl.module
 
-@Module
-class PersistenceModule {
-
-  @Provides
-  @Singleton
-  fun provideDatabase(application: Application): AppDatabase {
-    return Room
-      .databaseBuilder(application, AppDatabase::class.java, "TheMovies.db")
+val persistenceModule = module {
+  single {
+    Room
+      .databaseBuilder(androidApplication(), AppDatabase::class.java, "TheMovies.db")
       .allowMainThreadQueries()
       .build()
   }
 
-  @Provides
-  @Singleton
-  fun provideMovieDao(database: AppDatabase): MovieDao {
-    return database.movieDao()
-  }
-
-  @Provides
-  @Singleton
-  fun provideTvDao(database: AppDatabase): TvDao {
-    return database.tvDao()
-  }
-
-  @Provides
-  @Singleton
-  fun providePeopleDao(database: AppDatabase): PeopleDao {
-    return database.peopleDao()
-  }
+  single(createdAtStart = false) { get<AppDatabase>().movieDao() }
+  single(createdAtStart = false) { get<AppDatabase>().tvDao() }
+  single(createdAtStart = false) { get<AppDatabase>().peopleDao() }
 }
