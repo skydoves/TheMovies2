@@ -1,0 +1,124 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'jacoco'
+
+apply from: '../jacoco.gradle'
+
+def getProperty(String filename, String propName) {
+    def propsFile = rootProject.file(filename)
+    if (propsFile.exists()) {
+        def props = new Properties()
+        props.load(new FileInputStream(propsFile))
+        if (props[propName] != null) {
+            return props[propName]
+        } else {
+            print("No such property " + propName + " in file " + filename)
+        }
+    } else {
+        print(filename + " does not exist!")
+    }
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    defaultConfig {
+        applicationId "com.skydoves.themovies2"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "com.skydoves.themovies2.runner.AndroidJunitTestRunner"
+        buildConfigField "String", "TMDB_API_KEY", "\"${getProperty("local.properties", "tmdb_api_key")}\""
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    kapt {
+        correctErrorTypes = true
+    }
+    dataBinding {
+        enabled = true
+    }
+    androidExtensions {
+        experimental = true
+    }
+    sourceSets {
+        androidTest.java.srcDirs += "src/test-common/java"
+        test.java.srcDirs += "src/test-common/java"
+    }
+}
+
+dependencies {
+    // support library
+    implementation "androidx.appcompat:appcompat:$accompatVersion"
+    implementation "androidx.activity:activity:$androidActivity"
+    implementation "androidx.activity:activity-ktx:$androidActivity"
+    implementation "androidx.fragment:fragment:$androidFragment"
+    implementation "androidx.fragment:fragment-ktx:$androidFragment"
+    implementation "com.google.android.material:material:$materialVersion"
+    implementation "androidx.palette:palette:$androidxVersion"
+    implementation "androidx.cardview:cardview:$androidxVersion"
+    implementation "androidx.recyclerview:recyclerview:$recyclerVersion"
+
+    // kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation "org.jetbrains.anko:anko:$ankoVersion"
+
+    // architecture components
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.room:room-runtime:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+    testImplementation "androidx.arch.core:core-testing:$archCompomentVersion"
+
+    // dependency injection
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger-android:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+
+    // coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+
+    // network
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation "com.google.code.gson:gson:$retrofitVersion"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
+
+    // glide
+    implementation "com.github.bumptech.glide:glide:$glideVersion"
+    implementation "com.github.florent37:glidepalette:$glidePaletteVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+
+    // adapter
+    implementation "com.github.skydoves:baserecyclerviewadapter:$baseAdapterVersion"
+
+    // debugging
+    implementation "com.jakewharton.timber:timber:$timberVersion"
+    implementation "com.facebook.stetho:stetho:$stethoVersion"
+    implementation "com.facebook.stetho:stetho-okhttp3:$stethoVersion"
+
+    // custom view
+    implementation "co.lujun:androidtagview:$androidTagViewVersion"
+    implementation "com.ms-square:expandableTextView:$expandableTextViewVersion"
+
+    // unit test
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockitoKotlinVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espressoVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxTest"
+    androidTestImplementation "androidx.test:core:$androidxTest"
+    androidTestImplementation "androidx.test:rules:$androidxTestRules"
+}
+
+apply from: '../spotless.gradle'
