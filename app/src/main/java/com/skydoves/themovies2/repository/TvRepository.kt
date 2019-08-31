@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Designed and developed by 2018 skydoves (Jaewoong Eum)
+ * Designed and developed by 2019 skydoves (Jaewoong Eum)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,7 +26,7 @@ package com.skydoves.themovies2.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.themovies2.api.ApiResponse
-import com.skydoves.themovies2.api.TvService
+import com.skydoves.themovies2.api.service.TvService
 import com.skydoves.themovies2.mappers.KeywordResponseMapper
 import com.skydoves.themovies2.mappers.ReviewResponseMapper
 import com.skydoves.themovies2.mappers.VideoResponseMapper
@@ -44,8 +44,8 @@ import javax.inject.Singleton
 
 @Singleton
 class TvRepository @Inject
-constructor(val service: TvService, val tvDao: TvDao)
-  : Repository {
+constructor(val service: TvService, val tvDao: TvDao) :
+  Repository {
 
   init {
     Timber.d("Injection TvRepository")

@@ -37,7 +37,7 @@ buildscript {
         jacocoVersion = '0.8.1'
         androidxTest = '1.1.0'
         androidxTestRules = '1.2.0-alpha04'
-        spotlessVersion = '3.22.0'
+        spotlessVersion = '3.24.2'
     }
 
     repositories {

@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Designed and developed by 2018 skydoves (Jaewoong Eum)
+ * Designed and developed by 2019 skydoves (Jaewoong Eum)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +25,11 @@ package com.skydoves.themovies2.di
 
 import androidx.annotation.NonNull
 import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.skydoves.themovies2.api.MovieService
-import com.skydoves.themovies2.api.PeopleService
+import com.skydoves.themovies2.api.service.MovieService
+import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.api.RequestInterceptor
-import com.skydoves.themovies2.api.TheDiscoverService
-import com.skydoves.themovies2.api.TvService
+import com.skydoves.themovies2.api.service.TheDiscoverService
+import com.skydoves.themovies2.api.service.TvService
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient

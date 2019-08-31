@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Designed and developed by 2018 skydoves (Jaewoong Eum)
+ * Designed and developed by 2019 skydoves (Jaewoong Eum)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,8 @@ import com.skydoves.themovies2.models.Resource
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.view.viewholder.PeopleViewHolder
 
-class PeopleAdapter(val delegate: PeopleViewHolder.Delegate)
-  : BaseAdapter() {
+class PeopleAdapter(val delegate: PeopleViewHolder.Delegate) :
+  BaseAdapter() {
 
   init {
     addSection(ArrayList<Person>())

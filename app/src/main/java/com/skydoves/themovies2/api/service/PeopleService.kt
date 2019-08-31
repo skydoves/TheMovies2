@@ -21,33 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.skydoves.themovies2.compose
+package com.skydoves.themovies2.api.service
 
-import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import com.skydoves.themovies2.models.network.PeopleResponse
+import com.skydoves.themovies2.models.network.PersonDetail
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
-@SuppressLint("Registered")
-open class ViewModelActivity : AppCompatActivity() {
+interface PeopleService {
+  /**
+   * [People Popular](https://developers.themoviedb.org/3/people/get-popular-people)
+   *
+   * Get the list of popular people on TMDb. This list updates daily.
+   *
+   * @param [page] Specify the page of results to query.
+   *
+   * @return [PeopleResponse] response
+   */
+  @GET("/3/person/popular?language=en")
+  fun fetchPopularPeople(@Query("page") page: Int): Call<PeopleResponse>
 
-  @Inject
-  lateinit var viewModelFactory: ViewModelProvider.Factory
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    AndroidInjection.inject(this)
-    super.onCreate(savedInstanceState)
-  }
-
-  protected inline fun <reified VM : ViewModel>
-    viewModel(): Lazy<VM> = viewModels { viewModelFactory }
-
-  protected inline fun <reified T : ViewDataBinding> binding(resId: Int): Lazy<T> =
-    lazy { DataBindingUtil.setContentView<T>(this, resId) }
+  /**
+   * [Person Detail](https://developers.themoviedb.org/3/people/get-person-details)
+   *
+   * Get the primary person details by id.
+   *
+   * @para [id] Specify the id of results to query.
+   *
+   * @return [PersonDetail] response
+   */
+  @GET("/3/person/{person_id}")
+  fun fetchPersonDetail(@Path("person_id") id: Int): Call<PersonDetail>
 }

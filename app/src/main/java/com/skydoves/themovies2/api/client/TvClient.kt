@@ -21,33 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.skydoves.themovies2.compose
+package com.skydoves.themovies2.api.client
 
-import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import com.skydoves.themovies2.api.ApiResponse
+import com.skydoves.themovies2.api.async
+import com.skydoves.themovies2.api.service.TvService
+import com.skydoves.themovies2.models.network.KeywordListResponse
+import com.skydoves.themovies2.models.network.ReviewListResponse
+import com.skydoves.themovies2.models.network.VideoListResponse
 
-@SuppressLint("Registered")
-open class ViewModelActivity : AppCompatActivity() {
+class TvClient(private val service: TvService) {
 
-  @Inject
-  lateinit var viewModelFactory: ViewModelProvider.Factory
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    AndroidInjection.inject(this)
-    super.onCreate(savedInstanceState)
+  fun fetchKeywords(
+    id: Int,
+    onResult: (response: ApiResponse<KeywordListResponse>) -> Unit
+  ) {
+    service.fetchKeywords(id).async(onResult)
   }
 
-  protected inline fun <reified VM : ViewModel>
-    viewModel(): Lazy<VM> = viewModels { viewModelFactory }
+  fun fetchVideos(
+    id: Int,
+    onResult: (response: ApiResponse<VideoListResponse>) -> Unit
+  ) {
+    service.fetchVideos(id).async(onResult)
+  }
 
-  protected inline fun <reified T : ViewDataBinding> binding(resId: Int): Lazy<T> =
-    lazy { DataBindingUtil.setContentView<T>(this, resId) }
+  fun fetchReviews(
+    id: Int,
+    onResult: (response: ApiResponse<ReviewListResponse>) -> Unit
+  ) {
+    service.fetchReviews(id).async(onResult)
+  }
 }

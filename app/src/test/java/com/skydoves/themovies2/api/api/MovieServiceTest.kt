@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Designed and developed by 2018 skydoves (Jaewoong Eum)
+ * Designed and developed by 2019 skydoves (Jaewoong Eum)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  */
 package com.skydoves.themovies2.api.api
 
-import com.skydoves.themovies2.api.MovieService
+import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.utils.LiveDataTestUtil
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat

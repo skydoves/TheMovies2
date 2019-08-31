@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Designed and developed by 2018 skydoves (Jaewoong Eum)
+ * Designed and developed by 2019 skydoves (Jaewoong Eum)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,7 @@ package com.skydoves.themovies2.repository
 
 import androidx.lifecycle.LiveData
 import com.skydoves.themovies2.api.ApiResponse
-import com.skydoves.themovies2.api.TheDiscoverService
+import com.skydoves.themovies2.api.service.TheDiscoverService
 import com.skydoves.themovies2.mappers.MovieResponseMapper
 import com.skydoves.themovies2.mappers.TvResponseMapper
 import com.skydoves.themovies2.models.Resource

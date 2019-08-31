@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Designed and developed by 2018 skydoves (Jaewoong Eum)
+ * Designed and developed by 2019 skydoves (Jaewoong Eum)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,53 +23,71 @@
  */
 package com.skydoves.themovies2.api
 
+import okhttp3.ResponseBody
 import retrofit2.Response
-import timber.log.Timber
-import java.io.IOException
 
-@Suppress("MemberVisibilityCanBePrivate")
-class ApiResponse<T> {
-  val code: Int
-  val body: T?
-  val message: String?
+@Suppress("unused", "HasPlatformType", "SpellCheckingInspection", "MemberVisibilityCanBePrivate")
+sealed class ApiResponse<out T> {
 
-  val isSuccessful: Boolean
-    get() = code in 200..300
-  val isFailure: Boolean
-
-  constructor(error: Throwable) {
-    this.code = 500
-    this.body = null
-    this.message = error.message
-    this.isFailure = true
+  /**
+   * API Success response class from retrofit.
+   *
+   * [data] is optional. (There are responses without data)
+   */
+  class Success<T>(response: Response<T>) : ApiResponse<T>() {
+    val data: T? = response.body()
+    override fun toString() = "[ApiResponse.Success]: $data"
   }
 
-  constructor(response: Response<T>) {
-    this.code = response.code()
+  /**
+   * API Failure response class.
+   *
+   * ## Throw Exception case.
+   * Gets called when an unexpected exception occurs while creating the request or processing the response.
+   *
+   * ## API Network format error case.
+   * API communication conventions do not match or applications need to handle errors.
+   *
+   * ## API Network Excepttion error case.
+   * Gets called when an unexpected exception occurs while creating the request or processing the response.
+   */
+  sealed class Failure<out T> {
+    class Error<out T>(response: Response<out T>) : ApiResponse<T>() {
+      val responseBody: ResponseBody? = response.errorBody()
+      val code: Int = response.code()
+      override fun toString(): String = "[ApiResponse.Failure $code]: $responseBody"
+    }
 
-    if (response.isSuccessful) {
-      this.body = response.body()
-      this.message = null
-      this.isFailure = false
-    } else {
-      var errorMessage: String? = null
-      response.errorBody()?.let {
-        try {
-          errorMessage = response.errorBody()!!.string()
-        } catch (ignored: IOException) {
-          Timber.e(ignored, "error while parsing response")
-        }
+    class Exception<out T>(exception: Throwable) : ApiResponse<T>() {
+      val message: String? = exception.localizedMessage
+      override fun toString(): String = "[ApiResponse.Failure]: $message"
+    }
+  }
+
+  companion object {
+    /**
+     * ApiResponse Factory
+     *
+     * [Failure] factory function. Only receives [Throwable] arguments.
+     */
+    fun <T> error(ex: Throwable) = Failure.Exception<T>(ex)
+
+    /**
+     * ApiResponse Factory
+     *
+     * [f] Create ApiResponse from [retrofit2.Response] returning from the block.
+     * If [retrofit2.Response] has no errors, it will create [ApiResponse.Success]
+     * If [retrofit2.Response] has errors, it will create [ApiResponse.Failure.Error]
+     */
+    fun <T> of(f: () -> Response<T>): ApiResponse<T> = try {
+      val response = f()
+      if (response.isSuccessful) {
+        Success(response)
+      } else {
+        Failure.Error(response)
       }
-
-      errorMessage?.apply {
-        if (isNullOrEmpty() || trim { it <= ' ' }.isEmpty()) {
-          errorMessage = response.message()
-        }
-      }
-
-      this.body = null
-      this.message = errorMessage
-      this.isFailure = true
+    } catch (ex: Exception) {
+      Failure.Exception(ex)
     }
   }
 }
