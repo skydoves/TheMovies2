@@ -24,9 +24,8 @@
 
 package com.skydoves.themovies2.db
 
-import androidx.test.runner.AndroidJUnit4
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.skydoves.themovies2.models.entity.Person
-import com.skydoves.themovies2.utils.LiveDataTestUtil
 import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockPerson
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -43,7 +42,7 @@ class PeopleDaoTest : DbTest() {
     people.add(mockPerson)
 
     db.peopleDao().insertPeople(people)
-    val loadFromDB = LiveDataTestUtil.getValue(db.peopleDao().getPeople(1))[0]
+    val loadFromDB = db.peopleDao().getPeople(1)[0]
     assertThat(loadFromDB.page, `is`(1))
     assertThat(loadFromDB.id, `is`(123))
   }

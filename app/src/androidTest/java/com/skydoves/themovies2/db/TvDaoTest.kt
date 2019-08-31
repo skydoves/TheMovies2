@@ -25,11 +25,8 @@
 package com.skydoves.themovies2.db
 
 import com.skydoves.themovies2.models.entity.Tv
-import com.skydoves.themovies2.utils.LiveDataTestUtil
 import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockTv
-import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.MatcherAssert
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,9 +42,9 @@ class TvDaoTest : DbTest() {
     tvList.add(tv)
 
     db.tvDao().insertTv(tvList)
-    val loadFromDB = LiveDataTestUtil.getValue(db.tvDao().getTvList(tv.page))[0]
-    MatcherAssert.assertThat(loadFromDB.page, CoreMatchers.`is`(1))
-    MatcherAssert.assertThat(loadFromDB.id, CoreMatchers.`is`(123))
+    val loadFromDB = db.tvDao().getTvList(tv.page)[0]
+    assertThat(loadFromDB.page, `is`(1))
+    assertThat(loadFromDB.id, `is`(123))
   }
 
   @Test

@@ -27,12 +27,11 @@ package com.skydoves.themovies2.runner
 import android.app.Application
 import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
-import com.skydoves.themovies2.TestTheMoviesApplication
 
 @Suppress("unused")
 class AndroidJunitTestRunner : AndroidJUnitRunner() {
   @Throws(InstantiationException::class, IllegalAccessException::class, ClassNotFoundException::class)
   override fun newApplication(cl: ClassLoader, className: String, context: Context): Application {
-    return super.newApplication(cl, TestTheMoviesApplication::class.java.name, context)
+    return super.newApplication(cl, Application::class.java.name, context)
   }
 }
