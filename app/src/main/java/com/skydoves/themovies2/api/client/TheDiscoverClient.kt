@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.skydoves.themovies2.api.client
 
 import com.skydoves.themovies2.api.ApiResponse

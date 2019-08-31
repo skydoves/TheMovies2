@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.skydoves.themovies2.di
 
 import com.skydoves.themovies2.view.ui.details.movie.MovieDetailViewModel

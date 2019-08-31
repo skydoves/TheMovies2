@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.skydoves.themovies2.api.client
 
 import com.skydoves.themovies2.api.ApiResponse
@@ -38,7 +39,7 @@ class PeopleClient(private val service: PeopleService) {
     service.fetchPopularPeople(page).async(onResult)
   }
 
-  fun fetchPersonDetai(
+  fun fetchPersonDetail(
     page: Int,
     onResult: (response: ApiResponse<PersonDetail>) -> Unit
   ) {

@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+
 package com.skydoves.themovies2.repository
 
 import androidx.lifecycle.MutableLiveData
@@ -69,7 +70,7 @@ class PeopleRepository constructor(
   suspend fun loadPersonDetail(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
     val liveData = MutableLiveData<PersonDetail>()
     val person = peopleDao.getPerson(id)
-    peopleClient.fetchPersonDetai(id) { response ->
+    peopleClient.fetchPersonDetail(id) { response ->
       when (response) {
         is ApiResponse.Success -> {
           response.data?.let { data ->
