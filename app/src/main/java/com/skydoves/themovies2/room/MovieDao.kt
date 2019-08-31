@@ -23,7 +23,6 @@
  */
 package com.skydoves.themovies2.room
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -43,5 +42,5 @@ interface MovieDao {
   fun getMovie(id_: Int): Movie
 
   @Query("SELECT * FROM Movie WHERE page = :page_")
-  fun getMovieList(page_: Int): LiveData<List<Movie>>
+  fun getMovieList(page_: Int): List<Movie>
 }

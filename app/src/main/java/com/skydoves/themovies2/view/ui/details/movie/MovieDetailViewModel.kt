@@ -47,24 +47,9 @@ constructor(private val repository: MovieRepository) : ViewModel() {
   init {
     Timber.d("Injection MovieDetailViewModel")
 
-    this.keywordListLiveData = movieIdLiveData.switchMap {
-      movieIdLiveData.value?.let {
-        repository.loadKeywordList(it)
-      } ?: AbsentLiveData.create()
-    }
-
-    this.videoListLiveData = movieIdLiveData.switchMap {
-      movieIdLiveData.value?.let {
-        repository.loadVideoList(it)
-      } ?: AbsentLiveData.create()
-    }
-
-    this.reviewListLiveData = movieIdLiveData.switchMap {
-      movieIdLiveData.value?.let {
-        repository.loadReviewsList(it)
-      } ?: AbsentLiveData.create()
-    }
+    this.keywordListLiveData = MutableLiveData()
+    this.videoListLiveData = MutableLiveData()
+    this.reviewListLiveData = MutableLiveData()
   }
-
   fun postMovieId(id: Int) = movieIdLiveData.postValue(id)
 }

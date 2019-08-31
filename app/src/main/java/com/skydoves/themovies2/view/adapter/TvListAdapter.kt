@@ -25,10 +25,8 @@ package com.skydoves.themovies2.view.adapter
 
 import android.view.View
 import com.skydoves.baserecyclerviewadapter.BaseAdapter
-import com.skydoves.baserecyclerviewadapter.BaseViewHolder
 import com.skydoves.baserecyclerviewadapter.SectionRow
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.models.Resource
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.view.viewholder.TvListViewHolder
 
@@ -39,18 +37,12 @@ class TvListAdapter(private val delegate: TvListViewHolder.Delegate) :
     addSection(ArrayList<Tv>())
   }
 
-  fun addTvList(resource: Resource<List<Tv>>) {
-    resource.data?.let {
-      sections()[0].addAll(it)
-      notifyDataSetChanged()
-    }
+  fun addTvList(tvs: List<Tv>) {
+    sections()[0].addAll(tvs)
+    notifyDataSetChanged()
   }
 
-  override fun layout(sectionRow: SectionRow): Int {
-    return R.layout.item_poster
-  }
+  override fun layout(sectionRow: SectionRow) = R.layout.item_poster
 
-  override fun viewHolder(layout: Int, view: View): BaseViewHolder {
-    return TvListViewHolder(view, delegate)
-  }
+  override fun viewHolder(layout: Int, view: View) = TvListViewHolder(view, delegate)
 }

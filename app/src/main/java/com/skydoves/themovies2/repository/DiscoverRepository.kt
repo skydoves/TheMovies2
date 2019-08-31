@@ -23,18 +23,13 @@
  */
 package com.skydoves.themovies2.repository
 
-import androidx.lifecycle.LiveData
 import com.skydoves.themovies2.api.ApiResponse
-import com.skydoves.themovies2.api.service.TheDiscoverService
-import com.skydoves.themovies2.mappers.MovieResponseMapper
-import com.skydoves.themovies2.mappers.TvResponseMapper
-import com.skydoves.themovies2.models.Resource
-import com.skydoves.themovies2.models.entity.Movie
-import com.skydoves.themovies2.models.entity.Tv
-import com.skydoves.themovies2.models.network.DiscoverMovieResponse
-import com.skydoves.themovies2.models.network.DiscoverTvResponse
+import com.skydoves.themovies2.api.client.TheDiscoverClient
+import com.skydoves.themovies2.api.message
 import com.skydoves.themovies2.room.MovieDao
 import com.skydoves.themovies2.room.TvDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -42,74 +37,52 @@ import javax.inject.Singleton
 @Singleton
 class DiscoverRepository @Inject
 constructor(
-  val discoverService: TheDiscoverService,
-  val movieDao: MovieDao,
-  val tvDao: TvDao
+  private val discoverClient: TheDiscoverClient,
+  private val movieDao: MovieDao,
+  private val tvDao: TvDao
 ) : Repository {
 
   init {
     Timber.d("Injection DiscoverRepository")
   }
 
-  fun loadMovies(page: Int): LiveData<Resource<List<Movie>>> {
-    return object : NetworkBoundRepository<List<Movie>, DiscoverMovieResponse, MovieResponseMapper>() {
-      override fun saveFetchData(items: DiscoverMovieResponse) {
-        for (item in items.results) {
-          item.page = page
+  suspend fun loadMovies(page: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
+    var movies = movieDao.getMovieList(page)
+    if (movies.isEmpty()) {
+      discoverClient.fetchDiscoverMovie(page) { response ->
+        when (response) {
+          is ApiResponse.Success -> {
+            response.data?.let { data ->
+              movies = data.results
+              movies.forEach { it.page = page }
+              movieDao.insertMovieList(movies)
+            }
+          }
+          is ApiResponse.Failure.Error -> error(response.message())
+          is ApiResponse.Failure.Exception -> error(response.message())
         }
-        movieDao.insertMovieList(movies = items.results)
       }
-
-      override fun shouldFetch(data: List<Movie>?): Boolean {
-        return data == null || data.isEmpty()
-      }
-
-      override fun loadFromDb(): LiveData<List<Movie>> {
-        return movieDao.getMovieList(page_ = page)
-      }
-
-      override fun fetchService(): LiveData<ApiResponse<DiscoverMovieResponse>> {
-        return discoverService.fetchDiscoverMovie(page = page)
-      }
-
-      override fun mapper(): MovieResponseMapper {
-        return MovieResponseMapper()
-      }
-
-      override fun onFetchFailed(message: String?) {
-        Timber.d("onFetchFailed $message")
-      }
-    }.asLiveData()
+    }
+    movies
   }
 
-  fun loadTvs(page: Int): LiveData<Resource<List<Tv>>> {
-    return object : NetworkBoundRepository<List<Tv>, DiscoverTvResponse, TvResponseMapper>() {
-      override fun saveFetchData(items: DiscoverTvResponse) {
-        for (item in items.results) {
-          item.page = page
+  suspend fun loadTvs(page: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
+    var tvs = tvDao.getTvList(page)
+    if (tvs.isEmpty()) {
+      discoverClient.fetchDiscoverTv(page) { response ->
+        when (response) {
+          is ApiResponse.Success -> {
+            response.data?.let { data ->
+              tvs = data.results
+              tvs.forEach { it.page = page }
+              tvDao.insertTv(tvs)
+            }
+          }
+          is ApiResponse.Failure.Error -> error(response.message())
+          is ApiResponse.Failure.Exception -> error(response.message())
         }
-        tvDao.insertTv(tvs = items.results)
       }
-
-      override fun shouldFetch(data: List<Tv>?): Boolean {
-        return data == null || data.isEmpty()
-      }
-
-      override fun loadFromDb(): LiveData<List<Tv>> {
-        return tvDao.getTvList(page_ = page)
-      }
-
-      override fun fetchService(): LiveData<ApiResponse<DiscoverTvResponse>> {
-        return discoverService.fetchDiscoverTv(page = page)
-      }
-
-      override fun mapper(): TvResponseMapper {
-        return TvResponseMapper()
-      }
-
-      override fun onFetchFailed(message: String?) {
-        Timber.d("oFetchFailed $message")
-      }
-    }.asLiveData()
+    }
+    tvs
   }
 }

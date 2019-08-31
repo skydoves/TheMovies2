@@ -37,3 +37,7 @@ fun <T> Call<T>.async(onResult: (response: ApiResponse<T>) -> Unit) {
     }
   })
 }
+
+fun <T> ApiResponse.Failure.Error<T>.message() = "${code}: ${responseBody?.string()}"
+
+fun <T> ApiResponse.Failure.Exception<T>.message() = "$message"

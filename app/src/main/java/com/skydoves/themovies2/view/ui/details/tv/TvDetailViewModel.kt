@@ -47,23 +47,11 @@ constructor(private val repository: TvRepository) : ViewModel() {
   init {
     Timber.d("Injection TvDetailViewModel")
 
-    this.keywordListLiveData = tvIdLiveData.switchMap {
-      tvIdLiveData.value?.let {
-        repository.loadKeywordList(it)
-      } ?: AbsentLiveData.create()
-    }
+    this.keywordListLiveData =  MutableLiveData()
 
-    this.videoListLiveData = tvIdLiveData.switchMap {
-      tvIdLiveData.value?.let {
-        repository.loadVideoList(it)
-      } ?: AbsentLiveData.create()
-    }
+    this.videoListLiveData =  MutableLiveData()
 
-    this.reviewListLiveData = tvIdLiveData.switchMap {
-      tvIdLiveData.value?.let {
-        repository.loadReviewsList(it)
-      } ?: AbsentLiveData.create()
-    }
+    this.reviewListLiveData =  MutableLiveData()
   }
 
   fun postTvId(id: Int) = tvIdLiveData.postValue(id)

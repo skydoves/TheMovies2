@@ -23,11 +23,12 @@
  */
 package com.skydoves.themovies2.di
 
-import androidx.annotation.NonNull
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.skydoves.themovies2.api.RequestInterceptor
+import com.skydoves.themovies2.api.client.PeopleClient
+import com.skydoves.themovies2.api.client.TheDiscoverClient
 import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.api.service.PeopleService
-import com.skydoves.themovies2.api.RequestInterceptor
 import com.skydoves.themovies2.api.service.TheDiscoverService
 import com.skydoves.themovies2.api.service.TvService
 import dagger.Module
@@ -51,7 +52,7 @@ class NetworkModule {
 
   @Provides
   @Singleton
-  fun provideRetrofit(@NonNull okHttpClient: OkHttpClient): Retrofit {
+  fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .client(okHttpClient)
       .baseUrl("https://api.themoviedb.org/")
@@ -61,25 +62,37 @@ class NetworkModule {
 
   @Provides
   @Singleton
-  fun provideDiscoverService(@NonNull retrofit: Retrofit): TheDiscoverService {
+  fun provideDiscoverService(retrofit: Retrofit): TheDiscoverService {
     return retrofit.create(TheDiscoverService::class.java)
   }
 
   @Provides
   @Singleton
-  fun providePeopleService(@NonNull retrofit: Retrofit): PeopleService {
+  fun provideDiscoverClient(service: TheDiscoverService): TheDiscoverClient {
+    return TheDiscoverClient(service)
+  }
+
+  @Provides
+  @Singleton
+  fun providePeopleService(retrofit: Retrofit): PeopleService {
     return retrofit.create(PeopleService::class.java)
   }
 
   @Provides
   @Singleton
-  fun provideMovieService(@NonNull retrofit: Retrofit): MovieService {
+  fun providePeopleClient(service: PeopleService): PeopleClient {
+    return PeopleClient(service)
+  }
+
+  @Provides
+  @Singleton
+  fun provideMovieService(retrofit: Retrofit): MovieService {
     return retrofit.create(MovieService::class.java)
   }
 
   @Provides
   @Singleton
-  fun provideTvService(@NonNull retrofit: Retrofit): TvService {
+  fun provideTvService(retrofit: Retrofit): TvService {
     return retrofit.create(TvService::class.java)
   }
 }

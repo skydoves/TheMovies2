@@ -40,32 +40,26 @@ import com.skydoves.themovies2.view.adapter.TvListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
 
 @BindingAdapter("adapterMovieList")
-fun bindAdapterMovieList(view: RecyclerView, resource: Resource<List<Movie>>?) {
-  view.bindResource(resource) {
-    if (resource != null) {
-      val adapter = view.adapter as? MovieListAdapter
-      adapter?.addMovieList(resource)
-    }
+fun bindAdapterMovieList(view: RecyclerView, movies: List<Movie>?) {
+  movies?.let {
+    val adapter = view.adapter as? MovieListAdapter
+    adapter?.addMovieList(it)
   }
 }
 
 @BindingAdapter("adapterPersonList")
-fun bindAdapterPersonList(view: RecyclerView, resource: Resource<List<Person>>?) {
-  view.bindResource(resource) {
-    if (resource != null) {
-      val adapter = view.adapter as? PeopleAdapter
-      adapter?.addPeople(resource)
-    }
+fun bindAdapterPersonList(view: RecyclerView, people: List<Person>?) {
+  people?.let {
+    val adapter = view.adapter as? PeopleAdapter
+    adapter?.addPeople(it)
   }
 }
 
 @BindingAdapter("adapterTvList")
-fun bindAdapterTvList(view: RecyclerView, resource: Resource<List<Tv>>?) {
-  view.bindResource(resource) {
-    if (resource != null) {
-      val adapter = view.adapter as? TvListAdapter
-      adapter?.addTvList(resource)
-    }
+fun bindAdapterTvList(view: RecyclerView, tvs: List<Tv>?) {
+  tvs?.let {
+    val adapter = view.adapter as? TvListAdapter
+    adapter?.addTvList(it)
   }
 }
 

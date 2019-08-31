@@ -28,17 +28,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.GridLayoutManager
 import com.skydoves.baserecyclerviewadapter.RecyclerViewPaginator
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.compose.ViewModelFragment
 import com.skydoves.themovies2.databinding.MainFragmentStarBinding
-import com.skydoves.themovies2.models.Status
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.view.adapter.PeopleAdapter
 import com.skydoves.themovies2.view.ui.details.person.PersonDetailActivity
 import com.skydoves.themovies2.view.viewholder.PeopleViewHolder
 import kotlinx.android.synthetic.main.main_fragment_movie.*
+import org.jetbrains.anko.support.v4.toast
 
 class PersonListFragment : ViewModelFragment(), PeopleViewHolder.Delegate {
 
@@ -60,6 +61,7 @@ class PersonListFragment : ViewModelFragment(), PeopleViewHolder.Delegate {
   override fun onAttach(context: Context) {
     super.onAttach(context)
     loadMore(page = 1)
+    observeMessages()
   }
 
   private fun initializeUI() {
@@ -67,16 +69,20 @@ class PersonListFragment : ViewModelFragment(), PeopleViewHolder.Delegate {
     recyclerView.layoutManager = GridLayoutManager(context, 2)
     RecyclerViewPaginator(
       recyclerView = recyclerView,
-      isLoading = { viewModel.getPeopleValues()?.status == Status.LOADING },
+      isLoading = { false },
       loadMore = { loadMore(it) },
-      onLast = { viewModel.getPeopleValues()?.onLastPage!! })
+      onLast = { false }
+    ).apply {
+      threshold = 0
+      currentPage = 1
+    }
   }
 
-  private fun loadMore(page: Int) {
-    viewModel.postPeoplePage(page)
-  }
+  private fun loadMore(page: Int) = viewModel.postPeoplePage(page)
 
-  override fun onItemClick(person: Person, view: View) {
+  override fun onItemClick(person: Person, view: View) =
     PersonDetailActivity.startActivity(activity, person, view)
-  }
+
+  private fun observeMessages() =
+    viewModel.toastLiveData.observe(this) { toast(it) }
 }

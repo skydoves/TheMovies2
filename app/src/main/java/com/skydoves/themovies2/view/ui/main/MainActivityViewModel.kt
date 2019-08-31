@@ -26,14 +26,15 @@ package com.skydoves.themovies2.view.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.switchMap
-import com.skydoves.themovies2.models.Resource
+import androidx.lifecycle.viewModelScope
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.repository.DiscoverRepository
 import com.skydoves.themovies2.repository.PeopleRepository
-import com.skydoves.themovies2.utils.AbsentLiveData
+import kotlinx.coroutines.Dispatchers
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -44,29 +45,48 @@ constructor(
 ) : ViewModel() {
 
   private var moviePageLiveData: MutableLiveData<Int> = MutableLiveData()
-  val movieListLiveData: LiveData<Resource<List<Movie>>>
+  val movieListLiveData: LiveData<List<Movie>>
 
   private var tvPageLiveData: MutableLiveData<Int> = MutableLiveData()
-  val tvListLiveData: LiveData<Resource<List<Tv>>>
+  val tvListLiveData: LiveData<List<Tv>>
 
   private var peoplePageLiveData: MutableLiveData<Int> = MutableLiveData()
-  val peopleLiveData: LiveData<Resource<List<Person>>>
+  val peopleLiveData: LiveData<List<Person>>
+
+  val toastLiveData: MutableLiveData<String> = MutableLiveData()
 
   init {
     Timber.d("injection MainActivityViewModel")
 
-    movieListLiveData = moviePageLiveData.switchMap {
-      moviePageLiveData.value?.let { discoverRepository.loadMovies(it) }
-        ?: AbsentLiveData.create()
+    movieListLiveData = moviePageLiveData.switchMap { page ->
+      launchOnViewModelScope {
+        discoverRepository.loadMovies(page)
+        { toastLiveData.postValue(it) }
+      }
     }
 
-    tvListLiveData = tvPageLiveData.switchMap {
-      tvPageLiveData.value?.let { discoverRepository.loadTvs(it) } ?: AbsentLiveData.create()
+    tvListLiveData = tvPageLiveData.switchMap { page ->
+      launchOnViewModelScope {
+        discoverRepository.loadTvs(page)
+        { toastLiveData.postValue(it) }
+      }
     }
 
-    peopleLiveData = peoplePageLiveData.switchMap {
-      peoplePageLiveData.value?.let { peopleRepository.loadPeople(it) }
-        ?: AbsentLiveData.create()
+    peopleLiveData = peoplePageLiveData.switchMap { page ->
+      launchOnViewModelScope {
+        peopleRepository.loadPeople(page)
+        { toastLiveData.postValue(it) }
+      }
+    }
+  }
+
+  private fun <T> launchOnViewModelScope(block: suspend () -> T): LiveData<T> {
+    return liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+      try {
+        emit(block())
+      } catch (e: Throwable) {
+        Timber.e(e)
+      }
     }
   }
 

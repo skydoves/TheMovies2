@@ -43,11 +43,7 @@ constructor(private val repository: PeopleRepository) : ViewModel() {
   init {
     Timber.d("Injection : PersonDetailViewModel")
 
-    personLiveData = personIdLiveData.switchMap {
-      personIdLiveData.value?.let {
-        repository.loadPersonDetail(it)
-      } ?: AbsentLiveData.create()
-    }
+    personLiveData =  MutableLiveData()
   }
 
   fun postPersonId(id: Int) = personIdLiveData.postValue(id)

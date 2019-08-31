@@ -23,91 +23,61 @@
  */
 package com.skydoves.themovies2.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.skydoves.themovies2.api.ApiResponse
-import com.skydoves.themovies2.api.service.PeopleService
-import com.skydoves.themovies2.mappers.PeopleResponseMapper
-import com.skydoves.themovies2.mappers.PersonDetailResponseMapper
-import com.skydoves.themovies2.models.Resource
-import com.skydoves.themovies2.models.entity.Person
-import com.skydoves.themovies2.models.network.PeopleResponse
-import com.skydoves.themovies2.models.network.PersonDetail
+import com.skydoves.themovies2.api.client.PeopleClient
+import com.skydoves.themovies2.api.message
 import com.skydoves.themovies2.room.PeopleDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PeopleRepository @Inject
-constructor(val peopleService: PeopleService, val peopleDao: PeopleDao) :
-  Repository {
+constructor(
+  private val peopleClient: PeopleClient,
+  private val peopleDao: PeopleDao
+) : Repository {
 
   init {
     Timber.d("Injection PeopleRepository")
   }
 
-  fun loadPeople(page: Int): LiveData<Resource<List<Person>>> {
-    return object : NetworkBoundRepository<List<Person>, PeopleResponse, PeopleResponseMapper>() {
-      override fun saveFetchData(items: PeopleResponse) {
-        for (item in items.results) {
-          item.page = page
+  suspend fun loadPeople(page: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
+    var people = peopleDao.getPeople(page)
+    if (people.isEmpty()) {
+      peopleClient.fetchPopularPeople(page) { response ->
+        when (response) {
+          is ApiResponse.Success -> {
+            response.data?.let { data ->
+              people = data.results
+              people.forEach { it.page = page }
+              peopleDao.insertPeople(people)
+            }
+          }
+          is ApiResponse.Failure.Error -> error(response.message())
+          is ApiResponse.Failure.Exception -> error(response.message())
         }
-        peopleDao.insertPeople(items.results)
       }
-
-      override fun shouldFetch(data: List<Person>?): Boolean {
-        return data == null || data.isEmpty()
-      }
-
-      override fun loadFromDb(): LiveData<List<Person>> {
-        return peopleDao.getPeople(page_ = page)
-      }
-
-      override fun fetchService(): LiveData<ApiResponse<PeopleResponse>> {
-        return peopleService.fetchPopularPeople(page = page)
-      }
-
-      override fun mapper(): PeopleResponseMapper {
-        return PeopleResponseMapper()
-      }
-
-      override fun onFetchFailed(message: String?) {
-        Timber.d("onFetchFailed : $message")
-      }
-    }.asLiveData()
+    }
+    people
   }
 
-  fun loadPersonDetail(id: Int): LiveData<Resource<PersonDetail>> {
-    return object : NetworkBoundRepository<PersonDetail, PersonDetail, PersonDetailResponseMapper>() {
-      override fun saveFetchData(items: PersonDetail) {
-        val person = peopleDao.getPerson(id_ = id)
-        person.personDetail = items
-        peopleDao.updatePerson(person = person)
+  suspend fun loadPersonDetail(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
+    val person = peopleDao.getPerson(id)
+    peopleClient.fetchPersonDetai(id) { response ->
+      when (response) {
+        is ApiResponse.Success -> {
+          response.data?.let { data ->
+            person.personDetail = data
+            peopleDao.updatePerson(person)
+          }
+        }
+        is ApiResponse.Failure.Error -> error(response.message())
+        is ApiResponse.Failure.Exception -> error(response.message())
       }
-
-      override fun shouldFetch(data: PersonDetail?): Boolean {
-        return data == null || data.biography.isEmpty()
-      }
-
-      override fun loadFromDb(): LiveData<PersonDetail> {
-        val person = peopleDao.getPerson(id_ = id)
-        val data: MutableLiveData<PersonDetail> = MutableLiveData()
-        data.value = person.personDetail
-        return data
-      }
-
-      override fun fetchService(): LiveData<ApiResponse<PersonDetail>> {
-        return peopleService.fetchPersonDetail(id = id)
-      }
-
-      override fun mapper(): PersonDetailResponseMapper {
-        return PersonDetailResponseMapper()
-      }
-
-      override fun onFetchFailed(message: String?) {
-        Timber.d("onFetchFailed : $message")
-      }
-    }.asLiveData()
+    }
+    person.personDetail
   }
 }

@@ -54,7 +54,7 @@ class TvListViewHolder(
   private fun drawItem() {
     itemView.run {
       item_poster_title.text = tv.name
-      tv.poster_path.let {
+      tv.poster_path?.let {
         Glide.with(context)
           .load(Api.getPosterPath(it))
           .listener(GlidePalette.with(Api.getPosterPath(it))
@@ -66,9 +66,7 @@ class TvListViewHolder(
     }
   }
 
-  override fun onClick(v: View?) {
-    delegate.onItemClick(tv)
-  }
+  override fun onClick(v: View?) = delegate.onItemClick(tv)
 
   override fun onLongClick(p0: View?) = false
 }

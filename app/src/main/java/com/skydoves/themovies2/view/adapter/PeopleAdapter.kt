@@ -25,10 +25,8 @@ package com.skydoves.themovies2.view.adapter
 
 import android.view.View
 import com.skydoves.baserecyclerviewadapter.BaseAdapter
-import com.skydoves.baserecyclerviewadapter.BaseViewHolder
 import com.skydoves.baserecyclerviewadapter.SectionRow
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.models.Resource
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.view.viewholder.PeopleViewHolder
 
@@ -39,18 +37,12 @@ class PeopleAdapter(val delegate: PeopleViewHolder.Delegate) :
     addSection(ArrayList<Person>())
   }
 
-  fun addPeople(resource: Resource<List<Person>>) {
-    resource.data?.let {
-      sections()[0].addAll(resource.data)
-      notifyDataSetChanged()
-    }
+  fun addPeople(people: List<Person>) {
+    sections()[0].addAll(people)
+    notifyDataSetChanged()
   }
 
-  override fun layout(sectionRow: SectionRow): Int {
-    return R.layout.item_person
-  }
+  override fun layout(sectionRow: SectionRow) = R.layout.item_person
 
-  override fun viewHolder(layout: Int, view: View): BaseViewHolder {
-    return PeopleViewHolder(view, delegate)
-  }
+  override fun viewHolder(layout: Int, view: View) = PeopleViewHolder(view, delegate)
 }
