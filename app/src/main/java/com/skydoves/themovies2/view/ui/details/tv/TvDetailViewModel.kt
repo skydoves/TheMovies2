@@ -25,7 +25,8 @@ package com.skydoves.themovies2.view.ui.details.tv
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
+import com.skydoves.themovies2.compose.DispatchViewModel
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
@@ -34,21 +35,34 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class TvDetailViewModel @Inject
-constructor(private val repository: TvRepository) : ViewModel() {
+constructor(private val tvRepository: TvRepository) : DispatchViewModel() {
 
   private val tvIdLiveData: MutableLiveData<Int> = MutableLiveData()
   val keywordListLiveData: LiveData<List<Keyword>>
   val videoListLiveData: LiveData<List<Video>>
   val reviewListLiveData: LiveData<List<Review>>
+  val toastLiveData: MutableLiveData<String> = MutableLiveData()
 
   init {
     Timber.d("Injection TvDetailViewModel")
 
-    this.keywordListLiveData = MutableLiveData()
+    this.keywordListLiveData = tvIdLiveData.switchMap { id ->
+      launchOnViewModelScope {
+        tvRepository.loadKeywordList(id) { toastLiveData.postValue(it) }
+      }
+    }
 
-    this.videoListLiveData = MutableLiveData()
+    this.videoListLiveData = tvIdLiveData.switchMap { id ->
+      launchOnViewModelScope {
+        tvRepository.loadVideoList(id) { toastLiveData.postValue(it) }
+      }
+    }
 
-    this.reviewListLiveData = MutableLiveData()
+    this.reviewListLiveData = tvIdLiveData.switchMap { id ->
+      launchOnViewModelScope {
+        tvRepository.loadReviewsList(id) { toastLiveData.postValue(it) }
+      }
+    }
   }
 
   fun postTvId(id: Int) = tvIdLiveData.postValue(id)

@@ -41,7 +41,7 @@ import javax.inject.Singleton
 class MovieRepository @Inject
 constructor(
   private val movieClient: MovieClient,
-  val movieDao: MovieDao
+  private val movieDao: MovieDao
 ) : Repository {
 
   init {

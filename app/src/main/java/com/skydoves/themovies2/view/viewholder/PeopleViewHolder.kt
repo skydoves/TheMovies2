@@ -62,9 +62,8 @@ class PeopleViewHolder(
     }
   }
 
-  override fun onClick(p0: View?) {
+  override fun onClick(p0: View?) =
     delegate.onItemClick(person, itemView.item_person_profile)
-  }
 
   override fun onLongClick(p0: View?) = false
 }

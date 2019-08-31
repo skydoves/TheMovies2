@@ -28,6 +28,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.themovies2.R
@@ -45,6 +46,7 @@ import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_tv_detail.*
 import kotlinx.android.synthetic.main.layout_tv_detail_body.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 
 class TvDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
 
@@ -63,8 +65,8 @@ class TvDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
       detailHeader.tv = getTvFromIntent()
       detailBody.tv = getTvFromIntent()
     }
-
     initializeUI()
+    observeMessages()
   }
 
   private fun initializeUI() {
@@ -78,9 +80,11 @@ class TvDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
     detail_body_recyclerView_reviews.setHasFixedSize(true)
   }
 
-  private fun getTvFromIntent(): Tv {
-    return intent.getParcelableExtra(tvId) as Tv
-  }
+  private fun getTvFromIntent() =
+    intent.getParcelableExtra(tvId) as Tv
+
+  private fun observeMessages() =
+    vm.toastLiveData.observe(this) { toast(it) }
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     if (item?.itemId == android.R.id.home) onBackPressed()
