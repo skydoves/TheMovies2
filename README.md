@@ -37,7 +37,7 @@ tmdb_api_key=YOUR_API_KEY
 - Ripple animation, Shared element transition
 - Custom Views [AndroidTagView](https://github.com/whilu/AndroidTagView), [ExpandableTextView](https://github.com/Manabu-GT/ExpandableTextView)
 
-## Find this library useful? :heart:
+## Find this repository useful? :heart:
 Support it by joining __[stargazers](https://github.com/skydoves/TheMovies/stargazers2)__ for this repository. :star: <br>
 And __[follow](https://github.com/skydoves)__ me for my next creations! 🤩
 
