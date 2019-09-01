@@ -1,4 +1,4 @@
-# TheMovies
+# TheMovies2
 ![license](https://img.shields.io/badge/license-MIT%20License-blue.svg)
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
 [![Build Status](https://travis-ci.org/skydoves/TheMovies2.svg?branch=master)](https://travis-ci.org/skydoves/TheMovies2)
@@ -25,8 +25,8 @@ tmdb_api_key=YOUR_API_KEY
 - Architecture
   - MVVM Architecture (View - DataBinding - ViewModel - Model)
   - Repository pattern
+  - [Koin](https://github.com/InsertKoinIO/koin) - dependency injection
 - Material Design & Animations
-- The Movie DB API
 - [Retrofit2 & Gson](https://github.com/square/retrofit) - constructing the REST API
 - [OkHttp3](https://github.com/square/okhttp) - implementing interceptor, logging and mocking web server
 - [Glide](https://github.com/bumptech/glide) - loading images
@@ -38,7 +38,8 @@ tmdb_api_key=YOUR_API_KEY
 - Custom Views [AndroidTagView](https://github.com/whilu/AndroidTagView), [ExpandableTextView](https://github.com/Manabu-GT/ExpandableTextView)
 
 ## Find this library useful? :heart:
-Support it by joining __[stargazers](https://github.com/skydoves/TheMovies/stargazers2)__ for this repository. :star:
+Support it by joining __[stargazers](https://github.com/skydoves/TheMovies/stargazers2)__ for this repository. :star: <br>
+And __[follow](https://github.com/skydoves)__ me for my next creations! 🤩
 
 ## Supports :coffee:
 If you feel like support me a coffee for my efforts, I would greatly appreciate it. <br><br>
