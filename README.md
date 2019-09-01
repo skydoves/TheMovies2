@@ -7,12 +7,12 @@ A simple project using [The Movie DB](https://www.themoviedb.org) based on Kotli
 ![preview1](https://user-images.githubusercontent.com/24237865/64071373-e41f9c80-ccb3-11e9-996b-888b5bf9877d.gif)
 
 ## How to build on your environment
-Add your API key in local.properties file.
+Add your [The Movie DB](https://www.themoviedb.org)'s API key in your `local.properties` file.
 ```xml
 tmdb_api_key=YOUR_API_KEY
 ```
 
-## Specs & Open-source libraries
+## Tech stack & Open-source libraries
 - Minimum SDK level 16
 - 100% [Kotlin](https://kotlinlang.org/) based + [Coroutines](https://github.com/Kotlin/kotlinx.coroutines)
 - JetPack
@@ -25,13 +25,13 @@ tmdb_api_key=YOUR_API_KEY
   - Repository pattern
 - Material Design & Animations
 - The Movie DB API
-- [Retrofit2 & Gson](https://github.com/square/retrofit) for constructing the REST API
-- [OkHttp3](https://github.com/square/okhttp) for implementing interceptor, logging and mocking web server
-- [Glide](https://github.com/bumptech/glide) for loading images
-- [BaseRecyclerViewAdapter](https://github.com/skydoves/BaseRecyclerViewAdapter) for implementing adapters and viewHolders
-- [Mockito-kotlin](https://github.com/nhaarman/mockito-kotlin) for Junit mock test
-- [Timber](https://github.com/JakeWharton/timber) for logging
-- [Stetho](https://github.com/facebook/stetho) for debugging persistence data & network packets
+- [Retrofit2 & Gson](https://github.com/square/retrofit) - constructing the REST API
+- [OkHttp3](https://github.com/square/okhttp) - implementing interceptor, logging and mocking web server
+- [Glide](https://github.com/bumptech/glide) - loading images
+- [BaseRecyclerViewAdapter](https://github.com/skydoves/BaseRecyclerViewAdapter) - implementing adapters and viewHolders
+- [Mockito-kotlin](https://github.com/nhaarman/mockito-kotlin) - Junit mock test
+- [Timber](https://github.com/JakeWharton/timber) - logging
+- [Stetho](https://github.com/facebook/stetho) - debugging persistence data & network packets
 - Ripple animation, Shared element transition
 - Custom Views [AndroidTagView](https://github.com/whilu/AndroidTagView), [ExpandableTextView](https://github.com/Manabu-GT/ExpandableTextView)
 
