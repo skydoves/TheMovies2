@@ -24,8 +24,9 @@
 
 package com.skydoves.themovies2.api.api
 
+import com.skydoves.themovies2.api.ApiResponse
+import com.skydoves.themovies2.api.async
 import com.skydoves.themovies2.api.service.TheDiscoverService
-import com.skydoves.themovies2.utils.LiveDataTestUtil
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -45,19 +46,29 @@ class TheDiscoverServiceTest : ApiAbstract<TheDiscoverService>() {
   @Test
   fun fetchMovieListTest() {
     enqueueResponse("/tmdb_movie.json")
-    val response = LiveDataTestUtil.getValue(service.fetchDiscoverMovie(1))
-    assertThat(response.body?.results?.get(0)?.id, `is`(164558))
-    assertThat(response.body?.total_results, `is`(61))
-    assertThat(response.body?.total_pages, `is`(4))
+    this.service.fetchDiscoverMovie(1).async {
+      when (it) {
+        is ApiResponse.Success -> {
+          assertThat(it.data?.results?.get(0)?.id, `is`(164558))
+          assertThat(it.data?.total_results, `is`(61))
+          assertThat(it.data?.total_pages, `is`(4))
+        }
+      }
+    }
   }
 
   @Throws(IOException::class)
   @Test
   fun fetchTvListTest() {
     enqueueResponse("/tmdb_tv.json")
-    val response = LiveDataTestUtil.getValue(service.fetchDiscoverTv(1))
-    assertThat(response.body?.results?.get(0)?.id, `is`(61889))
-    assertThat(response.body?.total_results, `is`(61470))
-    assertThat(response.body?.total_pages, `is`(3074))
+    this.service.fetchDiscoverTv(1).async {
+      when (it) {
+        is ApiResponse.Success -> {
+          assertThat(it.data?.results?.get(0)?.id, `is`(61889))
+          assertThat(it.data?.total_results, `is`(61470))
+          assertThat(it.data?.total_pages, `is`(3074))
+        }
+      }
+    }
   }
 }

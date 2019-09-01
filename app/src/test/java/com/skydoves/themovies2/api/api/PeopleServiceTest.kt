@@ -24,8 +24,9 @@
 
 package com.skydoves.themovies2.api.api
 
+import com.skydoves.themovies2.api.ApiResponse
+import com.skydoves.themovies2.api.async
 import com.skydoves.themovies2.api.service.PeopleService
-import com.skydoves.themovies2.utils.LiveDataTestUtil
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
@@ -45,19 +46,29 @@ class PeopleServiceTest : ApiAbstract<PeopleService>() {
   @Test
   fun fetchPersonListTest() {
     enqueueResponse("/tmdb_people.json")
-    val response = LiveDataTestUtil.getValue(service.fetchPopularPeople(1))
-    assertThat(response.body?.results?.get(0)?.id, `is`(28782))
-    assertThat(response.body?.total_pages, `is`(984))
-    assertThat(response.body?.total_results, `is`(19671))
+    this.service.fetchPopularPeople(1).async {
+      when (it) {
+        is ApiResponse.Success -> {
+          assertThat(it.data?.results?.get(0)?.id, `is`(28782))
+          assertThat(it.data?.total_pages, `is`(984))
+          assertThat(it.data?.total_results, `is`(19671))
+        }
+      }
+    }
   }
 
   @Throws(IOException::class)
   @Test
   fun fetchPersonDetail() {
     enqueueResponse("tmdb_person.json")
-    val response = LiveDataTestUtil.getValue(service.fetchPersonDetail(123))
-    assertThat(response.body?.birthday, `is`("1963-12-18"))
-    assertThat(response.body?.known_for_department, `is`("Acting"))
-    assertThat(response.body?.place_of_birth, `is`("Shawnee, Oklahoma, USA"))
+    this.service.fetchPersonDetail(123).async {
+      when (it) {
+        is ApiResponse.Success -> {
+          assertThat(it.data?.birthday, `is`("1963-12-18"))
+          assertThat(it.data?.known_for_department, `is`("Acting"))
+          assertThat(it.data?.place_of_birth, `is`("Shawnee, Oklahoma, USA"))
+        }
+      }
+    }
   }
 }

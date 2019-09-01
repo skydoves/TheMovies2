@@ -25,11 +25,11 @@
 package com.skydoves.themovies2.api.api
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.skydoves.themovies2.api.LiveDataCallAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import okio.Okio
+import okio.buffer
+import okio.source
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.After
@@ -71,7 +71,7 @@ abstract class ApiAbstract<T> {
   @Throws(IOException::class)
   private fun enqueueResponse(fileName: String, headers: Map<String, String>) {
     val inputStream = javaClass.classLoader!!.getResourceAsStream("api-response/$fileName")
-    val source = Okio.buffer(Okio.source(inputStream))
+    val source = inputStream.source().buffer()
     val mockResponse = MockResponse()
     for ((key, value) in headers) {
       mockResponse.addHeader(key, value)
@@ -81,11 +81,10 @@ abstract class ApiAbstract<T> {
 
   fun createService(clazz: Class<T>): T {
     return Retrofit.Builder()
-        .baseUrl(mockWebServer.url("/"))
-        .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(LiveDataCallAdapterFactory())
-        .build()
-        .create(clazz)
+      .baseUrl(mockWebServer.url("/"))
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
+      .create(clazz)
   }
 
   fun assertRequestPath(path: String) {
