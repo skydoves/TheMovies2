@@ -1,5 +1,7 @@
 # TheMovies
-![license](https://img.shields.io/badge/license-MIT%20License-blue.svg) 
+![license](https://img.shields.io/badge/license-MIT%20License-blue.svg)
+[![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
+[![Build Status](https://travis-ci.org/skydoves/TheMovies2.svg?branch=master)](https://travis-ci.org/skydoves/TheMovies2)
 
 A simple project using [The Movie DB](https://www.themoviedb.org) based on Kotlin MVVM architecture and material designs & animations.<br>
 
