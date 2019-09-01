@@ -86,5 +86,5 @@ class TvListFragment : ViewModelFragment(), TvListViewHolder.Delegate {
     TvDetailActivity.startActivityModel(context, tv)
 
   private fun observeMessages() =
-    viewModel.toastLiveData.observe(this) { toast(it) }
+    this.viewModel.toastLiveData.observe(this) { toast(it) }
 }

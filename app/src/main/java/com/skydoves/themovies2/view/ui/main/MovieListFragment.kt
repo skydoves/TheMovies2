@@ -86,5 +86,5 @@ class MovieListFragment : ViewModelFragment(), MovieListViewHolder.Delegate {
     MovieDetailActivity.startActivityModel(context, movie)
 
   private fun observeMessages() =
-    viewModel.toastLiveData.observe(this) { toast(it) }
+    this.viewModel.toastLiveData.observe(this) { toast(it) }
 }

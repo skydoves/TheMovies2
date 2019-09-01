@@ -86,5 +86,5 @@ class PersonListFragment : ViewModelFragment(), PeopleViewHolder.Delegate {
     PersonDetailActivity.startActivity(activity, person, view)
 
   private fun observeMessages() =
-    viewModel.toastLiveData.observe(this) { toast(it) }
+    this.viewModel.toastLiveData.observe(this) { toast(it) }
 }

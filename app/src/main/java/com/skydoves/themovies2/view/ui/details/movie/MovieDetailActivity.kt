@@ -94,7 +94,7 @@ class MovieDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
     intent.getParcelableExtra(movieId) as Movie
 
   private fun observeMessages() =
-    vm.toastLiveData.observe(this) { toast(it) }
+    this.vm.toastLiveData.observe(this) { toast(it) }
 
   companion object {
     private const val movieId = "movie"

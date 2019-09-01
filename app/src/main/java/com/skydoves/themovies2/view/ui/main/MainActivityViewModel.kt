@@ -74,12 +74,9 @@ constructor(
     }
   }
 
-  fun getMovieListValues() = movieListLiveData.value
   fun postMoviePage(page: Int) = moviePageLiveData.postValue(page)
 
-  fun getTvListValues() = tvListLiveData.value
   fun postTvPage(page: Int) = tvPageLiveData.postValue(page)
 
-  fun getPeopleValues() = peopleLiveData.value
   fun postPeoplePage(page: Int) = peoplePageLiveData.postValue(page)
 }

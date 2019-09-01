@@ -84,7 +84,7 @@ class TvDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
     intent.getParcelableExtra(tvId) as Tv
 
   private fun observeMessages() =
-    vm.toastLiveData.observe(this) { toast(it) }
+    this.vm.toastLiveData.observe(this) { toast(it) }
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     if (item?.itemId == android.R.id.home) onBackPressed()

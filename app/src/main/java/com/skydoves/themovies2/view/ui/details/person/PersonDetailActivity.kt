@@ -67,7 +67,7 @@ class PersonDetailActivity : ViewModelActivity() {
     intent.getParcelableExtra(personId) as Person
 
   private fun observeMessages() =
-    vm.toastLiveData.observe(this) { toast(it) }
+    this.vm.toastLiveData.observe(this) { toast(it) }
 
   companion object {
     const val personId = "person"
