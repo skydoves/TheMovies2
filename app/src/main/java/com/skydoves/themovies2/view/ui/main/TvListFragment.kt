@@ -75,7 +75,7 @@ class TvListFragment : ViewModelFragment(), TvListViewHolder.Delegate {
       loadMore = { loadMore(it) },
       onLast = { false }
     ).apply {
-      threshold = 0
+      threshold = 4
       currentPage = 1
     }
   }

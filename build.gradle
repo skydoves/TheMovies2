@@ -1,4 +1,11 @@
+
+apply from: './versionsPlugin.gradle'
+
 buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
 
     ext {
         // sdk and tools
@@ -6,49 +13,69 @@ buildscript {
         minSdkVersion = 16
         targetSdkVersion = 29
 
-        // application dependencies
+        // build tool
+        gradleBuildTool = '3.5.0'
+
+        // support library
         androidxVersion = '1.0.0'
         accompatVersion = '1.1.0-rc01'
-        androidActivity = '1.1.0-alpha02'
-        androidFragment = '1.2.0-alpha02'
-        materialVersion = '1.1.0-alpha09'
         recyclerVersion = '1.1.0-beta03'
+        materialVersion = '1.1.0-alpha09'
+
+        // kotlin
         kotlinVersion = '1.3.50'
         ankoVersion = '0.10.8'
-        coroutinesVersion = '1.3.0'
+
+        // architecture components
         archCompomentVersion = '2.0.0'
-        roomVersion = '2.2.0-beta01'
         lifecycleVersion = '2.2.0-alpha03'
+        roomVersion = '2.2.0-beta01'
+
+        // koin
         koinVersion = '2.0.1'
-        retrofitVersion = '2.3.0'
-        okhttpVersion = '3.11.0'
-        gsonVersion = '2.8.2'
-        timberVersion = '4.7.1'
-        stethoVersion = '1.5.1'
+
+        // coroutines
+        coroutinesVersion = '1.3.0'
+
+        // network
+        retrofitVersion = '2.6.0'
+        okhttpVersion = '4.1.0'
+        gsonVersion = '2.8.5'
+
+        // glide
         glideVersion = '4.9.0'
         glidePaletteVersion = '2.1.2'
-        baseAdapterVersion = '0.1.3'
-        androidTagViewVersion = '1.1.4'
-        expandableTextViewVersion = '0.1.4'
-        mockWebServerVersion = '3.9.0'
-        mockitoKotlinVersion = '2.0.0-RC1'
-        junitVersion = '4.12'
-        espressoVersion = '3.1.1'
-        jacocoVersion = '0.8.1'
-        androidxTest = '1.1.0'
-        androidxTestRules = '1.2.0-alpha04'
-        spotlessVersion = '3.24.2'
-    }
 
-    repositories {
-        google()
-        jcenter()
+        // adapter
+        baseAdapterVersion = '0.1.3'
+
+        // debugging
+        timberVersion = '4.7.1'
+        stethoVersion = '1.5.1'
+
+        // custom view
+        androidTagViewVersion = '1.1.7'
+        expandableTextViewVersion = '0.1.4'
+
+        // unit test
+        junitVersion = '4.12'
+        androidxTest = '1.1.1'
+        androidxTestRules = '1.2.0-alpha04'
+        mockWebServerVersion = '3.9.0'
+        mockitoKotlinVersion = '2.1.0'
+        espressoVersion = '3.2.0'
+        jacocoVersion = '0.8.4'
+
+        // plugins
+        spotlessVersion = '3.24.2'
+        versionPlugin  = '0.23.0'
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.5.0"
+        classpath "com.android.tools.build:gradle:$gradleBuildTool"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "com.diffplug.spotless:spotless-plugin-gradle:$spotlessVersion"
+        classpath "com.github.ben-manes:gradle-versions-plugin:$versionPlugin"
         classpath "org.jacoco:org.jacoco.core:$jacocoVersion"
     }
 }

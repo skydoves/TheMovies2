@@ -27,7 +27,7 @@ package com.skydoves.themovies2.api
 import okhttp3.ResponseBody
 import retrofit2.Response
 
-@Suppress("unused", "HasPlatformType", "SpellCheckingInspection", "MemberVisibilityCanBePrivate")
+@Suppress("unused")
 sealed class ApiResponse<out T> {
 
   /**
