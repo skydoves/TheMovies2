@@ -47,27 +47,27 @@ val networkModule = module {
       .build()
   }
 
-  single(createdAtStart = false) {
+  single {
     get<Retrofit>().create(TheDiscoverService::class.java)
   }
 
-  single(createdAtStart = false) {
+  single {
     get<Retrofit>().create(PeopleService::class.java)
   }
 
-  single(createdAtStart = false) {
+  single {
     get<Retrofit>().create(MovieService::class.java)
   }
 
-  single(createdAtStart = false) {
+  single {
     get<Retrofit>().create(TvService::class.java)
   }
 
-  single(createdAtStart = false) { TheDiscoverClient(get()) }
+  single { TheDiscoverClient(get()) }
 
-  single(createdAtStart = false) { PeopleClient(get()) }
+  single { PeopleClient(get()) }
 
-  single(createdAtStart = false) { MovieClient(get()) }
+  single { MovieClient(get()) }
 
-  single(createdAtStart = false) { TvClient(get()) }
+  single { TvClient(get()) }
 }

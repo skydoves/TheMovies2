@@ -23,8 +23,8 @@ import com.skydoves.themovies2.repository.TvRepository
 import org.koin.dsl.module
 
 val repositoryModule = module {
-  single(createdAtStart = false) { DiscoverRepository(get(), get(), get()) }
-  single(createdAtStart = false) { MovieRepository(get(), get()) }
-  single(createdAtStart = false) { PeopleRepository(get(), get()) }
-  single(createdAtStart = false) { TvRepository(get(), get()) }
+  single { DiscoverRepository(get(), get(), get()) }
+  single { MovieRepository(get(), get()) }
+  single { PeopleRepository(get(), get()) }
+  single { TvRepository(get(), get()) }
 }

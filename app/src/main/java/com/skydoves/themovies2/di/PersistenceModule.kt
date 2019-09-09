@@ -29,7 +29,7 @@ val persistenceModule = module {
       .build()
   }
 
-  single(createdAtStart = false) { get<AppDatabase>().movieDao() }
-  single(createdAtStart = false) { get<AppDatabase>().tvDao() }
-  single(createdAtStart = false) { get<AppDatabase>().peopleDao() }
+  single { get<AppDatabase>().movieDao() }
+  single { get<AppDatabase>().tvDao() }
+  single { get<AppDatabase>().peopleDao() }
 }
