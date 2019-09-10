@@ -33,23 +33,20 @@ import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.utils.KeywordListMapper
+import com.skydoves.whatif.whatIfNotNull
 
 @BindingAdapter("visibilityByResource")
 fun bindVisibilityByResource(view: View, anyList: List<Any>?) {
-  anyList?.let {
-    if (it.isNotEmpty()) {
-      view.visible()
-    }
+  anyList.whatIfNotNull {
+    view.visible()
   }
 }
 
 @BindingAdapter("mapKeywordList")
 fun bindMapKeywordList(view: TagContainerLayout, keywords: List<Keyword>?) {
-  keywords?.let {
+  keywords.whatIfNotNull {
     view.tags = KeywordListMapper.mapToStringList(it)
-    if (it.isNotEmpty()) {
-      view.visible()
-    }
+    view.visible()
   }
 }
 
@@ -60,11 +57,9 @@ fun bindBiography(view: TextView, personDetail: PersonDetail?) {
 
 @BindingAdapter("nameTags")
 fun bindTags(view: TagContainerLayout, personDetail: PersonDetail?) {
-  personDetail?.also_known_as?.let {
+  personDetail?.also_known_as?.whatIfNotNull {
     view.tags = it
-    if (it.isNotEmpty()) {
-      view.visible()
-    }
+    view.visible()
   }
 }
 
@@ -82,34 +77,40 @@ fun bindAirDate(view: TextView, tv: Tv) {
 
 @BindingAdapter("bindBackDrop")
 fun bindBackDrop(view: ImageView, movie: Movie) {
-  if (movie.backdrop_path != null) {
-    Glide.with(view.context).load(Api.getBackdropPath(movie.backdrop_path))
-      .listener(view.requestGlideListener())
-      .into(view)
-  } else {
-    Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path!!))
-      .listener(view.requestGlideListener())
-      .into(view)
-  }
+  movie.backdrop_path.whatIfNotNull(
+    whatIf = {
+      Glide.with(view.context).load(Api.getBackdropPath(it))
+        .listener(view.requestGlideListener())
+        .into(view)
+    },
+    whatIfNot = {
+      Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
+        .listener(view.requestGlideListener())
+        .into(view)
+    }
+  )
 }
 
 @BindingAdapter("bindBackDrop")
 fun bindBackDrop(view: ImageView, tv: Tv) {
-  if (tv.backdrop_path != null) {
-    Glide.with(view.context).load(Api.getBackdropPath(tv.backdrop_path))
-      .listener(view.requestGlideListener())
-      .into(view)
-  } else if (tv.poster_path != null) {
-    Glide.with(view.context).load(Api.getBackdropPath(tv.poster_path))
-      .listener(view.requestGlideListener())
-      .into(view)
-  }
+  tv.backdrop_path.whatIfNotNull(
+    whatIf = {
+      Glide.with(view.context).load(Api.getBackdropPath(it))
+        .listener(view.requestGlideListener())
+        .into(view)
+    },
+    whatIfNot = {
+      Glide.with(view.context).load(Api.getBackdropPath(tv.poster_path))
+        .listener(view.requestGlideListener())
+        .into(view)
+    }
+  )
 }
 
 @BindingAdapter("bindBackDrop")
 fun bindBackDrop(view: ImageView, person: Person) {
-  if (person.profile_path != null) {
-    Glide.with(view.context).load(Api.getBackdropPath(person.profile_path))
+  person.profile_path.whatIfNotNull {
+    Glide.with(view.context).load(Api.getBackdropPath(it))
       .apply(RequestOptions().circleCrop())
       .into(view)
   }

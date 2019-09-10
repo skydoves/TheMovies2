@@ -29,10 +29,12 @@ import com.skydoves.themovies2.view.adapter.PeopleAdapter
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.TvListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
+import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 
 @BindingAdapter("adapterMovieList")
 fun bindAdapterMovieList(view: RecyclerView, movies: List<Movie>?) {
-  movies?.let {
+  movies.whatIfNotNull {
     val adapter = view.adapter as? MovieListAdapter
     adapter?.addMovieList(it)
   }
@@ -40,7 +42,7 @@ fun bindAdapterMovieList(view: RecyclerView, movies: List<Movie>?) {
 
 @BindingAdapter("adapterPersonList")
 fun bindAdapterPersonList(view: RecyclerView, people: List<Person>?) {
-  people?.let {
+  people.whatIfNotNull {
     val adapter = view.adapter as? PeopleAdapter
     adapter?.addPeople(it)
   }
@@ -48,7 +50,7 @@ fun bindAdapterPersonList(view: RecyclerView, people: List<Person>?) {
 
 @BindingAdapter("adapterTvList")
 fun bindAdapterTvList(view: RecyclerView, tvs: List<Tv>?) {
-  tvs?.let {
+  tvs.whatIfNotNull {
     val adapter = view.adapter as? TvListAdapter
     adapter?.addTvList(it)
   }
@@ -56,22 +58,18 @@ fun bindAdapterTvList(view: RecyclerView, tvs: List<Tv>?) {
 
 @BindingAdapter("adapterVideoList")
 fun bindAdapterVideoList(view: RecyclerView, videos: List<Video>?) {
-  videos?.let {
+  videos.whatIfNotNullOrEmpty {
     val adapter = view.adapter as? VideoListAdapter
     adapter?.addVideoList(it)
-    if (it.isNotEmpty()) {
-      view.visible()
-    }
+    view.visible()
   }
 }
 
 @BindingAdapter("adapterReviewList")
 fun bindAdapterReviewList(view: RecyclerView, reviews: List<Review>?) {
-  reviews?.let {
+  reviews.whatIfNotNullOrEmpty {
     val adapter = view.adapter as? ReviewListAdapter
     adapter?.addReviewList(it)
-    if (it.isNotEmpty()) {
-      view.visible()
-    }
+    view.visible()
   }
 }
