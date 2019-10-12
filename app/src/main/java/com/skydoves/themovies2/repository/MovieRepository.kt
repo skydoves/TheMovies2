@@ -39,58 +39,72 @@ class MovieRepository constructor(
 
   suspend fun loadKeywordList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
     val liveData = MutableLiveData<List<Keyword>>()
-    movieClient.fetchKeywords(id) { response ->
-      when (response) {
-        is ApiResponse.Success -> {
-          response.data?.let { data ->
-            val movie = movieDao.getMovie(id)
-            movie.keywords = data.keywords
-            liveData.postValue(data.keywords)
-            movieDao.updateMovie(movie)
+    val movie = movieDao.getMovie(id)
+    val keywords = movie.keywords
+    if (keywords.isNullOrEmpty()) {
+      movieClient.fetchKeywords(id) { response ->
+        when (response) {
+          is ApiResponse.Success -> {
+            response.data?.let { data ->
+              movie.keywords = data.keywords
+              liveData.postValue(data.keywords)
+              movieDao.updateMovie(movie)
+            }
           }
+          is ApiResponse.Failure.Error -> error(response.message())
+          is ApiResponse.Failure.Exception -> error(response.message())
         }
-        is ApiResponse.Failure.Error -> error(response.message())
-        is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
+    liveData.postValue(keywords)
     liveData
   }
 
   suspend fun loadVideoList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
     val liveData = MutableLiveData<List<Video>>()
-    movieClient.fetchVideos(id) { response ->
-      when (response) {
-        is ApiResponse.Success -> {
-          response.data?.let { data ->
-            val movie = movieDao.getMovie(id)
-            movie.videos = data.results
-            liveData.postValue(data.results)
-            movieDao.updateMovie(movie)
+    val movie = movieDao.getMovie(id)
+    var videos = movie.videos
+    if (videos.isNullOrEmpty()) {
+      movieClient.fetchVideos(id) { response ->
+        when (response) {
+          is ApiResponse.Success -> {
+            response.data?.let { data ->
+              videos = data.results
+              movie.videos = videos
+              liveData.postValue(videos)
+              movieDao.updateMovie(movie)
+            }
           }
+          is ApiResponse.Failure.Error -> error(response.message())
+          is ApiResponse.Failure.Exception -> error(response.message())
         }
-        is ApiResponse.Failure.Error -> error(response.message())
-        is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
+    liveData.postValue(videos)
     liveData
   }
 
   suspend fun loadReviewsList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
     val liveData = MutableLiveData<List<Review>>()
-    movieClient.fetchReviews(id) { response ->
-      when (response) {
-        is ApiResponse.Success -> {
-          response.data?.let { data ->
-            val movie = movieDao.getMovie(id)
-            movie.reviews = data.results
-            liveData.postValue(data.results)
-            movieDao.updateMovie(movie)
+    val movie = movieDao.getMovie(id)
+    var reviews = movie.reviews
+    if (reviews.isNullOrEmpty()) {
+      movieClient.fetchReviews(id) { response ->
+        when (response) {
+          is ApiResponse.Success -> {
+            response.data?.let { data ->
+              reviews = data.results
+              movie.reviews = reviews
+              liveData.postValue(reviews)
+              movieDao.updateMovie(movie)
+            }
           }
+          is ApiResponse.Failure.Error -> error(response.message())
+          is ApiResponse.Failure.Exception -> error(response.message())
         }
-        is ApiResponse.Failure.Error -> error(response.message())
-        is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
+    liveData.postValue(reviews)
     liveData
   }
 }
