@@ -14,17 +14,30 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.api.api
+package com.skydoves.themovies2.api
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.skydoves.themovies2.api.ApiResponse
+import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import retrofit2.Response
 
-object ApiUtil {
-  fun <T : Any> successCall(data: T) = createCall(Response.success(data))
+@RunWith(JUnit4::class)
+class ApiResponseTest {
 
-  private fun <T : Any> createCall(response: Response<T>) = MutableLiveData<ApiResponse<T>>().apply {
-    value = ApiResponse.of { response }
-  } as LiveData<ApiResponse<T>>
+  @Test
+  fun exception() {
+    val exception = Exception("foo")
+    val apiResponse = ApiResponse.error<String>(exception)
+    assertThat(apiResponse.message, `is`("foo"))
+  }
+
+  @Test
+  fun success() {
+    val apiResponse = ApiResponse.of { Response.success("foo") }
+    if (apiResponse is ApiResponse.Success) {
+      assertThat(apiResponse.data, `is`("foo"))
+    }
+  }
 }

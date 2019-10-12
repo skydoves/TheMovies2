@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.api.api
+package com.skydoves.themovies2.api
 
-import com.skydoves.themovies2.api.ApiResponse
-import com.skydoves.themovies2.api.async
-import com.skydoves.themovies2.api.service.TvService
+import com.skydoves.themovies2.api.service.MovieService
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 
-class TvServiceTest : ApiAbstract<TvService>() {
+class MovieServiceTest : ApiAbstract<MovieService>() {
 
-  private lateinit var service: TvService
+  private lateinit var service: MovieService
 
   @Before
   fun initService() {
-    this.service = createService(TvService::class.java)
+    this.service = createService(MovieService::class.java)
   }
 
   @Throws(IOException::class)
   @Test
-  fun fetchTvKeywordsTest() {
+  fun fetchMovieKeywordsTest() {
     enqueueResponse("/tmdb_movie_keywords.json")
     this.service.fetchKeywords(1).async {
       when (it) {
@@ -51,7 +49,7 @@ class TvServiceTest : ApiAbstract<TvService>() {
 
   @Throws(IOException::class)
   @Test
-  fun fetchTvVideosTest() {
+  fun fetchMovieVideosTest() {
     enqueueResponse("/tmdb_movie_videos.json")
     this.service.fetchVideos(1).async {
       when (it) {
@@ -66,7 +64,7 @@ class TvServiceTest : ApiAbstract<TvService>() {
 
   @Throws(IOException::class)
   @Test
-  fun fetchTvReviewsTest() {
+  fun fetchMovieReviewsTest() {
     enqueueResponse("/tmdb_movie_reviews.json")
     this.service.fetchReviews(1).async {
       when (it) {

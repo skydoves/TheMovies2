@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.api.api
+package com.skydoves.themovies2.api
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import okhttp3.mockwebserver.MockResponse

@@ -27,7 +27,7 @@ buildscript {
         // architecture components
         archCompomentVersion = '2.0.0'
         lifecycleVersion = '2.2.0-beta01'
-        roomVersion = '2.2.0-beta01'
+        roomVersion = '2.2.0-rc01'
 
         // koin
         koinVersion = '2.0.1'

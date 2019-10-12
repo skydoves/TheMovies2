@@ -14,36 +14,34 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.api.api
+package com.skydoves.themovies2.api
 
-import com.skydoves.themovies2.api.ApiResponse
-import com.skydoves.themovies2.api.async
-import com.skydoves.themovies2.api.service.TheDiscoverService
+import com.skydoves.themovies2.api.service.PeopleService
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.io.IOException
 
-class TheDiscoverServiceTest : ApiAbstract<TheDiscoverService>() {
+class PeopleServiceTest : ApiAbstract<PeopleService>() {
 
-  private lateinit var service: TheDiscoverService
+  private lateinit var service: PeopleService
 
   @Before
   fun initService() {
-    this.service = createService(TheDiscoverService::class.java)
+    this.service = createService(PeopleService::class.java)
   }
 
   @Throws(IOException::class)
   @Test
-  fun fetchMovieListTest() {
-    enqueueResponse("/tmdb_movie.json")
-    this.service.fetchDiscoverMovie(1).async {
+  fun fetchPersonListTest() {
+    enqueueResponse("/tmdb_people.json")
+    this.service.fetchPopularPeople(1).async {
       when (it) {
         is ApiResponse.Success -> {
-          assertThat(it.data?.results?.get(0)?.id, `is`(164558))
-          assertThat(it.data?.total_results, `is`(61))
-          assertThat(it.data?.total_pages, `is`(4))
+          assertThat(it.data?.results?.get(0)?.id, `is`(28782))
+          assertThat(it.data?.total_pages, `is`(984))
+          assertThat(it.data?.total_results, `is`(19671))
         }
       }
     }
@@ -51,14 +49,14 @@ class TheDiscoverServiceTest : ApiAbstract<TheDiscoverService>() {
 
   @Throws(IOException::class)
   @Test
-  fun fetchTvListTest() {
-    enqueueResponse("/tmdb_tv.json")
-    this.service.fetchDiscoverTv(1).async {
+  fun fetchPersonDetail() {
+    enqueueResponse("tmdb_person.json")
+    this.service.fetchPersonDetail(123).async {
       when (it) {
         is ApiResponse.Success -> {
-          assertThat(it.data?.results?.get(0)?.id, `is`(61889))
-          assertThat(it.data?.total_results, `is`(61470))
-          assertThat(it.data?.total_pages, `is`(3074))
+          assertThat(it.data?.birthday, `is`("1963-12-18"))
+          assertThat(it.data?.known_for_department, `is`("Acting"))
+          assertThat(it.data?.place_of_birth, `is`("Shawnee, Oklahoma, USA"))
         }
       }
     }
