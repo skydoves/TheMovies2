@@ -40,14 +40,15 @@ class MovieRepository constructor(
   suspend fun loadKeywordList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
     val liveData = MutableLiveData<List<Keyword>>()
     val movie = movieDao.getMovie(id)
-    val keywords = movie.keywords
+    var keywords = movie.keywords
     if (keywords.isNullOrEmpty()) {
       movieClient.fetchKeywords(id) { response ->
         when (response) {
           is ApiResponse.Success -> {
             response.data?.let { data ->
-              movie.keywords = data.keywords
-              liveData.postValue(data.keywords)
+              keywords = data.keywords
+              movie.keywords = keywords
+              liveData.postValue(keywords)
               movieDao.updateMovie(movie)
             }
           }
@@ -56,8 +57,7 @@ class MovieRepository constructor(
         }
       }
     }
-    liveData.postValue(keywords)
-    liveData
+    liveData.apply { postValue(keywords) }
   }
 
   suspend fun loadVideoList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
@@ -80,8 +80,7 @@ class MovieRepository constructor(
         }
       }
     }
-    liveData.postValue(videos)
-    liveData
+    liveData.apply { postValue(videos) }
   }
 
   suspend fun loadReviewsList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
@@ -104,7 +103,6 @@ class MovieRepository constructor(
         }
       }
     }
-    liveData.postValue(reviews)
-    liveData
+    liveData.apply { postValue(reviews) }
   }
 }

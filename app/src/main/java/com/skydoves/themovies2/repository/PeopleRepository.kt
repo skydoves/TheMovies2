@@ -55,8 +55,7 @@ class PeopleRepository constructor(
         }
       }
     }
-    liveData.postValue(people)
-    liveData
+    liveData.apply { postValue(people) }
   }
 
   suspend fun loadPersonDetail(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
@@ -75,7 +74,6 @@ class PeopleRepository constructor(
         is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
-    liveData.postValue(person.personDetail)
-    liveData
+    liveData.apply { postValue(person.personDetail) }
   }
 }

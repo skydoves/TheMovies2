@@ -39,13 +39,15 @@ class TvRepository constructor(
 
   suspend fun loadKeywordList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
     val liveData = MutableLiveData<List<Keyword>>()
+    val tv = tvDao.getTv(id)
+    var keywords = tv.keywords
     tvClient.fetchKeywords(id) { response ->
       when (response) {
         is ApiResponse.Success -> {
           response.data?.let { data ->
-            val tv = tvDao.getTv(id)
-            tv.keywords = data.keywords
-            liveData.postValue(data.keywords)
+            keywords = data.keywords
+            tv.keywords = keywords
+            liveData.postValue(keywords)
             tvDao.updateTv(tv)
           }
         }
@@ -53,18 +55,20 @@ class TvRepository constructor(
         is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
-    liveData
+    liveData.apply { postValue(keywords) }
   }
 
   suspend fun loadVideoList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
     val liveData = MutableLiveData<List<Video>>()
+    val tv = tvDao.getTv(id)
+    var videos = tv.videos
     tvClient.fetchVideos(id) { response ->
       when (response) {
         is ApiResponse.Success -> {
           response.data?.let { data ->
-            val tv = tvDao.getTv(id)
-            tv.videos = data.results
-            liveData.postValue(data.results)
+            videos = data.results
+            tv.videos = videos
+            liveData.postValue(videos)
             tvDao.updateTv(tv)
           }
         }
@@ -72,25 +76,29 @@ class TvRepository constructor(
         is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
-    liveData
+    liveData.apply { postValue(videos) }
   }
 
   suspend fun loadReviewsList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
     val liveData = MutableLiveData<List<Review>>()
-    tvClient.fetchReviews(id) { response ->
-      when (response) {
-        is ApiResponse.Success -> {
-          response.data?.let { data ->
-            val tv = tvDao.getTv(id)
-            tv.reviews = data.results
-            liveData.postValue(data.results)
-            tvDao.updateTv(tv)
+    val tv = tvDao.getTv(id)
+    var reviews = tv.reviews
+    if (reviews.isNullOrEmpty()) {
+      tvClient.fetchReviews(id) { response ->
+        when (response) {
+          is ApiResponse.Success -> {
+            response.data?.let { data ->
+              reviews = data.results
+              tv.reviews = reviews
+              liveData.postValue(reviews)
+              tvDao.updateTv(tv)
+            }
           }
+          is ApiResponse.Failure.Error -> error(response.message())
+          is ApiResponse.Failure.Exception -> error(response.message())
         }
-        is ApiResponse.Failure.Error -> error(response.message())
-        is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
-    liveData
+    liveData.apply { postValue(reviews) }
   }
 }

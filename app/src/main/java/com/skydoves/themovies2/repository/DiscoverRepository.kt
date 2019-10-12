@@ -57,8 +57,7 @@ class DiscoverRepository constructor(
         }
       }
     }
-    liveDate.postValue(movies)
-    liveDate
+    liveDate.apply { postValue(movies) }
   }
 
   suspend fun loadTvs(page: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
@@ -80,7 +79,6 @@ class DiscoverRepository constructor(
         }
       }
     }
-    liveDate.postValue(tvs)
-    liveDate
+    liveDate.apply { postValue(tvs) }
   }
 }
