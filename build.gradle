@@ -14,13 +14,11 @@ buildscript {
         targetSdkVersion = 29
 
         // build tool
-        gradleBuildTool = '3.5.0'
+        gradleBuildTool = '3.5.1'
 
         // support library
         androidxVersion = '1.0.0'
-        accompatVersion = '1.1.0-rc01'
-        recyclerVersion = '1.1.0-beta03'
-        materialVersion = '1.1.0-alpha09'
+        materialVersion = '1.1.0-beta01'
 
         // kotlin
         kotlinVersion = '1.3.50'
@@ -28,14 +26,14 @@ buildscript {
 
         // architecture components
         archCompomentVersion = '2.0.0'
-        lifecycleVersion = '2.2.0-alpha03'
+        lifecycleVersion = '2.2.0-beta01'
         roomVersion = '2.2.0-beta01'
 
         // koin
         koinVersion = '2.0.1'
 
         // whatIf
-        whatIfVersion = '1.0.2'
+        whatIfVersion = '1.0.4'
 
         // coroutines
         coroutinesVersion = '1.3.0'
