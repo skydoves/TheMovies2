@@ -26,9 +26,33 @@ import com.skydoves.themovies2.models.network.PersonDetail
 
 class MockTestUtil {
   companion object {
-    fun mockMovie() = Movie(1, emptyList(), emptyList(), emptyList(), "", false, "", "", ArrayList(), 123, "", "", "", "", 0f, 0, false, 0f)
-    fun mockTv() = Tv(1, emptyList(), emptyList(), emptyList(), "", 0f, 123, "", 0f, "", "", ArrayList(), ArrayList(), "", 1, "", "")
+    fun mockMovie(keywords: List<Keyword> = emptyList(), videos: List<Video> = emptyList(), reviews: List<Review> = emptyList()) = Movie(1, keywords, videos, reviews, "", false, "", "", ArrayList(), 123, "", "", "", "", 0f, 0, false, 0f)
+    fun mockTv(keywords: List<Keyword> = emptyList(), videos: List<Video> = emptyList(), reviews: List<Review> = emptyList()) = Tv(1, keywords, videos, reviews, "", 0f, 123, "", 0f, "", "", ArrayList(), ArrayList(), "", 1, "", "")
     fun mockPerson() = Person(1, mockPersonDetail(), "", false, 123, "", 0f)
+    fun mockMovieList(): List<Movie> {
+      val movies = ArrayList<Movie>()
+      movies.add(mockMovie())
+      movies.add(mockMovie())
+      movies.add(mockMovie())
+      return movies
+    }
+
+    fun mockTvList(): List<Tv> {
+      val tvs = ArrayList<Tv>()
+      tvs.add(mockTv())
+      tvs.add(mockTv())
+      tvs.add(mockTv())
+      return tvs
+    }
+
+    fun mockPersonList(): List<Person> {
+      val people = ArrayList<Person>()
+      people.add(mockPerson())
+      people.add(mockPerson())
+      people.add(mockPerson())
+      return people
+    }
+
     fun mockKeywordList(): List<Keyword> {
       val keywords = ArrayList<Keyword>()
       keywords.add(Keyword(100, "keyword0"))

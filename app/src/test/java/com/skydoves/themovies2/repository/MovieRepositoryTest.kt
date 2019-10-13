@@ -17,7 +17,6 @@
 package com.skydoves.themovies2.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -35,8 +34,11 @@ import com.skydoves.themovies2.models.network.KeywordListResponse
 import com.skydoves.themovies2.models.network.ReviewListResponse
 import com.skydoves.themovies2.models.network.VideoListResponse
 import com.skydoves.themovies2.room.MovieDao
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockKeywordList
 import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockMovie
-import junit.framework.TestCase
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockReviewList
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockVideoList
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers
@@ -69,28 +71,30 @@ class MovieRepositoryTest {
 
   @Test
   fun loadKeywordListFromNetworkTest() = runBlocking {
-    val liveData = MutableLiveData<List<Keyword>>()
-    whenever(movieDao.getMovie(1)).thenReturn(mockMovie())
-
-    val loadFromDB = movieDao.getMovie(1)
-    liveData.postValue(loadFromDB.keywords)
-
     val mockResponse = KeywordListResponse(1, emptyList())
     whenever(service.fetchKeywords(1)).thenReturn(ApiUtil.getCall(mockResponse))
+    whenever(movieDao.getMovie(1)).thenReturn(mockMovie())
 
     val data = repository.loadKeywordList(1) { }
-    verify(movieDao, times(2)).getMovie(1)
-
     val observer = mock<Observer<List<Keyword>>>()
     data.observeForever(observer)
-    val updatedData = mockMovie()
+    verify(movieDao).getMovie(1)
+
+    val loadFromDB = movieDao.getMovie(1)
+    data.postValue(loadFromDB.keywords)
+    verify(observer, times(2)).onChanged(loadFromDB.keywords)
+
+    val updatedData = mockMovie(keywords = mockKeywordList())
     whenever(movieDao.getMovie(1)).thenReturn(updatedData)
-    liveData.postValue(updatedData.keywords)
+    data.postValue(updatedData.keywords)
     verify(observer).onChanged(updatedData.keywords)
 
     client.fetchKeywords(1) {
       when (it) {
-        is ApiResponse.Success -> TestCase.assertEquals(it, CoreMatchers.`is`(mockResponse))
+        is ApiResponse.Success -> {
+          assertEquals(it.data, CoreMatchers.`is`(mockResponse))
+          assertEquals(it.data?.keywords, CoreMatchers.`is`(updatedData.keywords))
+        }
         else -> MatcherAssert.assertThat(it, CoreMatchers.instanceOf(ApiResponse.Failure::class.java))
       }
     }
@@ -98,28 +102,30 @@ class MovieRepositoryTest {
 
   @Test
   fun loadVideoListFromNetworkTest() = runBlocking {
-    val liveData = MutableLiveData<List<Video>>()
-    whenever(movieDao.getMovie(1)).thenReturn(mockMovie())
-
-    val loadFromDB = movieDao.getMovie(1)
-    liveData.postValue(loadFromDB.videos)
-
     val mockResponse = VideoListResponse(1, emptyList())
     whenever(service.fetchVideos(1)).thenReturn(ApiUtil.getCall(mockResponse))
+    whenever(movieDao.getMovie(1)).thenReturn(mockMovie())
 
     val data = repository.loadVideoList(1) { }
-    verify(movieDao, times(2)).getMovie(1)
-
     val observer = mock<Observer<List<Video>>>()
     data.observeForever(observer)
-    val updatedData = mockMovie()
+    verify(movieDao).getMovie(1)
+
+    val loadFromDB = movieDao.getMovie(1)
+    data.postValue(loadFromDB.videos)
+    verify(observer, times(2)).onChanged(loadFromDB.videos)
+
+    val updatedData = mockMovie(videos = mockVideoList())
     whenever(movieDao.getMovie(1)).thenReturn(updatedData)
-    liveData.postValue(updatedData.videos)
+    data.postValue(updatedData.videos)
     verify(observer).onChanged(updatedData.videos)
 
     client.fetchVideos(1) {
       when (it) {
-        is ApiResponse.Success -> TestCase.assertEquals(it, CoreMatchers.`is`(mockResponse))
+        is ApiResponse.Success -> {
+          assertEquals(it.data, CoreMatchers.`is`(mockResponse))
+          assertEquals(it.data?.results, CoreMatchers.`is`(updatedData.videos))
+        }
         else -> MatcherAssert.assertThat(it, CoreMatchers.instanceOf(ApiResponse.Failure::class.java))
       }
     }
@@ -127,28 +133,30 @@ class MovieRepositoryTest {
 
   @Test
   fun loadReviewListFromNetworkTest() = runBlocking {
-    val liveData = MutableLiveData<List<Review>>()
-    whenever(movieDao.getMovie(1)).thenReturn(mockMovie())
-
-    val loadFromDB = movieDao.getMovie(1)
-    liveData.postValue(loadFromDB.reviews)
-
     val mockResponse = ReviewListResponse(1, 0, emptyList(), 0, 0)
     whenever(service.fetchReviews(1)).thenReturn(ApiUtil.getCall(mockResponse))
+    whenever(movieDao.getMovie(1)).thenReturn(mockMovie())
 
     val data = repository.loadReviewsList(1) { }
-    verify(movieDao, times(2)).getMovie(1)
-
     val observer = mock<Observer<List<Review>>>()
     data.observeForever(observer)
-    val updatedData = mockMovie()
+    verify(movieDao).getMovie(1)
+
+    val loadFromDB = movieDao.getMovie(1)
+    data.postValue(loadFromDB.reviews)
+    verify(observer, times(2)).onChanged(loadFromDB.reviews)
+
+    val updatedData = mockMovie(reviews = mockReviewList())
     whenever(movieDao.getMovie(1)).thenReturn(updatedData)
-    liveData.postValue(updatedData.reviews)
+    data.postValue(updatedData.reviews)
     verify(observer).onChanged(updatedData.reviews)
 
     client.fetchReviews(1) {
       when (it) {
-        is ApiResponse.Success -> TestCase.assertEquals(it, CoreMatchers.`is`(mockResponse))
+        is ApiResponse.Success -> {
+          assertEquals(it.data, CoreMatchers.`is`(mockResponse))
+          assertEquals(it.data?.results, CoreMatchers.`is`(updatedData.videos))
+        }
         else -> MatcherAssert.assertThat(it, CoreMatchers.instanceOf(ApiResponse.Failure::class.java))
       }
     }

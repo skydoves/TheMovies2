@@ -35,7 +35,9 @@ import com.skydoves.themovies2.models.network.KeywordListResponse
 import com.skydoves.themovies2.models.network.ReviewListResponse
 import com.skydoves.themovies2.models.network.VideoListResponse
 import com.skydoves.themovies2.room.TvDao
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockKeywordList
 import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockTv
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockVideoList
 import junit.framework.TestCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -69,28 +71,30 @@ class TvRepositoryTest {
 
   @Test
   fun loadKeywordListFromNetworkTest() = runBlocking {
-    val liveData = MutableLiveData<List<Keyword>>()
-    whenever(tvDao.getTv(1)).thenReturn(mockTv())
-
-    val loadFromDB = tvDao.getTv(1)
-    liveData.postValue(loadFromDB.keywords)
-
     val mockResponse = KeywordListResponse(1, emptyList())
     whenever(service.fetchKeywords(1)).thenReturn(ApiUtil.getCall(mockResponse))
+    whenever(tvDao.getTv(1)).thenReturn(mockTv())
 
     val data = repository.loadKeywordList(1) { }
-    verify(tvDao, times(2)).getTv(1)
-
     val observer = mock<Observer<List<Keyword>>>()
     data.observeForever(observer)
-    val updatedData = mockTv()
+    verify(tvDao).getTv(1)
+
+    val loadFromDB = tvDao.getTv(1)
+    data.postValue(loadFromDB.keywords)
+    verify(observer, times(2)).onChanged(loadFromDB.keywords)
+
+    val updatedData = mockTv(keywords = mockKeywordList())
     whenever(tvDao.getTv(1)).thenReturn(updatedData)
-    liveData.postValue(updatedData.keywords)
+    data.postValue(updatedData.keywords)
     verify(observer).onChanged(updatedData.keywords)
 
     client.fetchKeywords(1) {
       when (it) {
-        is ApiResponse.Success -> TestCase.assertEquals(it, CoreMatchers.`is`(mockResponse))
+        is ApiResponse.Success -> {
+          TestCase.assertEquals(it.data, CoreMatchers.`is`(mockResponse))
+          TestCase.assertEquals(it.data?.keywords, CoreMatchers.`is`(updatedData.keywords))
+        }
         else -> MatcherAssert.assertThat(it, CoreMatchers.instanceOf(ApiResponse.Failure::class.java))
       }
     }
@@ -98,28 +102,30 @@ class TvRepositoryTest {
 
   @Test
   fun loadVideoListFromNetworkTest() = runBlocking {
-    val liveData = MutableLiveData<List<Video>>()
-    whenever(tvDao.getTv(1)).thenReturn(mockTv())
-
-    val loadFromDB = tvDao.getTv(1)
-    liveData.postValue(loadFromDB.videos)
-
     val mockResponse = VideoListResponse(1, emptyList())
     whenever(service.fetchVideos(1)).thenReturn(ApiUtil.getCall(mockResponse))
+    whenever(tvDao.getTv(1)).thenReturn(mockTv())
 
     val data = repository.loadVideoList(1) { }
-    verify(tvDao, times(2)).getTv(1)
-
     val observer = mock<Observer<List<Video>>>()
     data.observeForever(observer)
-    val updatedData = mockTv()
+    verify(tvDao).getTv(1)
+
+    val loadFromDB = tvDao.getTv(1)
+    data.postValue(loadFromDB.videos)
+    verify(observer, times(2)).onChanged(loadFromDB.videos)
+
+    val updatedData = mockTv(videos = mockVideoList())
     whenever(tvDao.getTv(1)).thenReturn(updatedData)
-    liveData.postValue(updatedData.videos)
+    data.postValue(updatedData.videos)
     verify(observer).onChanged(updatedData.videos)
 
     client.fetchVideos(1) {
       when (it) {
-        is ApiResponse.Success -> TestCase.assertEquals(it, CoreMatchers.`is`(mockResponse))
+        is ApiResponse.Success -> {
+          TestCase.assertEquals(it.data, CoreMatchers.`is`(mockResponse))
+          TestCase.assertEquals(it.data?.results, CoreMatchers.`is`(updatedData.videos))
+        }
         else -> MatcherAssert.assertThat(it, CoreMatchers.instanceOf(ApiResponse.Failure::class.java))
       }
     }

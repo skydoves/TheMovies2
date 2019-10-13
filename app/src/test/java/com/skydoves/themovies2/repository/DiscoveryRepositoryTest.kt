@@ -17,7 +17,6 @@
 package com.skydoves.themovies2.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
@@ -34,6 +33,8 @@ import com.skydoves.themovies2.models.network.DiscoverMovieResponse
 import com.skydoves.themovies2.models.network.DiscoverTvResponse
 import com.skydoves.themovies2.room.MovieDao
 import com.skydoves.themovies2.room.TvDao
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockMovieList
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockTvList
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -69,10 +70,8 @@ class DiscoveryRepositoryTest {
 
   @Test
   fun loadMovieListFromNetworkTest() = runBlocking {
-    val liveData = MutableLiveData<List<Movie>>()
     val loadFromDB = movieDao.getMovieList(1)
     whenever(movieDao.getMovieList(1)).thenReturn(loadFromDB)
-    liveData.postValue(loadFromDB)
 
     val mockResponse = DiscoverMovieResponse(1, emptyList(), 100, 10)
     whenever(service.fetchDiscoverMovie(1)).thenReturn(getCall(mockResponse))
@@ -82,14 +81,17 @@ class DiscoveryRepositoryTest {
 
     val observer = mock<Observer<List<Movie>>>()
     data.observeForever(observer)
-    val updatedData: List<Movie> = arrayListOf()
+    val updatedData = mockMovieList()
     whenever(movieDao.getMovieList(1)).thenReturn(updatedData)
-    liveData.postValue(updatedData)
+    data.postValue(updatedData)
     verify(observer).onChanged(updatedData)
 
     client.fetchDiscoverMovie(1) {
       when (it) {
-        is ApiResponse.Success -> assertEquals(it, `is`(mockResponse))
+        is ApiResponse.Success -> {
+          assertEquals(it.data, `is`(mockResponse))
+          assertEquals(it.data?.results, `is`(updatedData))
+        }
         else -> assertThat(it, instanceOf(ApiResponse.Failure::class.java))
       }
     }
@@ -97,10 +99,8 @@ class DiscoveryRepositoryTest {
 
   @Test
   fun loadTvListFromNetworkTest() = runBlocking {
-    val liveData = MutableLiveData<List<Tv>>()
     val loadFromDB = tvDao.getTvList(1)
     whenever(tvDao.getTvList(1)).thenReturn(loadFromDB)
-    liveData.postValue(loadFromDB)
 
     val mockResponse = DiscoverTvResponse(1, emptyList(), 100, 10)
     whenever(service.fetchDiscoverTv(1)).thenReturn(getCall(mockResponse))
@@ -110,14 +110,17 @@ class DiscoveryRepositoryTest {
 
     val observer = mock<Observer<List<Tv>>>()
     data.observeForever(observer)
-    val updatedData: List<Tv> = arrayListOf()
+    val updatedData = mockTvList()
     whenever(tvDao.getTvList(1)).thenReturn(updatedData)
-    liveData.postValue(updatedData)
+    data.postValue(updatedData)
     verify(observer).onChanged(updatedData)
 
     client.fetchDiscoverTv(1) {
       when (it) {
-        is ApiResponse.Success -> assertEquals(it, `is`(mockResponse))
+        is ApiResponse.Success -> {
+          assertEquals(it.data, `is`(mockResponse))
+          assertEquals(it.data?.results, `is`(updatedData))
+        }
         else -> assertThat(it, instanceOf(ApiResponse.Failure::class.java))
       }
     }

@@ -61,17 +61,21 @@ class PeopleRepository constructor(
   suspend fun loadPersonDetail(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
     val liveData = MutableLiveData<PersonDetail>()
     val person = peopleDao.getPerson(id)
-    peopleClient.fetchPersonDetail(id) { response ->
-      when (response) {
-        is ApiResponse.Success -> {
-          response.data?.let { data ->
-            person.personDetail = data
-            liveData.postValue(person.personDetail)
-            peopleDao.updatePerson(person)
+    var personDetail = person.personDetail
+    if (personDetail == null) {
+      peopleClient.fetchPersonDetail(id) { response ->
+        when (response) {
+          is ApiResponse.Success -> {
+            response.data?.let { data ->
+              personDetail = data
+              person.personDetail = personDetail
+              liveData.postValue(personDetail)
+              peopleDao.updatePerson(person)
+            }
           }
+          is ApiResponse.Failure.Error -> error(response.message())
+          is ApiResponse.Failure.Exception -> error(response.message())
         }
-        is ApiResponse.Failure.Error -> error(response.message())
-        is ApiResponse.Failure.Exception -> error(response.message())
       }
     }
     liveData.apply { postValue(person.personDetail) }
