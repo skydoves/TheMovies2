@@ -57,7 +57,7 @@ class MainActivityViewModelTest {
   private lateinit var discoverRepository: DiscoverRepository
   private val discoverService = mock<TheDiscoverService>()
   private val discoverClient = TheDiscoverClient(discoverService)
-  private val movieDao = mock<MogvieDao>()
+  private val movieDao = mock<MovieDao>()
   private val tvDao = mock<TvDao>()
 
   private lateinit var peopleRepository: PeopleRepository
