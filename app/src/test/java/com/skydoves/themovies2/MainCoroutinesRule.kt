@@ -16,26 +16,33 @@
 
 package com.skydoves.themovies2
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
-import org.junit.rules.TestWatcher
+import org.junit.rules.TestRule
 import org.junit.runner.Description
-import kotlin.coroutines.ContinuationInterceptor
+import org.junit.runners.model.Statement
 
 @ExperimentalCoroutinesApi
-class MainCoroutinesRule : TestWatcher(), TestCoroutineScope by TestCoroutineScope() {
+class MainCoroutinesRule : TestRule, TestCoroutineScope by TestCoroutineScope() {
 
-  override fun starting(description: Description?) {
-    super.starting(description)
-    Dispatchers.setMain(this.coroutineContext[ContinuationInterceptor] as CoroutineDispatcher)
+  private val testCoroutinesDispatcher = TestCoroutineDispatcher()
+  private val testCoroutineScope = TestCoroutineScope(testCoroutinesDispatcher)
+
+  override fun apply(base: Statement?, description: Description?) = object : Statement() {
+    override fun evaluate() {
+      Dispatchers.setMain(testCoroutinesDispatcher)
+      base?.evaluate()
+      Dispatchers.resetMain()
+      testCoroutineScope.cleanupTestCoroutines()
+    }
   }
 
-  override fun finished(description: Description?) {
-    super.finished(description)
-    Dispatchers.resetMain()
+  fun runBlockingTest(block: suspend TestCoroutineScope.() -> Unit) {
+    testCoroutineScope.runBlockingTest { block() }
   }
 }
