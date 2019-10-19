@@ -16,8 +16,8 @@
 
 package com.skydoves.themovies2.database
 
-import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockTv
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockTvList
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -31,21 +31,17 @@ class TvDaoTest : LocalDatabase() {
 
   @Test
   fun insertAndRead() {
-    val tvList = ArrayList<Tv>()
-    val tv = mockTv()
-    tvList.add(tv)
-
+    val tvList = mockTvList()
     db.tvDao().insertTv(tvList)
-    val loadFromDB = db.tvDao().getTvList(tv.page)[0]
+    val loadFromDB = db.tvDao().getTvList(1)[0]
     assertThat(loadFromDB.page, `is`(1))
     assertThat(loadFromDB.id, `is`(123))
   }
 
   @Test
   fun updateAndReadTest() {
-    val tvList = ArrayList<Tv>()
+    val tvList = mockTvList()
     val tv = mockTv()
-    tvList.add(tv)
     db.tvDao().insertTv(tvList)
 
     val loadFromDB = db.tvDao().getTv(tv.id)

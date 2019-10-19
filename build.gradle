@@ -70,7 +70,7 @@ buildscript {
         jacocoVersion = '0.8.4'
 
         // plugins
-        spotlessVersion = '3.24.2'
+        spotlessVersion = '3.25.0'
         versionPlugin  = '0.23.0'
     }
 

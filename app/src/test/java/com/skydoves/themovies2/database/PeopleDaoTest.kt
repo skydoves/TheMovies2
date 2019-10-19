@@ -16,8 +16,8 @@
 
 package com.skydoves.themovies2.database
 
-import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockPerson
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockPersonList
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -31,10 +31,7 @@ class PeopleDaoTest : LocalDatabase() {
 
   @Test
   fun insertAndRead() {
-    val people = ArrayList<Person>()
-    val mockPerson = mockPerson()
-    people.add(mockPerson)
-
+    val people = mockPersonList()
     db.peopleDao().insertPeople(people)
     val loadFromDB = db.peopleDao().getPeople(1)[0]
     assertThat(loadFromDB.page, `is`(1))
@@ -43,9 +40,8 @@ class PeopleDaoTest : LocalDatabase() {
 
   @Test
   fun updateAndRead() {
-    val people = ArrayList<Person>()
+    val people = mockPersonList()
     val mockPerson = mockPerson()
-    people.add(mockPerson)
     db.peopleDao().insertPeople(people)
 
     val loadFromDB = db.peopleDao().getPerson(mockPerson.id)

@@ -16,8 +16,8 @@
 
 package com.skydoves.themovies2.database
 
-import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockMovie
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockMovieList
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -31,22 +31,18 @@ class MovieDaoTest : LocalDatabase() {
 
   @Test
   fun insertAndReadTest() {
-    val movieList = ArrayList<Movie>()
-    val movie = mockMovie()
-    movieList.add(movie)
-
-    db.movieDao().insertMovieList(movieList)
-    val loadFromDB = db.movieDao().getMovieList(movie.page)[0]
+    val mockData = mockMovieList()
+    db.movieDao().insertMovieList(mockData)
+    val loadFromDB = db.movieDao().getMovieList(1)[0]
     assertThat(loadFromDB.page, `is`(1))
     assertThat(loadFromDB.id, `is`(123))
   }
 
   @Test
   fun updateAndReadTest() {
-    val movieList = ArrayList<Movie>()
+    val mockData = mockMovieList()
     val movie = mockMovie()
-    movieList.add(movie)
-    db.movieDao().insertMovieList(movieList)
+    db.movieDao().insertMovieList(mockData)
 
     val loadFromDB = db.movieDao().getMovie(movie.id)
     assertThat(loadFromDB.page, `is`(1))
