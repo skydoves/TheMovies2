@@ -14,28 +14,33 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.db
+package com.skydoves.themovies2.database
 
 import androidx.room.Room
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import com.skydoves.themovies2.room.AppDatabase
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-@RunWith(AndroidJUnit4::class)
-abstract class DbTest {
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [21])
+abstract class LocalDatabase {
   lateinit var db: AppDatabase
 
   @Before
   fun initDB() {
-    db = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().context,
-        AppDatabase::class.java).build()
+    db = Room.inMemoryDatabaseBuilder(getApplicationContext(), AppDatabase::class.java)
+      .allowMainThreadQueries()
+      .build()
   }
 
   @After
   fun closeDB() {
     db.close()
+    stopKoin()
   }
 }

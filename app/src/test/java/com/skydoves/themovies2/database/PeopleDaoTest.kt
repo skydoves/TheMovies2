@@ -14,45 +14,47 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.db
+package com.skydoves.themovies2.database
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.skydoves.themovies2.models.entity.Movie
-import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockMovie
+import com.skydoves.themovies2.models.entity.Person
+import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockPerson
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-@RunWith(AndroidJUnit4::class)
-class MovieDaoTest : DbTest() {
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [21])
+class PeopleDaoTest : LocalDatabase() {
 
   @Test
-  fun insertAndReadTest() {
-    val movieList = ArrayList<Movie>()
-    val movie = mockMovie()
-    movieList.add(movie)
+  fun insertAndRead() {
+    val people = ArrayList<Person>()
+    val mockPerson = mockPerson()
+    people.add(mockPerson)
 
-    db.movieDao().insertMovieList(movieList)
-    val loadFromDB = db.movieDao().getMovieList(movie.page)[0]
+    db.peopleDao().insertPeople(people)
+    val loadFromDB = db.peopleDao().getPeople(1)[0]
     assertThat(loadFromDB.page, `is`(1))
     assertThat(loadFromDB.id, `is`(123))
   }
 
   @Test
-  fun updateAndReadTest() {
-    val movieList = ArrayList<Movie>()
-    val movie = mockMovie()
-    movieList.add(movie)
-    db.movieDao().insertMovieList(movieList)
+  fun updateAndRead() {
+    val people = ArrayList<Person>()
+    val mockPerson = mockPerson()
+    people.add(mockPerson)
+    db.peopleDao().insertPeople(people)
 
-    val loadFromDB = db.movieDao().getMovie(movie.id)
+    val loadFromDB = db.peopleDao().getPerson(mockPerson.id)
     assertThat(loadFromDB.page, `is`(1))
 
-    movie.page = 10
-    db.movieDao().updateMovie(movie)
+    mockPerson.page = 10
+    db.peopleDao().updatePerson(mockPerson)
 
-    val updated = db.movieDao().getMovie(movie.id)
+    val updated = db.peopleDao().getPerson(mockPerson.id)
     assertThat(updated.page, `is`(10))
   }
 }

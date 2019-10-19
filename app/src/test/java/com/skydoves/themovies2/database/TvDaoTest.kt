@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.db
+package com.skydoves.themovies2.database
 
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.utils.MockTestUtil.Companion.mockTv
@@ -22,10 +22,12 @@ import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-@RunWith(JUnit4::class)
-class TvDaoTest : DbTest() {
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [21])
+class TvDaoTest : LocalDatabase() {
 
   @Test
   fun insertAndRead() {
