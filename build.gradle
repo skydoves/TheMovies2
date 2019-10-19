@@ -27,7 +27,7 @@ buildscript {
         // architecture components
         archCompomentVersion = '2.0.0'
         lifecycleVersion = '2.2.0-beta01'
-        roomVersion = '2.2.0-rc01'
+        roomVersion = '2.2.0'
 
         // koin
         koinVersion = '2.0.1'
@@ -61,6 +61,8 @@ buildscript {
         // unit test
         junitVersion = '4.12'
         androidxTest = '1.1.1'
+        unitTestCoreVersion = '1.2.0'
+        robolectricVersion = '4.3'
         androidxTestRules = '1.2.0-alpha04'
         mockWebServerVersion = '3.9.0'
         mockitoKotlinVersion = '2.1.0'
