@@ -25,6 +25,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.skydoves.themovies2.R
+import kotlin.math.max
 
 fun View.visible() {
   visibility = View.VISIBLE
@@ -32,11 +33,22 @@ fun View.visible() {
 
 fun View.requestGlideListener(): RequestListener<Drawable> {
   return object : RequestListener<Drawable> {
-    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+    override fun onLoadFailed(
+      e: GlideException?,
+      model: Any?,
+      target: Target<Drawable>?,
+      isFirstResource: Boolean
+    ): Boolean {
       return false
     }
 
-    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+    override fun onResourceReady(
+      resource: Drawable?,
+      model: Any?,
+      target: Target<Drawable>?,
+      dataSource: DataSource?,
+      isFirstResource: Boolean
+    ): Boolean {
       circularRevealedAtCenter()
       return false
     }
@@ -47,7 +59,7 @@ fun View.circularRevealedAtCenter() {
   val view = this
   val cx = (view.left + view.right) / 2
   val cy = (view.top + view.bottom) / 2
-  val finalRadius = Math.max(view.width, view.height)
+  val finalRadius = max(view.width, view.height)
 
   if (checkIsMaterialVersion() && view.isAttachedToWindow) {
     val anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0f, finalRadius.toFloat())

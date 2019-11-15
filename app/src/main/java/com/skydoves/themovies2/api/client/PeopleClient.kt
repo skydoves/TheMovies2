@@ -28,13 +28,13 @@ class PeopleClient(private val service: PeopleService) {
     page: Int,
     onResult: (response: ApiResponse<PeopleResponse>) -> Unit
   ) {
-    service.fetchPopularPeople(page).async(onResult)
+    this.service.fetchPopularPeople(page).async(onResult)
   }
 
   fun fetchPersonDetail(
     page: Int,
     onResult: (response: ApiResponse<PersonDetail>) -> Unit
   ) {
-    service.fetchPersonDetail(page).async(onResult)
+    this.service.fetchPersonDetail(page).async(onResult)
   }
 }

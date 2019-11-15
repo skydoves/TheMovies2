@@ -32,8 +32,9 @@ class VideoListAdapter(
   }
 
   fun addVideoList(videos: List<Video>) {
+    val section = sections()[0]
     sections()[0].addAll(videos)
-    notifyDataSetChanged()
+    notifyItemRangeInserted(section.size + 1, videos.size)
   }
 
   override fun layout(sectionRow: SectionRow) = R.layout.item_video

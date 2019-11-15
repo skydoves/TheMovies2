@@ -41,7 +41,7 @@ sealed class ApiResponse<out T> {
    * ## API Network format error case.
    * API communication conventions do not match or applications need to handle errors.
    *
-   * ## API Network Excepttion error case.
+   * ## API Network Exception error case.
    * Gets called when an unexpected exception occurs while creating the request or processing the response.
    */
   sealed class Failure<out T> {

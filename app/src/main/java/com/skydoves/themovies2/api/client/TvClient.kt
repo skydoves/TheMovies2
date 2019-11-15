@@ -29,20 +29,20 @@ class TvClient(private val service: TvService) {
     id: Int,
     onResult: (response: ApiResponse<KeywordListResponse>) -> Unit
   ) {
-    service.fetchKeywords(id).async(onResult)
+    this.service.fetchKeywords(id).async(onResult)
   }
 
   fun fetchVideos(
     id: Int,
     onResult: (response: ApiResponse<VideoListResponse>) -> Unit
   ) {
-    service.fetchVideos(id).async(onResult)
+    this.service.fetchVideos(id).async(onResult)
   }
 
   fun fetchReviews(
     id: Int,
     onResult: (response: ApiResponse<ReviewListResponse>) -> Unit
   ) {
-    service.fetchReviews(id).async(onResult)
+    this.service.fetchReviews(id).async(onResult)
   }
 }

@@ -31,8 +31,9 @@ class TvListAdapter(private val delegate: TvListViewHolder.Delegate) :
   }
 
   fun addTvList(tvs: List<Tv>) {
-    sections()[0].addAll(tvs)
-    notifyDataSetChanged()
+    val section = sections()[0]
+    section.addAll(tvs)
+    notifyItemRangeInserted(section.size + 1, tvs.size)
   }
 
   override fun layout(sectionRow: SectionRow) = R.layout.item_poster

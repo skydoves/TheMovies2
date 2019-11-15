@@ -28,13 +28,13 @@ class TheDiscoverClient(private val service: TheDiscoverService) {
     page: Int,
     onResult: (response: ApiResponse<DiscoverMovieResponse>) -> Unit
   ) {
-    service.fetchDiscoverMovie(page).async(onResult)
+    this.service.fetchDiscoverMovie(page).async(onResult)
   }
 
   fun fetchDiscoverTv(
     page: Int,
     onResult: (response: ApiResponse<DiscoverTvResponse>) -> Unit
   ) {
-    service.fetchDiscoverTv(page).async(onResult)
+    this.service.fetchDiscoverTv(page).async(onResult)
   }
 }

@@ -31,8 +31,9 @@ class MovieListAdapter(private val delegate: MovieListViewHolder.Delegate) :
   }
 
   fun addMovieList(movies: List<Movie>) {
-    sections()[0].addAll(movies)
-    notifyDataSetChanged()
+    val section = sections()[0]
+    section.addAll(movies)
+    notifyItemRangeInserted(section.size + 1, movies.size)
   }
 
   override fun layout(sectionRow: SectionRow) = R.layout.item_poster

@@ -30,8 +30,9 @@ class ReviewListAdapter : BaseAdapter() {
   }
 
   fun addReviewList(reviews: List<Review>) {
-    sections()[0].addAll(reviews)
-    notifyDataSetChanged()
+    val section = sections()[0]
+    section.addAll(reviews)
+    notifyItemRangeInserted(section.size + 1, reviews.size)
   }
 
   override fun layout(sectionRow: SectionRow) = R.layout.item_review
