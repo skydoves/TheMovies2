@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.utils
+package com.skydoves.themovies2.room.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.skydoves.themovies2.models.Review
+import com.skydoves.themovies2.models.Keyword
 
-open class ReviewListConverter {
+open class KeywordListConverter {
   @TypeConverter
-  fun fromString(value: String): List<Review>? {
-    val listType = object : TypeToken<List<Review>>() {}.type
-    return Gson().fromJson<List<Review>>(value, listType)
+  fun fromString(value: String): List<Keyword>? {
+    val listType = object : TypeToken<List<Keyword>>() {}.type
+    return Gson().fromJson<List<Keyword>>(value, listType)
   }
 
   @TypeConverter
-  fun fromList(list: List<Review>?): String {
+  fun fromList(list: List<Keyword>?): String {
     val gson = Gson()
     return gson.toJson(list)
   }

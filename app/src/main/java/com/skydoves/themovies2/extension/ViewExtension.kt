@@ -62,10 +62,12 @@ fun View.circularRevealedAtCenter() {
   val finalRadius = max(view.width, view.height)
 
   if (checkIsMaterialVersion() && view.isAttachedToWindow) {
-    val anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0f, finalRadius.toFloat())
-    view.visible()
-    view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.background))
-    anim.duration = 550
-    anim.start()
+    ViewAnimationUtils.createCircularReveal(view, cx, cy, 0f, finalRadius.toFloat())
+      .apply {
+        view.visible()
+        view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.background))
+        duration = 550
+        start()
+      }
   }
 }

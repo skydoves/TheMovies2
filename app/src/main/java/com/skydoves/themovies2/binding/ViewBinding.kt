@@ -32,7 +32,7 @@ import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.models.network.PersonDetail
-import com.skydoves.themovies2.utils.KeywordListMapper
+import com.skydoves.themovies2.room.converters.KeywordListMapper
 import com.skydoves.whatif.whatIfNotNull
 
 @BindingAdapter("visibilityByResource")

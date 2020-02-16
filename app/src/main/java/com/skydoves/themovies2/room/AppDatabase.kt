@@ -22,11 +22,11 @@ import androidx.room.TypeConverters
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
-import com.skydoves.themovies2.utils.IntegerListConverter
-import com.skydoves.themovies2.utils.KeywordListConverter
-import com.skydoves.themovies2.utils.ReviewListConverter
-import com.skydoves.themovies2.utils.StringListConverter
-import com.skydoves.themovies2.utils.VideoListConverter
+import com.skydoves.themovies2.room.converters.IntegerListConverter
+import com.skydoves.themovies2.room.converters.KeywordListConverter
+import com.skydoves.themovies2.room.converters.ReviewListConverter
+import com.skydoves.themovies2.room.converters.StringListConverter
+import com.skydoves.themovies2.room.converters.VideoListConverter
 
 @Database(entities = [(Movie::class), (Tv::class), (Person::class)],
   version = 3, exportSchema = false)

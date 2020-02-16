@@ -41,21 +41,34 @@ fun Activity.circularRevealedAtCenter(view: View) {
   val finalRadius = view.width.coerceAtLeast(view.height)
 
   if (checkIsMaterialVersion() && view.isAttachedToWindow) {
-    val anim = ViewAnimationUtils.createCircularReveal(view, cx, cy, 0f, finalRadius.toFloat())
-    view.visible()
-    view.setBackgroundColor(ContextCompat.getColor(this, R.color.background))
-    anim.duration = 550
-    anim.start()
+    ViewAnimationUtils.createCircularReveal(view, cx, cy, 0f, finalRadius.toFloat())
+      .apply {
+        view.visible()
+        view.setBackgroundColor(ContextCompat.getColor(baseContext, R.color.background))
+        duration = 550
+        start()
+      }
   }
 }
 
 fun Activity.requestGlideListener(view: View): RequestListener<Drawable> {
   return object : RequestListener<Drawable> {
-    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+    override fun onLoadFailed(
+      e: GlideException?,
+      model: Any?,
+      target: Target<Drawable>?,
+      isFirstResource: Boolean
+    ): Boolean {
       return false
     }
 
-    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+    override fun onResourceReady(
+      resource: Drawable?,
+      model: Any?,
+      target: Target<Drawable>?,
+      dataSource: DataSource?,
+      isFirstResource: Boolean
+    ): Boolean {
       circularRevealedAtCenter(view)
       return false
     }

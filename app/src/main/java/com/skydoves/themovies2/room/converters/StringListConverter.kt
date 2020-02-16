@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.utils
+package com.skydoves.themovies2.room.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-open class IntegerListConverter {
+open class StringListConverter {
   @TypeConverter
-  fun fromString(value: String): List<Int>? {
-    val listType = object : TypeToken<List<Int>>() {}.type
-    return Gson().fromJson<List<Int>>(value, listType)
+  fun fromString(value: String): List<String>? {
+    val listType = object : TypeToken<List<String>>() {}.type
+    return Gson().fromJson<List<String>>(value, listType)
   }
 
   @TypeConverter
-  fun fromList(list: List<Int>): String {
+  fun fromList(list: List<String>?): String {
     val gson = Gson()
     return gson.toJson(list)
   }

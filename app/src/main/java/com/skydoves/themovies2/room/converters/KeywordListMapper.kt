@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.utils
+package com.skydoves.themovies2.room.converters
 
 import com.skydoves.themovies2.models.Keyword
 
