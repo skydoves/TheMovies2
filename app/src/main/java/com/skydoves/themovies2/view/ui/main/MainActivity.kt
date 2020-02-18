@@ -31,22 +31,24 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun initializeUI() {
-    main_viewpager.adapter = MainPagerAdapter(supportFragmentManager)
-    main_viewpager.offscreenPageLimit = 3
-    main_viewpager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-      override fun onPageScrollStateChanged(state: Int) = Unit
-      override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
-      override fun onPageSelected(position: Int) {
-        main_bottom_navigation.menu.getItem(position).isChecked = true
+    with(main_viewpager) {
+      adapter = MainPagerAdapter(supportFragmentManager)
+      offscreenPageLimit = 3
+      addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        override fun onPageScrollStateChanged(state: Int) = Unit
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
+        override fun onPageSelected(position: Int) {
+          main_bottom_navigation.menu.getItem(position).isChecked = true
+        }
+      })
+      main_bottom_navigation.setOnNavigationItemSelectedListener {
+        when (it.itemId) {
+          R.id.action_one -> currentItem = 0
+          R.id.action_two -> currentItem = 1
+          R.id.action_three -> currentItem = 2
+        }
+        true
       }
-    })
-    main_bottom_navigation.setOnNavigationItemSelectedListener {
-      when (it.itemId) {
-        R.id.action_one -> main_viewpager.currentItem = 0
-        R.id.action_two -> main_viewpager.currentItem = 1
-        R.id.action_three -> main_viewpager.currentItem = 2
-      }
-      true
     }
   }
 }
