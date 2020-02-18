@@ -23,16 +23,12 @@ import com.github.florent37.glidepalette.GlidePalette
 import com.skydoves.baserecyclerviewadapter.BaseViewHolder
 import com.skydoves.themovies2.api.Api
 import com.skydoves.themovies2.models.entity.Movie
+import com.skydoves.themovies2.view.ui.details.movie.MovieDetailActivity
 import kotlinx.android.synthetic.main.item_poster.view.*
 
-class MovieListViewHolder(
-  val view: View,
-  private val delegate: Delegate
+class MovieListViewHolder constructor(
+  val view: View
 ) : BaseViewHolder(view) {
-
-  interface Delegate {
-    fun onItemClick(movie: Movie)
-  }
 
   private lateinit var movie: Movie
 
@@ -59,7 +55,7 @@ class MovieListViewHolder(
     }
   }
 
-  override fun onClick(v: View?) = delegate.onItemClick(movie)
+  override fun onClick(v: View?) = MovieDetailActivity.startActivityModel(context(), movie)
 
   override fun onLongClick(v: View?) = false
 }

@@ -18,6 +18,8 @@ package com.skydoves.themovies2.binding
 
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.skydoves.baserecyclerviewadapter.BaseAdapter
+import com.skydoves.baserecyclerviewadapter.RecyclerViewPaginator
 import com.skydoves.themovies2.extension.visible
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
@@ -29,14 +31,33 @@ import com.skydoves.themovies2.view.adapter.PeopleAdapter
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.TvListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
+import com.skydoves.themovies2.view.ui.main.MainActivityViewModel
 import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
+
+@BindingAdapter("adapter")
+fun bindAdapter(view: RecyclerView, baseAdapter: BaseAdapter) {
+  view.adapter = baseAdapter
+}
 
 @BindingAdapter("adapterMovieList")
 fun bindAdapterMovieList(view: RecyclerView, movies: List<Movie>?) {
   movies.whatIfNotNull {
     val adapter = view.adapter as? MovieListAdapter
     adapter?.addMovieList(it)
+  }
+}
+
+@BindingAdapter("paginationMovieList")
+fun paginationMovieList(view: RecyclerView, viewModel: MainActivityViewModel) {
+  RecyclerViewPaginator(
+    recyclerView = view,
+    isLoading = { false },
+    loadMore = { viewModel.postMoviePage(it) },
+    onLast = { false }
+  ).run {
+    threshold = 4
+    currentPage = 1
   }
 }
 

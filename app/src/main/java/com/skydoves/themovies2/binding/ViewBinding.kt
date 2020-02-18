@@ -20,7 +20,9 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.LiveData
 import co.lujun.androidtagview.TagContainerLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -34,6 +36,13 @@ import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.room.converters.KeywordListMapper
 import com.skydoves.whatif.whatIfNotNull
+
+@BindingAdapter("toast")
+fun bindToast(view: View, text: LiveData<String>) {
+  text.value.whatIfNotNull {
+    Toast.makeText(view.context, it, Toast.LENGTH_SHORT).show()
+  }
+}
 
 @BindingAdapter("visibilityByResource")
 fun bindVisibilityByResource(view: View, anyList: List<Any>?) {

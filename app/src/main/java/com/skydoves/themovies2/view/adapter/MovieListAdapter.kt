@@ -23,8 +23,7 @@ import com.skydoves.themovies2.R
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.view.viewholder.MovieListViewHolder
 
-class MovieListAdapter(private val delegate: MovieListViewHolder.Delegate) :
-  BaseAdapter() {
+class MovieListAdapter : BaseAdapter() {
 
   init {
     addSection(ArrayList<Movie>())
@@ -38,5 +37,5 @@ class MovieListAdapter(private val delegate: MovieListViewHolder.Delegate) :
 
   override fun layout(sectionRow: SectionRow) = R.layout.item_poster
 
-  override fun viewHolder(layout: Int, view: View) = MovieListViewHolder(view, delegate)
+  override fun viewHolder(layout: Int, view: View) = MovieListViewHolder(view)
 }
