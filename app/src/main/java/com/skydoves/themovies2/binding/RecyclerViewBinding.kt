@@ -69,6 +69,19 @@ fun bindAdapterPersonList(view: RecyclerView, people: List<Person>?) {
   }
 }
 
+@BindingAdapter("paginationPersonList")
+fun paginationPersonList(view: RecyclerView, viewModel: MainActivityViewModel) {
+  RecyclerViewPaginator(
+    recyclerView = view,
+    isLoading = { false },
+    loadMore = { viewModel.postPeoplePage(it) },
+    onLast = { false }
+  ).run {
+    threshold = 4
+    currentPage = 1
+  }
+}
+
 @BindingAdapter("adapterTvList")
 fun bindAdapterTvList(view: RecyclerView, tvs: List<Tv>?) {
   tvs.whatIfNotNull {
