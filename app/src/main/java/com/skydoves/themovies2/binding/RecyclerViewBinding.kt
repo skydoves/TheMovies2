@@ -90,6 +90,19 @@ fun bindAdapterTvList(view: RecyclerView, tvs: List<Tv>?) {
   }
 }
 
+@BindingAdapter("paginationTvList")
+fun paginationTvList(view: RecyclerView, viewModel: MainActivityViewModel) {
+  RecyclerViewPaginator(
+    recyclerView = view,
+    isLoading = { false },
+    loadMore = { viewModel.postTvPage(it) },
+    onLast = { false }
+  ).run {
+    threshold = 4
+    currentPage = 1
+  }
+}
+
 @BindingAdapter("adapterVideoList")
 fun bindAdapterVideoList(view: RecyclerView, videos: List<Video>?) {
   videos.whatIfNotNullOrEmpty {
