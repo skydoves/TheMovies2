@@ -12,6 +12,14 @@
     <variable
       name="viewModel"
       type="com.skydoves.themovies2.view.ui.details.movie.MovieDetailViewModel" />
+
+    <variable
+      name="videoListAdapter"
+      type="com.skydoves.themovies2.view.adapter.VideoListAdapter" />
+
+    <variable
+      name="reviewListAdapter"
+      type="com.skydoves.themovies2.view.adapter.ReviewListAdapter" />
   </data>
 
   <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -36,7 +44,7 @@
         app:expandedTitleTextAppearance="@style/CollapsedExpandedTitleText"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
           android:id="@+id/movie_detail_poster"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -66,11 +74,16 @@
 
         <include
           android:id="@+id/detail_header"
-          layout="@layout/layout_movie_detail_header" />
+          layout="@layout/layout_movie_detail_header"
+          app:movie="@{movie}" />
 
         <include
           android:id="@+id/detail_body"
-          layout="@layout/layout_movie_detail_body" />
+          layout="@layout/layout_movie_detail_body"
+          app:movie="@{movie}"
+          app:reviewListAdapter="@{reviewListAdapter}"
+          app:videoListAdapter="@{videoListAdapter}"
+          app:viewModel="@{viewModel}" />
 
       </LinearLayout>
     </androidx.core.widget.NestedScrollView>

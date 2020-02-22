@@ -16,6 +16,8 @@
 
 package com.skydoves.themovies2.view.viewholder
 
+import android.content.Intent
+import android.net.Uri
 import android.view.View
 import com.bumptech.glide.Glide
 import com.github.florent37.glidepalette.BitmapPalette
@@ -25,14 +27,7 @@ import com.skydoves.themovies2.api.Api
 import com.skydoves.themovies2.models.Video
 import kotlinx.android.synthetic.main.item_video.view.*
 
-class VideoListViewHolder(
-  val view: View,
-  private val delegate: Delegate
-) : BaseViewHolder(view) {
-
-  interface Delegate {
-    fun onItemClicked(video: Video)
-  }
+class VideoListViewHolder(val view: View) : BaseViewHolder(view) {
 
   private lateinit var video: Video
 
@@ -56,7 +51,10 @@ class VideoListViewHolder(
     }
   }
 
-  override fun onClick(v: View?) = delegate.onItemClicked(video)
+  override fun onClick(v: View?) {
+    val playVideoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(video.key)))
+    context().startActivity(playVideoIntent)
+  }
 
   override fun onLongClick(v: View?) = false
 }

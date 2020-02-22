@@ -43,8 +43,7 @@ fun bindAdapter(view: RecyclerView, baseAdapter: BaseAdapter) {
 @BindingAdapter("adapterMovieList")
 fun bindAdapterMovieList(view: RecyclerView, movies: List<Movie>?) {
   movies.whatIfNotNull {
-    val adapter = view.adapter as? MovieListAdapter
-    adapter?.addMovieList(it)
+    (view.adapter as? MovieListAdapter)?.addMovieList(it)
   }
 }
 
@@ -64,8 +63,7 @@ fun paginationMovieList(view: RecyclerView, viewModel: MainActivityViewModel) {
 @BindingAdapter("adapterPersonList")
 fun bindAdapterPersonList(view: RecyclerView, people: List<Person>?) {
   people.whatIfNotNull {
-    val adapter = view.adapter as? PeopleAdapter
-    adapter?.addPeople(it)
+    (view.adapter as? PeopleAdapter)?.addPeople(it)
   }
 }
 
@@ -85,8 +83,7 @@ fun paginationPersonList(view: RecyclerView, viewModel: MainActivityViewModel) {
 @BindingAdapter("adapterTvList")
 fun bindAdapterTvList(view: RecyclerView, tvs: List<Tv>?) {
   tvs.whatIfNotNull {
-    val adapter = view.adapter as? TvListAdapter
-    adapter?.addTvList(it)
+    (view.adapter as? TvListAdapter)?.addTvList(it)
   }
 }
 
@@ -106,17 +103,16 @@ fun paginationTvList(view: RecyclerView, viewModel: MainActivityViewModel) {
 @BindingAdapter("adapterVideoList")
 fun bindAdapterVideoList(view: RecyclerView, videos: List<Video>?) {
   videos.whatIfNotNullOrEmpty {
-    val adapter = view.adapter as? VideoListAdapter
-    adapter?.addVideoList(it)
+    (view.adapter as? VideoListAdapter)?.addVideoList(it)
     view.visible()
   }
 }
 
 @BindingAdapter("adapterReviewList")
 fun bindAdapterReviewList(view: RecyclerView, reviews: List<Review>?) {
+  view.setHasFixedSize(true)
   reviews.whatIfNotNullOrEmpty {
-    val adapter = view.adapter as? ReviewListAdapter
-    adapter?.addReviewList(it)
+    (view.adapter as? ReviewListAdapter)?.addReviewList(it)
     view.visible()
   }
 }

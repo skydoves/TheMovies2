@@ -12,6 +12,14 @@
     <variable
       name="viewModel"
       type="com.skydoves.themovies2.view.ui.details.movie.MovieDetailViewModel" />
+
+    <variable
+      name="videoListAdapter"
+      type="com.skydoves.themovies2.view.adapter.VideoListAdapter" />
+
+    <variable
+      name="reviewListAdapter"
+      type="com.skydoves.themovies2.view.adapter.ReviewListAdapter" />
   </data>
 
   <LinearLayout
@@ -21,12 +29,12 @@
     android:orientation="vertical"
     android:paddingBottom="10dp">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
       android:id="@+id/detail_body_trailers"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="23dp"
-      android:text="Trailers"
+      android:text="@string/trailers"
       android:textColor="@color/white"
       android:textSize="20sp"
       android:textStyle="bold"
@@ -39,20 +47,25 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="12dp"
+      android:orientation="horizontal"
       android:visibility="gone"
+      app:adapter="@{videoListAdapter}"
       app:adapterVideoList="@{viewModel.videoListLiveData}"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+      app:toast="@{viewModel.toastLiveData}"
+      tools:listitem="@layout/item_video"
       tools:visibility="visible" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="23dp"
-      android:text="Summary"
+      android:text="@string/summary"
       android:textColor="@color/white"
       android:textSize="20sp"
       android:textStyle="bold" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
       android:id="@+id/detail_body_summary"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -82,12 +95,12 @@
       app:tag_vertical_padding="6dp"
       tools:visibility="visible" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
       android:id="@+id/detail_body_reviews"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="23dp"
-      android:text="Reviews"
+      android:text="@string/reviews"
       android:textColor="@color/white"
       android:textSize="20sp"
       android:textStyle="bold"
@@ -100,8 +113,14 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginTop="12dp"
+      android:nestedScrollingEnabled="false"
+      android:orientation="vertical"
       android:visibility="gone"
+      app:adapter="@{reviewListAdapter}"
       app:adapterReviewList="@{viewModel.reviewListLiveData}"
+      app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+      tools:ignore="UnusedAttribute"
+      tools:listitem="@layout/item_review"
       tools:visibility="visible" />
   </LinearLayout>
 </layout>

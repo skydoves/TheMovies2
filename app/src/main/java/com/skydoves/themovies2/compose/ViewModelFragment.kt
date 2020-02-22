@@ -22,7 +22,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
-open class ViewModelFragment : Fragment() {
+abstract class ViewModelFragment : Fragment() {
 
   protected inline fun <reified T : ViewDataBinding> binding(
     inflater: LayoutInflater,

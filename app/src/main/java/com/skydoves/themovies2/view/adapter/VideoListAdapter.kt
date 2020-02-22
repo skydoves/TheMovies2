@@ -23,9 +23,7 @@ import com.skydoves.themovies2.R
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.view.viewholder.VideoListViewHolder
 
-class VideoListAdapter(
-  private val delegate: VideoListViewHolder.Delegate
-) : BaseAdapter() {
+class VideoListAdapter : BaseAdapter() {
 
   init {
     addSection(ArrayList<Video>())
@@ -39,5 +37,5 @@ class VideoListAdapter(
 
   override fun layout(sectionRow: SectionRow) = R.layout.item_video
 
-  override fun viewHolder(layout: Int, view: View) = VideoListViewHolder(view, delegate)
+  override fun viewHolder(layout: Int, view: View) = VideoListViewHolder(view)
 }

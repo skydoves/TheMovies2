@@ -17,31 +17,26 @@
 package com.skydoves.themovies2.view.ui.details.tv
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.api.Api
 import com.skydoves.themovies2.compose.ViewModelActivity
 import com.skydoves.themovies2.databinding.ActivityTvDetailBinding
 import com.skydoves.themovies2.extension.applyToolbarMargin
 import com.skydoves.themovies2.extension.simpleToolbarWithHome
-import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
-import com.skydoves.themovies2.view.viewholder.VideoListViewHolder
 import kotlinx.android.synthetic.main.activity_tv_detail.*
 import kotlinx.android.synthetic.main.layout_tv_detail_body.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class TvDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
+class TvDetailActivity : ViewModelActivity() {
 
   private val vm by viewModel<TvDetailViewModel>()
   private val binding by binding<ActivityTvDetailBinding>(R.layout.activity_tv_detail)
@@ -65,7 +60,7 @@ class TvDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
     applyToolbarMargin(tv_detail_toolbar)
     simpleToolbarWithHome(tv_detail_toolbar, getTvFromIntent().name)
     detail_body_recyclerView_trailers.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-    detail_body_recyclerView_trailers.adapter = VideoListAdapter(this)
+    detail_body_recyclerView_trailers.adapter = VideoListAdapter()
     detail_body_recyclerView_reviews.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
     detail_body_recyclerView_reviews.adapter = ReviewListAdapter()
     detail_body_recyclerView_reviews.isNestedScrollingEnabled = false
@@ -81,11 +76,6 @@ class TvDetailActivity : ViewModelActivity(), VideoListViewHolder.Delegate {
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     if (item?.itemId == android.R.id.home) onBackPressed()
     return false
-  }
-
-  override fun onItemClicked(video: Video) {
-    val playVideoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(video.key)))
-    startActivity(playVideoIntent)
   }
 
   companion object {
