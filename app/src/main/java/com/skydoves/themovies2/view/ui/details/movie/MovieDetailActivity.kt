@@ -29,18 +29,17 @@ import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 import org.jetbrains.anko.startActivity
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.android.viewmodel.ext.android.getViewModel
 
 class MovieDetailActivity : ViewModelActivity() {
 
-  private val vm: MovieDetailViewModel by viewModel()
   private val binding: ActivityMovieDetailBinding by binding(R.layout.activity_movie_detail)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     with(binding) {
       lifecycleOwner = this@MovieDetailActivity
-      viewModel = vm.apply { postMovieId(getMovieFromIntent().id) }
+      viewModel = getViewModel(MovieDetailViewModel::class).apply { postMovieId(getMovieFromIntent().id) }
       movie = getMovieFromIntent()
       videoListAdapter = VideoListAdapter()
       reviewListAdapter = ReviewListAdapter()
