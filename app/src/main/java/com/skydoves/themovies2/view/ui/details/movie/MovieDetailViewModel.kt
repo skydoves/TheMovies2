@@ -26,8 +26,9 @@ import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.repository.MovieRepository
 import timber.log.Timber
 
-class MovieDetailViewModel
-constructor(private val movieRepository: MovieRepository) : DispatchViewModel() {
+class MovieDetailViewModel constructor(
+  private val movieRepository: MovieRepository
+) : DispatchViewModel() {
 
   private val movieIdLiveData: MutableLiveData<Int> = MutableLiveData()
   val keywordListLiveData: LiveData<List<Keyword>>

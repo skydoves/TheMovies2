@@ -22,12 +22,9 @@ import android.view.MenuItem
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.compose.ViewModelActivity
 import com.skydoves.themovies2.databinding.ActivityMovieDetailBinding
-import com.skydoves.themovies2.extension.applyToolbarMargin
-import com.skydoves.themovies2.extension.simpleToolbarWithHome
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
-import kotlinx.android.synthetic.main.activity_movie_detail.*
 import org.jetbrains.anko.startActivity
 import org.koin.android.viewmodel.ext.android.getViewModel
 
@@ -37,28 +34,22 @@ class MovieDetailActivity : ViewModelActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    val intentMovie: Movie = intent.getParcelableExtra(movieId) as Movie
     with(binding) {
+      activity = this@MovieDetailActivity
       lifecycleOwner = this@MovieDetailActivity
-      viewModel = getViewModel(MovieDetailViewModel::class).apply { postMovieId(getMovieFromIntent().id) }
-      movie = getMovieFromIntent()
+      viewModel =
+        getViewModel(MovieDetailViewModel::class).apply { postMovieId(intentMovie.id) }
+      movie = intentMovie
       videoListAdapter = VideoListAdapter()
       reviewListAdapter = ReviewListAdapter()
     }
-    initializeUI()
-  }
-
-  private fun initializeUI() {
-    applyToolbarMargin(movie_detail_toolbar)
-    simpleToolbarWithHome(movie_detail_toolbar, getMovieFromIntent().title)
   }
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     if (item?.itemId == android.R.id.home) onBackPressed()
     return false
   }
-
-  private fun getMovieFromIntent() =
-    intent.getParcelableExtra(movieId) as Movie
 
   companion object {
     private const val movieId = "movie"

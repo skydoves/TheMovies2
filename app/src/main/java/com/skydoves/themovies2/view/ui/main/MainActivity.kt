@@ -20,7 +20,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.skydoves.themovies2.R
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.main_bottom_navigation
+import kotlinx.android.synthetic.main.activity_main.main_viewpager
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,7 +37,12 @@ class MainActivity : AppCompatActivity() {
       offscreenPageLimit = 3
       addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
         override fun onPageScrollStateChanged(state: Int) = Unit
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) = Unit
+        override fun onPageScrolled(
+          position: Int,
+          positionOffset: Float,
+          positionOffsetPixels: Int
+        ) = Unit
+
         override fun onPageSelected(position: Int) {
           main_bottom_navigation.menu.getItem(position).isChecked = true
         }

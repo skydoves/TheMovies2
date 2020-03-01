@@ -28,7 +28,11 @@ import org.koin.android.viewmodel.ext.android.getViewModel
 
 class TvListFragment : ViewModelFragment() {
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
     return binding<MainFragmentTvBinding>(inflater, R.layout.main_fragment_tv, container).apply {
       viewModel = getViewModel<MainActivityViewModel>().apply { postTvPage(1) }
       lifecycleOwner = this@TvListFragment

@@ -6,6 +6,10 @@
   <data>
 
     <variable
+      name="activity"
+      type="com.skydoves.themovies2.view.ui.details.movie.MovieDetailActivity" />
+
+    <variable
       name="movie"
       type="com.skydoves.themovies2.models.entity.Movie" />
 
@@ -52,11 +56,13 @@
           app:bindBackDrop="@{movie}"
           app:layout_collapseMode="parallax" />
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
           android:id="@+id/movie_detail_toolbar"
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
-          app:layout_collapseMode="pin" />
+          app:layout_collapseMode="pin"
+          app:simpleToolbarTitle="@{movie.title}"
+          app:simpleToolbarWithHome="@{activity}" />
       </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -6,12 +6,24 @@
   <data>
 
     <variable
+      name="activity"
+      type="com.skydoves.themovies2.view.ui.details.tv.TvDetailActivity" />
+
+    <variable
       name="tv"
       type="com.skydoves.themovies2.models.entity.Tv" />
 
     <variable
       name="viewModel"
       type="com.skydoves.themovies2.view.ui.details.tv.TvDetailViewModel" />
+
+    <variable
+      name="videoAdapter"
+      type="com.skydoves.themovies2.view.adapter.VideoListAdapter" />
+
+    <variable
+      name="reviewAdapter"
+      type="com.skydoves.themovies2.view.adapter.ReviewListAdapter" />
   </data>
 
   <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -36,7 +48,7 @@
         app:expandedTitleTextAppearance="@style/CollapsedExpandedTitleText"
         app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
           android:id="@+id/tv_detail_poster"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
@@ -44,11 +56,13 @@
           app:bindBackDrop="@{tv}"
           app:layout_collapseMode="parallax" />
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
           android:id="@+id/tv_detail_toolbar"
           android:layout_width="match_parent"
           android:layout_height="?attr/actionBarSize"
-          app:layout_collapseMode="pin" />
+          app:layout_collapseMode="pin"
+          app:simpleToolbarTitle="@{tv.name}"
+          app:simpleToolbarWithHome="@{activity}" />
       </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -66,11 +80,16 @@
 
         <include
           android:id="@+id/detail_header"
-          layout="@layout/layout_tv_detail_header" />
+          layout="@layout/layout_tv_detail_header"
+          app:tv="@{tv}" />
 
         <include
           android:id="@+id/detail_body"
-          layout="@layout/layout_tv_detail_body" />
+          layout="@layout/layout_tv_detail_body"
+          app:reviewAdapter="@{reviewAdapter}"
+          app:tv="@{tv}"
+          app:videoAdapter="@{videoAdapter}"
+          app:viewModel="@{viewModel}" />
       </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

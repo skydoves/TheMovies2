@@ -19,59 +19,31 @@ package com.skydoves.themovies2.view.ui.details.tv
 import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.lifecycle.observe
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.compose.ViewModelActivity
 import com.skydoves.themovies2.databinding.ActivityTvDetailBinding
-import com.skydoves.themovies2.extension.applyToolbarMargin
-import com.skydoves.themovies2.extension.simpleToolbarWithHome
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
-import kotlinx.android.synthetic.main.activity_tv_detail.*
-import kotlinx.android.synthetic.main.layout_tv_detail_body.*
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.android.viewmodel.ext.android.getViewModel
 
 class TvDetailActivity : ViewModelActivity() {
 
-  private val vm by viewModel<TvDetailViewModel>()
-  private val binding by binding<ActivityTvDetailBinding>(R.layout.activity_tv_detail)
+  private val binding: ActivityTvDetailBinding by binding(R.layout.activity_tv_detail)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    vm.postTvId(getTvFromIntent().id)
+    val intentTv = intent.getParcelableExtra(tvId) as Tv
     with(binding) {
+      activity = this@TvDetailActivity
       lifecycleOwner = this@TvDetailActivity
-      viewModel = vm
-      detailBody.viewModel = vm
-      tv = getTvFromIntent()
-      detailHeader.tv = getTvFromIntent()
-      detailBody.tv = getTvFromIntent()
+      viewModel = getViewModel(TvDetailViewModel::class).apply { postTvId(intentTv.id) }
+      tv = intentTv
+      videoAdapter = VideoListAdapter()
+      reviewAdapter = ReviewListAdapter()
     }
-    initializeUI()
-    observeMessages()
   }
-
-  private fun initializeUI() {
-    applyToolbarMargin(tv_detail_toolbar)
-    simpleToolbarWithHome(tv_detail_toolbar, getTvFromIntent().name)
-    detail_body_recyclerView_trailers.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-    detail_body_recyclerView_trailers.adapter = VideoListAdapter()
-    detail_body_recyclerView_reviews.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-    detail_body_recyclerView_reviews.adapter = ReviewListAdapter()
-    detail_body_recyclerView_reviews.isNestedScrollingEnabled = false
-    detail_body_recyclerView_reviews.setHasFixedSize(true)
-  }
-
-  private fun getTvFromIntent() =
-    intent.getParcelableExtra(tvId) as Tv
-
-  private fun observeMessages() =
-    this.vm.toastLiveData.observe(this) { toast(it) }
 
   override fun onOptionsItemSelected(item: MenuItem?): Boolean {
     if (item?.itemId == android.R.id.home) onBackPressed()

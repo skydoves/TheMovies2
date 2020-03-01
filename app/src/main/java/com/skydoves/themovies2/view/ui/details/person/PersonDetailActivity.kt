@@ -20,47 +20,38 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
-import androidx.lifecycle.observe
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.compose.ViewModelActivity
 import com.skydoves.themovies2.databinding.ActivityPersonDetailBinding
 import com.skydoves.themovies2.extension.checkIsMaterialVersion
 import com.skydoves.themovies2.models.entity.Person
-import kotlinx.android.synthetic.main.toolbar_default.*
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
-import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.android.viewmodel.ext.android.getViewModel
 
 class PersonDetailActivity : ViewModelActivity() {
 
-  private val vm by viewModel<PersonDetailViewModel>()
-  private val binding by binding<ActivityPersonDetailBinding>(R.layout.activity_person_detail)
+  private val binding: ActivityPersonDetailBinding by binding(R.layout.activity_person_detail)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    vm.postPersonId(getPersonFromIntent().id)
+    val intentPerson = intent.getParcelableExtra(personId) as Person
     with(binding) {
+      activity = this@PersonDetailActivity
       lifecycleOwner = this@PersonDetailActivity
-      viewModel = vm
-      person = getPersonFromIntent()
+      viewModel =
+        getViewModel(PersonDetailViewModel::class).apply { postPersonId(intentPerson.id) }
+      person = intentPerson
     }
-    initializeUI()
-    observeMessages()
   }
 
-  private fun initializeUI() {
-    toolbar_home.setOnClickListener { onBackPressed() }
-    toolbar_title.text = getPersonFromIntent().name
+  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    if (item?.itemId == android.R.id.home) onBackPressed()
+    return false
   }
-
-  private fun getPersonFromIntent() =
-    intent.getParcelableExtra(personId) as Person
-
-  private fun observeMessages() =
-    this.vm.toastLiveData.observe(this) { toast(it) }
 
   companion object {
     const val personId = "person"

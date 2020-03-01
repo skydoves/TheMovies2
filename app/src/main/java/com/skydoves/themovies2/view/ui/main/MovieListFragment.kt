@@ -28,8 +28,13 @@ import org.koin.android.viewmodel.ext.android.getViewModel
 
 class MovieListFragment : ViewModelFragment() {
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    return binding<MainFragmentMovieBinding>(inflater, R.layout.main_fragment_movie, container).apply {
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View? {
+    return binding<MainFragmentMovieBinding>(inflater, R.layout.main_fragment_movie,
+      container).apply {
       viewModel = getViewModel<MainActivityViewModel>().apply { postMoviePage(1) }
       lifecycleOwner = this@MovieListFragment
       adapter = MovieListAdapter()

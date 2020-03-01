@@ -92,7 +92,7 @@ fun AppCompatActivity.applyToolbarMargin(toolbar: Toolbar) {
   }
 }
 
-private fun AppCompatActivity.getStatusBarSize(): Int {
+fun AppCompatActivity.getStatusBarSize(): Int {
   val idStatusBarHeight = resources.getIdentifier("status_bar_height", "dimen", "android")
   return if (idStatusBarHeight > 0) {
     resources.getDimensionPixelSize(idStatusBarHeight)

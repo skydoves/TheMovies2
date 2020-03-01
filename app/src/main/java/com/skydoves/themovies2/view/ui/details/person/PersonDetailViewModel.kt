@@ -24,8 +24,9 @@ import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.repository.PeopleRepository
 import timber.log.Timber
 
-class PersonDetailViewModel
-constructor(private val peopleRepository: PeopleRepository) : DispatchViewModel() {
+class PersonDetailViewModel constructor(
+  private val peopleRepository: PeopleRepository
+) : DispatchViewModel() {
 
   private val personIdLiveData: MutableLiveData<Int> = MutableLiveData()
   val personLiveData: LiveData<PersonDetail>
