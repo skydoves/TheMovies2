@@ -97,25 +97,16 @@
           </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <co.lujun.androidtagview.TagContainerLayout
-          android:id="@+id/detail_person_tags"
+        <com.google.android.material.chip.ChipGroup
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="10dp"
+          android:layout_marginTop="15dp"
           android:padding="10dp"
           android:visibility="gone"
-          app:container_background_color="@color/background800"
-          app:container_border_color="@color/background800"
-          app:container_border_radius="6dp"
-          app:container_enable_drag="false"
-          app:nameTags="@{viewModel.personLiveData}"
-          app:tag_background_color="@color/colorPrimary"
-          app:tag_border_color="@color/colorPrimary"
-          app:tag_clickable="false"
-          app:tag_horizontal_padding="5dp"
-          app:tag_text_color="@color/white"
-          app:tag_theme="none"
-          app:tag_vertical_padding="6dp"
+          app:chipSpacingHorizontal="5dp"
+          app:chipSpacingVertical="6dp"
+          app:mapNameTagList="@{viewModel.personLiveData}"
+          app:singleLine="false"
           tools:visibility="visible" />
       </LinearLayout>
     </ScrollView>

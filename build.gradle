@@ -22,7 +22,6 @@ buildscript {
 
         // kotlin
         kotlinVersion = '1.3.61'
-        ankoVersion = '0.10.8'
 
         // architecture components
         archCompomentVersion = '2.0.0'
@@ -31,9 +30,6 @@ buildscript {
 
         // koin
         koinVersion = '2.0.1'
-
-        // whatIf
-        whatIfVersion = '1.0.4'
 
         // coroutines
         coroutinesVersion = '1.3.0'
@@ -47,6 +43,9 @@ buildscript {
         glideVersion = '4.9.0'
         glidePaletteVersion = '2.1.2'
 
+        // whatIf
+        whatIfVersion = '1.0.4'
+
         // adapter
         baseAdapterVersion = '0.1.3'
 
@@ -55,7 +54,6 @@ buildscript {
         stethoVersion = '1.5.1'
 
         // custom view
-        androidTagViewVersion = '1.1.7'
         expandableTextViewVersion = '0.1.4'
 
         // unit test
@@ -70,7 +68,7 @@ buildscript {
         jacocoVersion = '0.8.4'
 
         // plugins
-        spotlessVersion = '3.25.0'
+        spotlessVersion = '3.26.1'
         versionPlugin  = '0.23.0'
     }
 

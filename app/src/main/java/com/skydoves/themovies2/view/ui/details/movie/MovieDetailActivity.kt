@@ -16,7 +16,9 @@
 
 package com.skydoves.themovies2.view.ui.details.movie
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import com.skydoves.themovies2.R
@@ -25,7 +27,6 @@ import com.skydoves.themovies2.databinding.ActivityMovieDetailBinding
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
-import org.jetbrains.anko.startActivity
 import org.koin.android.viewmodel.ext.android.getViewModel
 
 class MovieDetailActivity : ViewModelActivity() {
@@ -54,7 +55,10 @@ class MovieDetailActivity : ViewModelActivity() {
   companion object {
     private const val movieId = "movie"
     fun startActivityModel(context: Context?, movie: Movie) {
-      context?.startActivity<MovieDetailActivity>(movieId to movie)
+      if (context is Activity) {
+        context.startActivity(
+          Intent(context, MovieDetailActivity::class.java).putExtra(movieId, movie))
+      }
     }
   }
 }

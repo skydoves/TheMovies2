@@ -29,7 +29,6 @@ import com.skydoves.themovies2.compose.ViewModelActivity
 import com.skydoves.themovies2.databinding.ActivityPersonDetailBinding
 import com.skydoves.themovies2.extension.checkIsMaterialVersion
 import com.skydoves.themovies2.models.entity.Person
-import org.jetbrains.anko.startActivity
 import org.koin.android.viewmodel.ext.android.getViewModel
 
 class PersonDetailActivity : ViewModelActivity() {
@@ -67,7 +66,8 @@ class PersonDetailActivity : ViewModelActivity() {
             context.startActivityForResult(intent, intent_requestCode, options.toBundle())
           }
         } else {
-          context.startActivity<PersonDetailActivity>(personId to person)
+          context.startActivity(
+            Intent(context, PersonDetailActivity::class.java).putExtra(personId, person))
         }
       }
     }

@@ -18,14 +18,19 @@ package com.skydoves.themovies2.binding
 
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.skydoves.baserecyclerviewadapter.BaseAdapter
 import com.skydoves.baserecyclerviewadapter.RecyclerViewPaginator
+import com.skydoves.themovies2.R
 import com.skydoves.themovies2.extension.visible
+import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
+import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.view.adapter.MovieListAdapter
 import com.skydoves.themovies2.view.adapter.PeopleAdapter
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
@@ -114,5 +119,38 @@ fun bindAdapterReviewList(view: RecyclerView, reviews: List<Review>?) {
   reviews.whatIfNotNullOrEmpty {
     (view.adapter as? ReviewListAdapter)?.addReviewList(it)
     view.visible()
+  }
+}
+
+@BindingAdapter("mapKeywordList")
+fun bindMapKeywordList(chipGroup: ChipGroup, keywords: List<Keyword>?) {
+  keywords.whatIfNotNullOrEmpty {
+    chipGroup.visible()
+    for (keyword in it) {
+      chipGroup.addView(
+        Chip(chipGroup.context).apply {
+          text = keyword.name
+          isCheckable = false
+          setTextAppearanceResource(R.style.ChipTextStyle)
+          setChipBackgroundColorResource(R.color.colorPrimary)
+        })
+    }
+  }
+}
+
+@BindingAdapter("mapNameTagList")
+fun bindTags(chipGroup: ChipGroup, personDetail: PersonDetail?) {
+  personDetail?.also_known_as?.whatIfNotNull {
+    chipGroup.visible()
+    for (nameTag in it) {
+      chipGroup.addView(
+        Chip(chipGroup.context).apply {
+          text = nameTag
+          isCheckable = false
+          setTextAppearanceResource(R.style.ChipTextStyle)
+          setChipBackgroundColorResource(R.color.colorPrimary)
+        }
+      )
+    }
   }
 }
