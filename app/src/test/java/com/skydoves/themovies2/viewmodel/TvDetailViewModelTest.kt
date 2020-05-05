@@ -24,7 +24,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.skydoves.themovies2.MainCoroutinesRule
 import com.skydoves.themovies2.api.ApiUtil
-import com.skydoves.themovies2.api.client.TvClient
 import com.skydoves.themovies2.api.service.TvService
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
@@ -47,7 +46,6 @@ class TvDetailViewModelTest {
   private lateinit var viewModel: TvDetailViewModel
   private lateinit var repository: TvRepository
   private val service = mock<TvService>()
-  private val client = TvClient(service)
   private val tvDao = mock<TvDao>()
 
   @ExperimentalCoroutinesApi
@@ -60,7 +58,7 @@ class TvDetailViewModelTest {
   @ExperimentalCoroutinesApi
   @Before
   fun setup() {
-    this.repository = TvRepository(client, tvDao)
+    this.repository = TvRepository(service, tvDao)
     this.viewModel = TvDetailViewModel(repository)
   }
 

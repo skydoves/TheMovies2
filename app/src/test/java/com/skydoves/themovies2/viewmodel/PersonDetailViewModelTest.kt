@@ -24,7 +24,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.skydoves.themovies2.MainCoroutinesRule
 import com.skydoves.themovies2.api.ApiUtil
-import com.skydoves.themovies2.api.client.PeopleClient
 import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.repository.PeopleRepository
@@ -42,7 +41,6 @@ class PersonDetailViewModelTest {
   private lateinit var viewModel: PersonDetailViewModel
   private lateinit var repository: PeopleRepository
   private val service = mock<PeopleService>()
-  private val client = PeopleClient(service)
   private val peopleDao = mock<PeopleDao>()
 
   @ExperimentalCoroutinesApi
@@ -55,7 +53,7 @@ class PersonDetailViewModelTest {
   @ExperimentalCoroutinesApi
   @Before
   fun setup() {
-    this.repository = PeopleRepository(client, peopleDao)
+    this.repository = PeopleRepository(service, peopleDao)
     this.viewModel = PersonDetailViewModel(repository)
   }
 

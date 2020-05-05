@@ -24,8 +24,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.skydoves.themovies2.MainCoroutinesRule
 import com.skydoves.themovies2.api.ApiUtil
-import com.skydoves.themovies2.api.client.PeopleClient
-import com.skydoves.themovies2.api.client.TheDiscoverClient
 import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.api.service.TheDiscoverService
 import com.skydoves.themovies2.models.entity.Movie
@@ -56,13 +54,11 @@ class MainActivityViewModelTest {
 
   private lateinit var discoverRepository: DiscoverRepository
   private val discoverService = mock<TheDiscoverService>()
-  private val discoverClient = TheDiscoverClient(discoverService)
   private val movieDao = mock<MovieDao>()
   private val tvDao = mock<TvDao>()
 
   private lateinit var peopleRepository: PeopleRepository
   private val peopleService = mock<PeopleService>()
-  private val peopleClient = PeopleClient(peopleService)
   private val peopleDao = mock<PeopleDao>()
 
   @ExperimentalCoroutinesApi
@@ -75,8 +71,8 @@ class MainActivityViewModelTest {
   @ExperimentalCoroutinesApi
   @Before
   fun setup() {
-    this.discoverRepository = DiscoverRepository(discoverClient, movieDao, tvDao)
-    this.peopleRepository = PeopleRepository(peopleClient, peopleDao)
+    this.discoverRepository = DiscoverRepository(discoverService, movieDao, tvDao)
+    this.peopleRepository = PeopleRepository(peopleService, peopleDao)
     this.viewModel = MainActivityViewModel(discoverRepository, peopleRepository)
   }
 
