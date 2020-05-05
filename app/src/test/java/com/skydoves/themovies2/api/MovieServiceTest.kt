@@ -16,6 +16,8 @@
 
 package com.skydoves.themovies2.api
 
+import com.skydoves.sandwich.ApiResponse
+import com.skydoves.sandwich.request
 import com.skydoves.themovies2.api.service.MovieService
 import java.io.IOException
 import org.hamcrest.CoreMatchers.`is`
@@ -36,7 +38,7 @@ class MovieServiceTest : ApiAbstract<MovieService>() {
   @Test
   fun fetchMovieKeywordsTest() {
     enqueueResponse("/tmdb_movie_keywords.json")
-    this.service.fetchKeywords(1).async {
+    this.service.fetchKeywords(1).request {
       when (it) {
         is ApiResponse.Success -> {
           assertThat(it.data?.id, `is`(550))
@@ -51,7 +53,7 @@ class MovieServiceTest : ApiAbstract<MovieService>() {
   @Test
   fun fetchMovieVideosTest() {
     enqueueResponse("/tmdb_movie_videos.json")
-    this.service.fetchVideos(1).async {
+    this.service.fetchVideos(1).request {
       when (it) {
         is ApiResponse.Success -> {
           assertThat(it.data?.id, `is`(550))
@@ -66,7 +68,7 @@ class MovieServiceTest : ApiAbstract<MovieService>() {
   @Test
   fun fetchMovieReviewsTest() {
     enqueueResponse("/tmdb_movie_reviews.json")
-    this.service.fetchReviews(1).async {
+    this.service.fetchReviews(1).request {
       when (it) {
         is ApiResponse.Success -> {
           assertThat(it.data?.id, `is`(297761))

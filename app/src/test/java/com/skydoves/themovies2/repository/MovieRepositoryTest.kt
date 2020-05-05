@@ -22,10 +22,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.skydoves.sandwich.ApiResponse
+import com.skydoves.sandwich.request
 import com.skydoves.themovies2.MainCoroutinesRule
-import com.skydoves.themovies2.api.ApiResponse
 import com.skydoves.themovies2.api.ApiUtil
-import com.skydoves.themovies2.api.client.MovieClient
 import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
@@ -51,7 +51,6 @@ import org.junit.Test
 class MovieRepositoryTest {
 
   private lateinit var repository: MovieRepository
-  private lateinit var client: MovieClient
   private val service = mock<MovieService>()
   private val movieDao = mock<MovieDao>()
 
@@ -65,8 +64,7 @@ class MovieRepositoryTest {
   @ExperimentalCoroutinesApi
   @Before
   fun setup() {
-    client = MovieClient(service)
-    repository = MovieRepository(client, movieDao)
+    repository = MovieRepository(service, movieDao)
   }
 
   @Test
@@ -89,7 +87,7 @@ class MovieRepositoryTest {
     data.postValue(updatedData.keywords)
     verify(observer).onChanged(updatedData.keywords)
 
-    client.fetchKeywords(1) {
+    service.fetchKeywords(1).request {
       when (it) {
         is ApiResponse.Success -> {
           assertEquals(it.data, CoreMatchers.`is`(mockResponse))
@@ -120,7 +118,7 @@ class MovieRepositoryTest {
     data.postValue(updatedData.videos)
     verify(observer).onChanged(updatedData.videos)
 
-    client.fetchVideos(1) {
+    service.fetchVideos(1).request {
       when (it) {
         is ApiResponse.Success -> {
           assertEquals(it.data, CoreMatchers.`is`(mockResponse))
@@ -151,7 +149,7 @@ class MovieRepositoryTest {
     data.postValue(updatedData.reviews)
     verify(observer).onChanged(updatedData.reviews)
 
-    client.fetchReviews(1) {
+    service.fetchReviews(1).request {
       when (it) {
         is ApiResponse.Success -> {
           assertEquals(it.data, CoreMatchers.`is`(mockResponse))

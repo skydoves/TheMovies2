@@ -23,10 +23,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.skydoves.sandwich.ApiResponse
+import com.skydoves.sandwich.request
 import com.skydoves.themovies2.MainCoroutinesRule
-import com.skydoves.themovies2.api.ApiResponse
 import com.skydoves.themovies2.api.ApiUtil
-import com.skydoves.themovies2.api.client.TvClient
 import com.skydoves.themovies2.api.service.TvService
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
@@ -51,7 +51,6 @@ import org.junit.Test
 class TvRepositoryTest {
 
   private lateinit var repository: TvRepository
-  private lateinit var client: TvClient
   private val service = mock<TvService>()
   private val tvDao = mock<TvDao>()
 
@@ -65,8 +64,7 @@ class TvRepositoryTest {
   @ExperimentalCoroutinesApi
   @Before
   fun setup() {
-    client = TvClient(service)
-    repository = TvRepository(client, tvDao)
+    repository = TvRepository(service, tvDao)
   }
 
   @Test
@@ -89,7 +87,7 @@ class TvRepositoryTest {
     data.postValue(updatedData.keywords)
     verify(observer).onChanged(updatedData.keywords)
 
-    client.fetchKeywords(1) {
+    service.fetchKeywords(1).request {
       when (it) {
         is ApiResponse.Success -> {
           TestCase.assertEquals(it.data, CoreMatchers.`is`(mockResponse))
@@ -120,7 +118,7 @@ class TvRepositoryTest {
     data.postValue(updatedData.videos)
     verify(observer).onChanged(updatedData.videos)
 
-    client.fetchVideos(1) {
+    service.fetchVideos(1).request {
       when (it) {
         is ApiResponse.Success -> {
           TestCase.assertEquals(it.data, CoreMatchers.`is`(mockResponse))
@@ -152,7 +150,7 @@ class TvRepositoryTest {
     liveData.postValue(updatedData.reviews)
     verify(observer).onChanged(updatedData.reviews)
 
-    client.fetchReviews(1) {
+    service.fetchReviews(1).request {
       when (it) {
         is ApiResponse.Success -> TestCase.assertEquals(it, CoreMatchers.`is`(mockResponse))
         else -> MatcherAssert.assertThat(it, CoreMatchers.instanceOf(ApiResponse.Failure::class.java))

@@ -17,9 +17,12 @@
 package com.skydoves.themovies2.repository
 
 import androidx.lifecycle.MutableLiveData
-import com.skydoves.themovies2.api.ApiResponse
-import com.skydoves.themovies2.api.client.MovieClient
-import com.skydoves.themovies2.api.message
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.onError
+import com.skydoves.sandwich.onException
+import com.skydoves.sandwich.onSuccess
+import com.skydoves.sandwich.request
+import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
@@ -29,7 +32,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class MovieRepository constructor(
-  private val movieClient: MovieClient,
+  private val movieService: MovieService,
   private val movieDao: MovieDao
 ) : Repository {
 
@@ -42,18 +45,18 @@ class MovieRepository constructor(
     val movie = movieDao.getMovie(id)
     var keywords = movie.keywords
     if (keywords.isNullOrEmpty()) {
-      movieClient.fetchKeywords(id) { response ->
-        when (response) {
-          is ApiResponse.Success -> {
-            response.data?.let { data ->
-              keywords = data.keywords
-              movie.keywords = keywords
-              liveData.postValue(keywords)
-              movieDao.updateMovie(movie)
-            }
+      movieService.fetchKeywords(id).request { response ->
+        response.onSuccess {
+          data?.let { data ->
+            keywords = data.keywords
+            movie.keywords = keywords
+            liveData.postValue(keywords)
+            movieDao.updateMovie(movie)
           }
-          is ApiResponse.Failure.Error -> error(response.message())
-          is ApiResponse.Failure.Exception -> error(response.message())
+        }.onError {
+          error(message())
+        }.onException {
+          error(message())
         }
       }
     }
@@ -65,18 +68,18 @@ class MovieRepository constructor(
     val movie = movieDao.getMovie(id)
     var videos = movie.videos
     if (videos.isNullOrEmpty()) {
-      movieClient.fetchVideos(id) { response ->
-        when (response) {
-          is ApiResponse.Success -> {
-            response.data?.let { data ->
-              videos = data.results
-              movie.videos = videos
-              liveData.postValue(videos)
-              movieDao.updateMovie(movie)
-            }
+      movieService.fetchVideos(id).request { response ->
+        response.onSuccess {
+          data?.let { data ->
+            videos = data.results
+            movie.videos = videos
+            liveData.postValue(videos)
+            movieDao.updateMovie(movie)
           }
-          is ApiResponse.Failure.Error -> error(response.message())
-          is ApiResponse.Failure.Exception -> error(response.message())
+        }.onError {
+          error(message())
+        }.onException {
+          error(message())
         }
       }
     }
@@ -88,18 +91,18 @@ class MovieRepository constructor(
     val movie = movieDao.getMovie(id)
     var reviews = movie.reviews
     if (reviews.isNullOrEmpty()) {
-      movieClient.fetchReviews(id) { response ->
-        when (response) {
-          is ApiResponse.Success -> {
-            response.data?.let { data ->
-              reviews = data.results
-              movie.reviews = reviews
-              liveData.postValue(reviews)
-              movieDao.updateMovie(movie)
-            }
+      movieService.fetchReviews(id).request { response ->
+        response.onSuccess {
+          data?.let { data ->
+            reviews = data.results
+            movie.reviews = reviews
+            liveData.postValue(reviews)
+            movieDao.updateMovie(movie)
           }
-          is ApiResponse.Failure.Error -> error(response.message())
-          is ApiResponse.Failure.Exception -> error(response.message())
+        }.onError {
+          error(message())
+        }.onException {
+          error(message())
         }
       }
     }

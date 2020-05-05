@@ -22,10 +22,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.skydoves.sandwich.ApiResponse
+import com.skydoves.sandwich.request
 import com.skydoves.themovies2.MainCoroutinesRule
-import com.skydoves.themovies2.api.ApiResponse
 import com.skydoves.themovies2.api.ApiUtil.getCall
-import com.skydoves.themovies2.api.client.PeopleClient
 import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.network.PeopleResponse
@@ -47,7 +47,6 @@ import org.junit.Test
 class PeopleRepositoryTest {
 
   private lateinit var repository: PeopleRepository
-  private lateinit var client: PeopleClient
   private val service = mock<PeopleService>()
   private val peopleDao = mock<PeopleDao>()
 
@@ -61,8 +60,7 @@ class PeopleRepositoryTest {
   @ExperimentalCoroutinesApi
   @Before
   fun setup() {
-    client = PeopleClient(service)
-    repository = PeopleRepository(client, peopleDao)
+    repository = PeopleRepository(service, peopleDao)
   }
 
   @Test
@@ -85,7 +83,7 @@ class PeopleRepositoryTest {
     data.postValue(updatedData)
     verify(observer).onChanged(updatedData)
 
-    client.fetchPopularPeople(1) {
+    service.fetchPopularPeople(1).request {
       when (it) {
         is ApiResponse.Success -> {
           TestCase.assertEquals(it.data, CoreMatchers.`is`(mockResponse))
@@ -116,7 +114,7 @@ class PeopleRepositoryTest {
     data.postValue(updatedData.personDetail)
     verify(observer, times(3)).onChanged(updatedData.personDetail)
 
-    client.fetchPersonDetail(1) {
+    service.fetchPersonDetail(1).request {
       when (it) {
         is ApiResponse.Success -> {
           TestCase.assertEquals(it, CoreMatchers.`is`(mockResponse))

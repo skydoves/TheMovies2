@@ -18,10 +18,6 @@ package com.skydoves.themovies2.di
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.skydoves.themovies2.api.RequestInterceptor
-import com.skydoves.themovies2.api.client.MovieClient
-import com.skydoves.themovies2.api.client.PeopleClient
-import com.skydoves.themovies2.api.client.TheDiscoverClient
-import com.skydoves.themovies2.api.client.TvClient
 import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.api.service.TheDiscoverService
@@ -62,12 +58,4 @@ val networkModule = module {
   single {
     get<Retrofit>().create(TvService::class.java)
   }
-
-  single { TheDiscoverClient(get()) }
-
-  single { PeopleClient(get()) }
-
-  single { MovieClient(get()) }
-
-  single { TvClient(get()) }
 }

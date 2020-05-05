@@ -17,9 +17,12 @@
 package com.skydoves.themovies2.repository
 
 import androidx.lifecycle.MutableLiveData
-import com.skydoves.themovies2.api.ApiResponse
-import com.skydoves.themovies2.api.client.PeopleClient
-import com.skydoves.themovies2.api.message
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.onError
+import com.skydoves.sandwich.onException
+import com.skydoves.sandwich.onSuccess
+import com.skydoves.sandwich.request
+import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.room.PeopleDao
@@ -28,7 +31,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class PeopleRepository constructor(
-  private val peopleClient: PeopleClient,
+  private val peopleService: PeopleService,
   private val peopleDao: PeopleDao
 ) : Repository {
 
@@ -40,18 +43,18 @@ class PeopleRepository constructor(
     val liveData = MutableLiveData<List<Person>>()
     var people = peopleDao.getPeople(page)
     if (people.isEmpty()) {
-      peopleClient.fetchPopularPeople(page) { response ->
-        when (response) {
-          is ApiResponse.Success -> {
-            response.data?.let { data ->
-              people = data.results
-              people.forEach { it.page = page }
-              liveData.postValue(people)
-              peopleDao.insertPeople(people)
-            }
+      peopleService.fetchPopularPeople(page).request { response ->
+        response.onSuccess {
+          data?.let { data ->
+            people = data.results
+            people.forEach { it.page = page }
+            liveData.postValue(people)
+            peopleDao.insertPeople(people)
           }
-          is ApiResponse.Failure.Error -> error(response.message())
-          is ApiResponse.Failure.Exception -> error(response.message())
+        }.onError {
+          error(message())
+        }.onException {
+          error(message())
         }
       }
     }
@@ -63,18 +66,18 @@ class PeopleRepository constructor(
     val person = peopleDao.getPerson(id)
     var personDetail = person.personDetail
     if (personDetail == null) {
-      peopleClient.fetchPersonDetail(id) { response ->
-        when (response) {
-          is ApiResponse.Success -> {
-            response.data?.let { data ->
-              personDetail = data
-              person.personDetail = personDetail
-              liveData.postValue(personDetail)
-              peopleDao.updatePerson(person)
-            }
+      peopleService.fetchPersonDetail(id).request { response ->
+        response.onSuccess {
+          data?.let { data ->
+            personDetail = data
+            person.personDetail = personDetail
+            liveData.postValue(personDetail)
+            peopleDao.updatePerson(person)
           }
-          is ApiResponse.Failure.Error -> error(response.message())
-          is ApiResponse.Failure.Exception -> error(response.message())
+        }.onError {
+          error(message())
+        }.onException {
+          error(message())
         }
       }
     }

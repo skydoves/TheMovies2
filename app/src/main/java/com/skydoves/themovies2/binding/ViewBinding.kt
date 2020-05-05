@@ -23,18 +23,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
-import co.lujun.androidtagview.TagContainerLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.skydoves.themovies2.api.Api
 import com.skydoves.themovies2.extension.requestGlideListener
 import com.skydoves.themovies2.extension.visible
-import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.models.network.PersonDetail
-import com.skydoves.themovies2.room.converters.KeywordListMapper
 import com.skydoves.whatif.whatIfNotNull
 
 @BindingAdapter("toast")
@@ -51,25 +48,9 @@ fun bindVisibilityByResource(view: View, anyList: List<Any>?) {
   }
 }
 
-@BindingAdapter("mapKeywordList")
-fun bindMapKeywordList(view: TagContainerLayout, keywords: List<Keyword>?) {
-  keywords.whatIfNotNull {
-    view.tags = KeywordListMapper.mapToStringList(it)
-    view.visible()
-  }
-}
-
 @BindingAdapter("biography")
 fun bindBiography(view: TextView, personDetail: PersonDetail?) {
   view.text = personDetail?.biography
-}
-
-@BindingAdapter("nameTags")
-fun bindTags(view: TagContainerLayout, personDetail: PersonDetail?) {
-  personDetail?.also_known_as?.whatIfNotNull {
-    view.tags = it
-    view.visible()
-  }
 }
 
 @SuppressLint("SetTextI18n")

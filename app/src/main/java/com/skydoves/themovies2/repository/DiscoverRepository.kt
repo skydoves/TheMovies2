@@ -17,9 +17,12 @@
 package com.skydoves.themovies2.repository
 
 import androidx.lifecycle.MutableLiveData
-import com.skydoves.themovies2.api.ApiResponse
-import com.skydoves.themovies2.api.client.TheDiscoverClient
-import com.skydoves.themovies2.api.message
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.onError
+import com.skydoves.sandwich.onException
+import com.skydoves.sandwich.onSuccess
+import com.skydoves.sandwich.request
+import com.skydoves.themovies2.api.service.TheDiscoverService
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.room.MovieDao
@@ -29,7 +32,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class DiscoverRepository constructor(
-  private val discoverClient: TheDiscoverClient,
+  private val discoverService: TheDiscoverService,
   private val movieDao: MovieDao,
   private val tvDao: TvDao
 ) : Repository {
@@ -42,18 +45,18 @@ class DiscoverRepository constructor(
     val liveDate = MutableLiveData<List<Movie>>()
     var movies = movieDao.getMovieList(page)
     if (movies.isEmpty()) {
-      discoverClient.fetchDiscoverMovie(page) { response ->
-        when (response) {
-          is ApiResponse.Success -> {
-            response.data?.let { data ->
-              movies = data.results
-              movies.forEach { it.page = page }
-              liveDate.postValue(movies)
-              movieDao.insertMovieList(movies)
-            }
+      discoverService.fetchDiscoverMovie(page).request { response ->
+        response.onSuccess {
+          data?.let { data ->
+            movies = data.results
+            movies.forEach { it.page = page }
+            liveDate.postValue(movies)
+            movieDao.insertMovieList(movies)
           }
-          is ApiResponse.Failure.Error -> error(response.message())
-          is ApiResponse.Failure.Exception -> error(response.message())
+        }.onError {
+          error(message())
+        }.onException {
+          error(message())
         }
       }
     }
@@ -64,18 +67,18 @@ class DiscoverRepository constructor(
     val liveDate = MutableLiveData<List<Tv>>()
     var tvs = tvDao.getTvList(page)
     if (tvs.isEmpty()) {
-      discoverClient.fetchDiscoverTv(page) { response ->
-        when (response) {
-          is ApiResponse.Success -> {
-            response.data?.let { data ->
-              tvs = data.results
-              tvs.forEach { it.page = page }
-              liveDate.postValue(tvs)
-              tvDao.insertTv(tvs)
-            }
+      discoverService.fetchDiscoverTv(page).request { response ->
+        response.onSuccess {
+          data?.let { data ->
+            tvs = data.results
+            tvs.forEach { it.page = page }
+            liveDate.postValue(tvs)
+            tvDao.insertTv(tvs)
           }
-          is ApiResponse.Failure.Error -> error(response.message())
-          is ApiResponse.Failure.Exception -> error(response.message())
+        }.onError {
+          error(message())
+        }.onException {
+          error(message())
         }
       }
     }

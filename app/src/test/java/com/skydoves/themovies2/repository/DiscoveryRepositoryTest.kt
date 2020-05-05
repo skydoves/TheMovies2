@@ -22,10 +22,10 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.skydoves.sandwich.ApiResponse
+import com.skydoves.sandwich.request
 import com.skydoves.themovies2.MainCoroutinesRule
-import com.skydoves.themovies2.api.ApiResponse
 import com.skydoves.themovies2.api.ApiUtil.getCall
-import com.skydoves.themovies2.api.client.TheDiscoverClient
 import com.skydoves.themovies2.api.service.TheDiscoverService
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Tv
@@ -49,7 +49,6 @@ import org.junit.Test
 class DiscoveryRepositoryTest {
 
   private lateinit var repository: DiscoverRepository
-  private lateinit var client: TheDiscoverClient
   private val service = mock<TheDiscoverService>()
   private val movieDao = mock<MovieDao>()
   private val tvDao = mock<TvDao>()
@@ -64,8 +63,7 @@ class DiscoveryRepositoryTest {
   @ExperimentalCoroutinesApi
   @Before
   fun setup() {
-    client = TheDiscoverClient(service)
-    repository = DiscoverRepository(client, movieDao, tvDao)
+    repository = DiscoverRepository(service, movieDao, tvDao)
   }
 
   @Test
@@ -86,7 +84,7 @@ class DiscoveryRepositoryTest {
     data.postValue(updatedData)
     verify(observer).onChanged(updatedData)
 
-    client.fetchDiscoverMovie(1) {
+    service.fetchDiscoverMovie(1).request {
       when (it) {
         is ApiResponse.Success -> {
           assertEquals(it.data, `is`(mockResponse))
@@ -115,7 +113,7 @@ class DiscoveryRepositoryTest {
     data.postValue(updatedData)
     verify(observer).onChanged(updatedData)
 
-    client.fetchDiscoverTv(1) {
+    service.fetchDiscoverTv(1).request {
       when (it) {
         is ApiResponse.Success -> {
           assertEquals(it.data, `is`(mockResponse))

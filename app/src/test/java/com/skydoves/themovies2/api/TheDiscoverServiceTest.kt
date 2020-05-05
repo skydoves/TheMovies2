@@ -16,6 +16,8 @@
 
 package com.skydoves.themovies2.api
 
+import com.skydoves.sandwich.ApiResponse
+import com.skydoves.sandwich.request
 import com.skydoves.themovies2.api.service.TheDiscoverService
 import java.io.IOException
 import org.hamcrest.CoreMatchers.`is`
@@ -36,7 +38,7 @@ class TheDiscoverServiceTest : ApiAbstract<TheDiscoverService>() {
   @Test
   fun fetchMovieListTest() {
     enqueueResponse("/tmdb_movie.json")
-    this.service.fetchDiscoverMovie(1).async {
+    this.service.fetchDiscoverMovie(1).request {
       when (it) {
         is ApiResponse.Success -> {
           assertThat(it.data?.results?.get(0)?.id, `is`(164558))
@@ -51,7 +53,7 @@ class TheDiscoverServiceTest : ApiAbstract<TheDiscoverService>() {
   @Test
   fun fetchTvListTest() {
     enqueueResponse("/tmdb_tv.json")
-    this.service.fetchDiscoverTv(1).async {
+    this.service.fetchDiscoverTv(1).request {
       when (it) {
         is ApiResponse.Success -> {
           assertThat(it.data?.results?.get(0)?.id, `is`(61889))

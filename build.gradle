@@ -37,6 +37,7 @@ buildscript {
         // network
         retrofitVersion = '2.6.0'
         okhttpVersion = '4.1.0'
+        sandwichVersion = '1.0.0'
         gsonVersion = '2.8.5'
 
         // glide
@@ -68,7 +69,7 @@ buildscript {
         jacocoVersion = '0.8.4'
 
         // plugins
-        spotlessVersion = '3.26.1'
+        spotlessVersion = '3.28.1'
         versionPlugin  = '0.23.0'
     }
 

@@ -17,9 +17,12 @@
 package com.skydoves.themovies2.repository
 
 import androidx.lifecycle.MutableLiveData
-import com.skydoves.themovies2.api.ApiResponse
-import com.skydoves.themovies2.api.client.TvClient
-import com.skydoves.themovies2.api.message
+import com.skydoves.sandwich.message
+import com.skydoves.sandwich.onError
+import com.skydoves.sandwich.onException
+import com.skydoves.sandwich.onSuccess
+import com.skydoves.sandwich.request
+import com.skydoves.themovies2.api.service.TvService
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
@@ -29,7 +32,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class TvRepository constructor(
-  private val tvClient: TvClient,
+  private val tvService: TvService,
   private val tvDao: TvDao
 ) : Repository {
 
@@ -41,18 +44,18 @@ class TvRepository constructor(
     val liveData = MutableLiveData<List<Keyword>>()
     val tv = tvDao.getTv(id)
     var keywords = tv.keywords
-    tvClient.fetchKeywords(id) { response ->
-      when (response) {
-        is ApiResponse.Success -> {
-          response.data?.let { data ->
-            keywords = data.keywords
-            tv.keywords = keywords
-            liveData.postValue(keywords)
-            tvDao.updateTv(tv)
-          }
+    tvService.fetchKeywords(id).request { response ->
+      response.onSuccess {
+        data?.let { data ->
+          keywords = data.keywords
+          tv.keywords = keywords
+          liveData.postValue(keywords)
+          tvDao.updateTv(tv)
         }
-        is ApiResponse.Failure.Error -> error(response.message())
-        is ApiResponse.Failure.Exception -> error(response.message())
+      }.onError {
+        error(message())
+      }.onException {
+        error(message())
       }
     }
     liveData.apply { postValue(keywords) }
@@ -62,18 +65,18 @@ class TvRepository constructor(
     val liveData = MutableLiveData<List<Video>>()
     val tv = tvDao.getTv(id)
     var videos = tv.videos
-    tvClient.fetchVideos(id) { response ->
-      when (response) {
-        is ApiResponse.Success -> {
-          response.data?.let { data ->
-            videos = data.results
-            tv.videos = videos
-            liveData.postValue(videos)
-            tvDao.updateTv(tv)
-          }
+    tvService.fetchVideos(id).request { response ->
+      response.onSuccess {
+        data?.let { data ->
+          videos = data.results
+          tv.videos = videos
+          liveData.postValue(videos)
+          tvDao.updateTv(tv)
         }
-        is ApiResponse.Failure.Error -> error(response.message())
-        is ApiResponse.Failure.Exception -> error(response.message())
+      }.onError {
+        error(message())
+      }.onException {
+        error(message())
       }
     }
     liveData.apply { postValue(videos) }
@@ -84,18 +87,18 @@ class TvRepository constructor(
     val tv = tvDao.getTv(id)
     var reviews = tv.reviews
     if (reviews.isNullOrEmpty()) {
-      tvClient.fetchReviews(id) { response ->
-        when (response) {
-          is ApiResponse.Success -> {
-            response.data?.let { data ->
-              reviews = data.results
-              tv.reviews = reviews
-              liveData.postValue(reviews)
-              tvDao.updateTv(tv)
-            }
+      tvService.fetchReviews(id).request { response ->
+        response.onSuccess {
+          data?.let { data ->
+            reviews = data.results
+            tv.reviews = reviews
+            liveData.postValue(reviews)
+            tvDao.updateTv(tv)
           }
-          is ApiResponse.Failure.Error -> error(response.message())
-          is ApiResponse.Failure.Exception -> error(response.message())
+        }.onError {
+          error(message())
+        }.onException {
+          error(message())
         }
       }
     }
