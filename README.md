@@ -30,6 +30,7 @@ tmdb_api_key=YOUR_API_KEY
 - Material Design & Animations
 - [Retrofit2 & Gson](https://github.com/square/retrofit) - constructing the REST API
 - [OkHttp3](https://github.com/square/okhttp) - implementing interceptor, logging and mocking web server
+- [Sandwich](https://github.com/skydoves/Sandwich) - constructing lightweight API response and handling error responses
 - [Glide](https://github.com/bumptech/glide) - loading images
 - [BaseRecyclerViewAdapter](https://github.com/skydoves/BaseRecyclerViewAdapter) - implementing adapters and viewHolders
 - [WhatIf](https://github.com/skydoves/whatif) - checking nullable object and empty collections more fluently
