@@ -16,30 +16,31 @@
 
 package com.skydoves.themovies2.view.ui.details.tv
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import com.skydoves.bundler.bundleNonNull
+import com.skydoves.bundler.intentOf
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.base.DataBindingActivity
 import com.skydoves.themovies2.databinding.ActivityTvDetailBinding
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
-import org.koin.android.viewmodel.ext.android.getViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class TvDetailActivity : DataBindingActivity() {
 
+  private val vm: TvDetailViewModel by viewModel()
   private val binding: ActivityTvDetailBinding by binding(R.layout.activity_tv_detail)
+  private val intentTv: Tv by bundleNonNull(TV_ID)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val intentTv = intent.getParcelableExtra<Tv>(tvId) as Tv
     with(binding) {
       activity = this@TvDetailActivity
       lifecycleOwner = this@TvDetailActivity
-      viewModel = getViewModel(TvDetailViewModel::class).apply { postTvId(intentTv.id) }
+      viewModel = vm.apply { postTvId(intentTv.id) }
       tv = intentTv
       videoAdapter = VideoListAdapter()
       reviewAdapter = ReviewListAdapter()
@@ -52,10 +53,11 @@ class TvDetailActivity : DataBindingActivity() {
   }
 
   companion object {
-    private const val tvId = "tv"
+    private const val TV_ID = "tv"
     fun startActivityModel(context: Context?, tv: Tv) {
-      if (context is Activity) {
-        context.startActivity(Intent(context, TvDetailActivity::class.java).putExtra(tvId, tv))
+      context?.intentOf<TvDetailActivity> {
+        putExtra(TV_ID, tv)
+        startActivity(context)
       }
     }
   }

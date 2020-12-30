@@ -27,11 +27,12 @@ import com.skydoves.themovies2.databinding.ActivityMovieDetailBinding
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
-import org.koin.android.viewmodel.ext.android.getViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MovieDetailActivity : DataBindingActivity() {
 
   private val binding: ActivityMovieDetailBinding by binding(R.layout.activity_movie_detail)
+  private val vm: MovieDetailViewModel by viewModel()
   private val intentMovie: Movie by bundleNonNull(MOVIE_ID)
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +40,7 @@ class MovieDetailActivity : DataBindingActivity() {
     with(binding) {
       activity = this@MovieDetailActivity
       lifecycleOwner = this@MovieDetailActivity
-      viewModel =
-        getViewModel(MovieDetailViewModel::class).apply { getMovieListFromId(intentMovie.id) }
+      viewModel = vm.apply { getMovieListFromId(intentMovie.id) }
       movie = intentMovie
       videoListAdapter = VideoListAdapter()
       reviewListAdapter = ReviewListAdapter()
@@ -57,6 +57,7 @@ class MovieDetailActivity : DataBindingActivity() {
     fun startActivityModel(context: Context?, movie: Movie) {
       context?.intentOf<MovieDetailActivity> {
         putExtra(MOVIE_ID, movie)
+        startActivity(context)
       }
     }
   }

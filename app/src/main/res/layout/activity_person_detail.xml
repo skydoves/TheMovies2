@@ -69,7 +69,6 @@
               android:layout_marginTop="20dp"
               android:transitionName="@string/transition_profile"
               app:bindBackDrop="@{person}"
-              app:toast="@{viewModel.toastLiveData}"
               tools:src="@drawable/ic_live_tv_white_24dp"
               tools:targetApi="LOLLIPOP" />
 

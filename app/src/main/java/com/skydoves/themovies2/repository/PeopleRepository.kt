@@ -16,17 +16,13 @@
 
 package com.skydoves.themovies2.repository
 
-import androidx.lifecycle.MutableLiveData
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.suspendOnError
-import com.skydoves.sandwich.suspendOnException
+import androidx.annotation.WorkerThread
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.PeopleService
-import com.skydoves.themovies2.models.entity.Person
-import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.room.PeopleDao
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 
 class PeopleRepository constructor(
@@ -38,8 +34,8 @@ class PeopleRepository constructor(
     Timber.d("Injection PeopleRepository")
   }
 
-  suspend fun loadPeople(page: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<List<Person>>()
+  @WorkerThread
+  suspend fun loadPeople(page: Int, success: () -> Unit) = flow {
     var people = peopleDao.getPeople(page)
     if (people.isEmpty()) {
       val response = peopleService.fetchPopularPeople(page)
@@ -47,20 +43,19 @@ class PeopleRepository constructor(
         data?.let { data ->
           people = data.results
           people.forEach { it.page = page }
-          liveData.postValue(people)
           peopleDao.insertPeople(people)
+          emit(people)
+          success()
         }
-      }.suspendOnError {
-        error(message())
-      }.suspendOnException {
-        error(message())
       }
+    } else {
+      emit(people)
+      success()
     }
-    liveData.apply { postValue(people) }
-  }
+  }.flowOn(Dispatchers.IO)
 
-  suspend fun loadPersonDetail(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<PersonDetail>()
+  @WorkerThread
+  suspend fun loadPersonDetail(id: Int, success: () -> Unit) = flow {
     val person = peopleDao.getPerson(id)
     var personDetail = person.personDetail
     if (personDetail == null) {
@@ -69,15 +64,14 @@ class PeopleRepository constructor(
         data?.let { data ->
           personDetail = data
           person.personDetail = personDetail
-          liveData.postValue(personDetail)
           peopleDao.updatePerson(person)
+          emit(personDetail)
+          success()
         }
-      }.suspendOnError {
-        error(message())
-      }.suspendOnException {
-        error(message())
       }
+    } else {
+      emit(personDetail)
+      success()
     }
-    liveData.apply { postValue(person.personDetail) }
-  }
+  }.flowOn(Dispatchers.IO)
 }

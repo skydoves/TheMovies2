@@ -42,7 +42,7 @@ class TheMoviesApplication : Application() {
       modules(viewModelModule)
     }
 
-    // initialize global sandwich opertator
+    // initialize global sandwich operator
     SandwichInitializer.sandwichOperator = GlobalResponseOperator<Any>(this)
 
     if (BuildConfig.DEBUG) {

@@ -31,11 +31,12 @@ class TvListAdapter : BaseAdapter() {
 
   fun addTvList(tvs: List<Tv>) {
     val section = sections()[0]
+    val previousItemSize = section.size
     section.addAll(tvs)
-    notifyItemRangeInserted(section.size + 1, tvs.size)
+    notifyItemRangeInserted(previousItemSize, tvs.size)
   }
 
-  override fun layout(sectionRow: SectionRow) = R.layout.item_poster
+  override fun layout(sectionRow: SectionRow) = R.layout.item_tv
 
   override fun viewHolder(layout: Int, view: View) = TvListViewHolder(view)
 }

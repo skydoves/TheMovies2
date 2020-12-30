@@ -31,8 +31,9 @@ class MovieListAdapter : BaseAdapter() {
 
   fun addMovieList(movies: List<Movie>) {
     val section = sections()[0]
+    val previousItemSize = section.size
     section.addAll(movies)
-    notifyItemRangeInserted(section.size + 1, movies.size)
+    notifyItemRangeInserted(previousItemSize, movies.size)
   }
 
   override fun layout(sectionRow: SectionRow) = R.layout.item_poster

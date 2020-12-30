@@ -28,7 +28,8 @@
       app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
       app:paginationTvList="@{viewModel}"
       app:spanCount="2"
-      app:toast="@{viewModel.toastLiveData}"
       tools:listitem="@layout/item_poster" />
+
   </RelativeLayout>
+
 </layout>
