@@ -37,7 +37,7 @@ class PersonDetailActivity : ViewModelActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val intentPerson = intent.getParcelableExtra(personId) as Person
+    val intentPerson = intent.getParcelableExtra<Person>(personId) as Person
     with(binding) {
       activity = this@PersonDetailActivity
       lifecycleOwner = this@PersonDetailActivity
@@ -47,8 +47,8 @@ class PersonDetailActivity : ViewModelActivity() {
     }
   }
 
-  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-    if (item?.itemId == android.R.id.home) onBackPressed()
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    if (item.itemId == android.R.id.home) onBackPressed()
     return false
   }
 

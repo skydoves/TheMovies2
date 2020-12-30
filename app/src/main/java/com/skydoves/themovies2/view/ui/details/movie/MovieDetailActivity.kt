@@ -35,7 +35,7 @@ class MovieDetailActivity : ViewModelActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val intentMovie: Movie = intent.getParcelableExtra(movieId) as Movie
+    val intentMovie = intent.getParcelableExtra<Movie>(movieId) as Movie
     with(binding) {
       activity = this@MovieDetailActivity
       lifecycleOwner = this@MovieDetailActivity
@@ -47,8 +47,8 @@ class MovieDetailActivity : ViewModelActivity() {
     }
   }
 
-  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-    if (item?.itemId == android.R.id.home) onBackPressed()
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    if (item.itemId == android.R.id.home) onBackPressed()
     return false
   }
 

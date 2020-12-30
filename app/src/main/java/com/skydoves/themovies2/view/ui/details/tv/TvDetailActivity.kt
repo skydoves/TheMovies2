@@ -35,7 +35,7 @@ class TvDetailActivity : ViewModelActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val intentTv = intent.getParcelableExtra(tvId) as Tv
+    val intentTv = intent.getParcelableExtra<Tv>(tvId) as Tv
     with(binding) {
       activity = this@TvDetailActivity
       lifecycleOwner = this@TvDetailActivity
@@ -46,8 +46,8 @@ class TvDetailActivity : ViewModelActivity() {
     }
   }
 
-  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-    if (item?.itemId == android.R.id.home) onBackPressed()
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    if (item.itemId == android.R.id.home) onBackPressed()
     return false
   }
 
