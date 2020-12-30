@@ -18,31 +18,31 @@ package com.skydoves.themovies2.view.ui.details.person
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
+import com.skydoves.bundler.bundleNonNull
+import com.skydoves.bundler.intentOf
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.base.DataBindingActivity
 import com.skydoves.themovies2.databinding.ActivityPersonDetailBinding
-import com.skydoves.themovies2.extension.checkIsMaterialVersion
 import com.skydoves.themovies2.models.entity.Person
-import org.koin.android.viewmodel.ext.android.getViewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class PersonDetailActivity : DataBindingActivity() {
 
   private val binding: ActivityPersonDetailBinding by binding(R.layout.activity_person_detail)
+  private val vm: PersonDetailViewModel by viewModel()
+  private val intentPerson: Person by bundleNonNull(PERSON_ID)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val intentPerson = intent.getParcelableExtra<Person>(personId) as Person
     with(binding) {
       activity = this@PersonDetailActivity
       lifecycleOwner = this@PersonDetailActivity
-      viewModel =
-        getViewModel(PersonDetailViewModel::class).apply { postPersonId(intentPerson.id) }
+      viewModel = vm.apply { postPersonId(intentPerson.id) }
       person = intentPerson
     }
   }
@@ -53,22 +53,17 @@ class PersonDetailActivity : DataBindingActivity() {
   }
 
   companion object {
-    const val personId = "person"
+    const val PERSON_ID = "person"
     private const val intent_requestCode = 1000
 
     fun startActivity(context: Context, person: Person, view: View) {
       if (context is Activity) {
-        if (checkIsMaterialVersion()) {
-          val intent = Intent(context, PersonDetailActivity::class.java)
+        context.intentOf<PersonDetailActivity> {
           ViewCompat.getTransitionName(view)?.let {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, it)
-            intent.putExtra(personId, person)
+            putExtra(PERSON_ID, person)
             context.startActivityForResult(intent, intent_requestCode, options.toBundle())
           }
-        } else {
-          context.startActivity(
-            Intent(context, PersonDetailActivity::class.java).putExtra(personId, person)
-          )
         }
       }
     }

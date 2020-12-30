@@ -16,18 +16,13 @@
 
 package com.skydoves.themovies2.repository
 
-import androidx.lifecycle.MutableLiveData
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.suspendOnError
-import com.skydoves.sandwich.suspendOnException
+import androidx.annotation.WorkerThread
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.TvService
-import com.skydoves.themovies2.models.Keyword
-import com.skydoves.themovies2.models.Review
-import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.room.TvDao
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 
 class TvRepository constructor(
@@ -39,48 +34,46 @@ class TvRepository constructor(
     Timber.d("Injection TvRepository")
   }
 
-  suspend fun loadKeywordList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<List<Keyword>>()
+  @WorkerThread
+  suspend fun loadKeywordList(id: Int) = flow {
     val tv = tvDao.getTv(id)
     var keywords = tv.keywords
     val response = tvService.fetchKeywords(id)
-    response.suspendOnSuccess {
-      data?.let { data ->
-        keywords = data.keywords
-        tv.keywords = keywords
-        liveData.postValue(keywords)
-        tvDao.updateTv(tv)
+    if (keywords.isNullOrEmpty()) {
+      response.suspendOnSuccess {
+        data?.let { data ->
+          keywords = data.keywords
+          tv.keywords = keywords
+          tvDao.updateTv(tv)
+          emit(keywords)
+        }
       }
-    }.suspendOnError {
-      error(message())
-    }.suspendOnException {
-      error(message())
+    } else {
+      emit(keywords)
     }
-    liveData.apply { postValue(keywords) }
-  }
+  }.flowOn(Dispatchers.IO)
 
-  suspend fun loadVideoList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<List<Video>>()
+  @WorkerThread
+  suspend fun loadVideoList(id: Int) = flow {
     val tv = tvDao.getTv(id)
     var videos = tv.videos
     val response = tvService.fetchVideos(id)
-    response.suspendOnSuccess {
-      data?.let { data ->
-        videos = data.results
-        tv.videos = videos
-        liveData.postValue(videos)
-        tvDao.updateTv(tv)
+    if (videos.isNullOrEmpty()) {
+      response.suspendOnSuccess {
+        data?.let { data ->
+          videos = data.results
+          tv.videos = videos
+          tvDao.updateTv(tv)
+          emit(videos)
+        }
       }
-    }.suspendOnError {
-      error(message())
-    }.suspendOnException {
-      error(message())
+    } else {
+      emit(videos)
     }
-    liveData.apply { postValue(videos) }
-  }
+  }.flowOn(Dispatchers.IO)
 
-  suspend fun loadReviewsList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<List<Review>>()
+  @WorkerThread
+  suspend fun loadReviewsList(id: Int) = flow {
     val tv = tvDao.getTv(id)
     var reviews = tv.reviews
     if (reviews.isNullOrEmpty()) {
@@ -89,15 +82,12 @@ class TvRepository constructor(
         data?.let { data ->
           reviews = data.results
           tv.reviews = reviews
-          liveData.postValue(reviews)
           tvDao.updateTv(tv)
+          emit(reviews)
         }
-      }.suspendOnError {
-        error(message())
-      }.suspendOnException {
-        error(message())
       }
+    } else {
+      emit(reviews)
     }
-    liveData.apply { postValue(reviews) }
-  }
+  }.flowOn(Dispatchers.IO)
 }

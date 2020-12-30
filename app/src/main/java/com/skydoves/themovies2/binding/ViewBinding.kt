@@ -36,6 +36,7 @@ import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 
 object ViewBinding {
 
@@ -81,7 +82,7 @@ object ViewBinding {
   @JvmStatic
   @BindingAdapter("visibilityByResource")
   fun bindVisibilityByResource(view: View, anyList: List<Any>?) {
-    anyList.whatIfNotNull {
+    anyList.whatIfNotNullOrEmpty {
       view.visible()
     }
   }
