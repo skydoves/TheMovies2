@@ -17,6 +17,7 @@
 package com.skydoves.themovies2.api
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.skydoves.sandwich.coroutines.CoroutinesResponseCallAdapterFactory
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
@@ -75,6 +76,7 @@ abstract class ApiAbstract<T> {
     return Retrofit.Builder()
       .baseUrl(mockWebServer.url("/"))
       .addConverterFactory(GsonConverterFactory.create())
+      .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
       .build()
       .create(clazz)
   }
