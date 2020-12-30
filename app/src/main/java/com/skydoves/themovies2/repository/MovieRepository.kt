@@ -30,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
+// TODO Mapper and operator
 class MovieRepository constructor(
   private val movieService: MovieService,
   private val movieDao: MovieDao
@@ -39,6 +40,7 @@ class MovieRepository constructor(
     Timber.d("Injection MovieRepository")
   }
 
+  // TODO Flow
   suspend fun loadKeywordList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
     val liveData = MutableLiveData<List<Keyword>>()
     val movie = movieDao.getMovie(id)

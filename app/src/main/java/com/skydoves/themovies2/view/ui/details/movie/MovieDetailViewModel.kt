@@ -30,10 +30,14 @@ class MovieDetailViewModel constructor(
   private val movieRepository: MovieRepository
 ) : DispatchViewModel() {
 
+  // TODO StateFlow
   private val movieIdLiveData: MutableLiveData<Int> = MutableLiveData()
+
   val keywordListLiveData: LiveData<List<Keyword>>
   val videoListLiveData: LiveData<List<Video>>
   val reviewListLiveData: LiveData<List<Review>>
+
+  // TODO LiveData
   val toastLiveData: MutableLiveData<String> = MutableLiveData()
 
   init {
@@ -58,5 +62,6 @@ class MovieDetailViewModel constructor(
     }
   }
 
+  // TODO
   fun postMovieId(id: Int) = movieIdLiveData.postValue(id)
 }

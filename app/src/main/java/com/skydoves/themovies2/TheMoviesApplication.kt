@@ -18,10 +18,12 @@ package com.skydoves.themovies2
 
 import android.app.Application
 import com.facebook.stetho.Stetho
+import com.skydoves.sandwich.SandwichInitializer
 import com.skydoves.themovies2.di.networkModule
 import com.skydoves.themovies2.di.persistenceModule
 import com.skydoves.themovies2.di.repositoryModule
 import com.skydoves.themovies2.di.viewModelModule
+import com.skydoves.themovies2.models.network.GlobalOperator
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -39,6 +41,9 @@ class TheMoviesApplication : Application() {
       modules(repositoryModule)
       modules(viewModelModule)
     }
+
+    // initialize global sandwich operator
+    SandwichInitializer.sandwichOperator = GlobalOperator<Any>(this)
 
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())

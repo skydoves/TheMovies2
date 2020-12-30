@@ -88,11 +88,14 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 
     // network
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
-    implementation "com.google.code.gson:gson:$retrofitVersion"
     implementation "com.github.skydoves:sandwich:$sandwichVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
+
+    // bundler
+    implementation "com.github.skydoves:bundler:$bundlerVersion"
 
     // glide
     implementation "com.github.bumptech.glide:glide:$glideVersion"
