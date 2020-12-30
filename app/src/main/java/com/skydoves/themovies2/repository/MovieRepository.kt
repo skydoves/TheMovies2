@@ -18,10 +18,9 @@ package com.skydoves.themovies2.repository
 
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onSuccess
-import com.skydoves.sandwich.request
+import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
+import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
@@ -45,19 +44,18 @@ class MovieRepository constructor(
     val movie = movieDao.getMovie(id)
     var keywords = movie.keywords
     if (keywords.isNullOrEmpty()) {
-      movieService.fetchKeywords(id).request { response ->
-        response.onSuccess {
-          data?.let { data ->
-            keywords = data.keywords
-            movie.keywords = keywords
-            liveData.postValue(keywords)
-            movieDao.updateMovie(movie)
-          }
-        }.onError {
-          error(message())
-        }.onException {
-          error(message())
+      val response = movieService.fetchKeywords(id)
+      response.suspendOnSuccess {
+        data?.let { data ->
+          keywords = data.keywords
+          movie.keywords = keywords
+          liveData.postValue(keywords)
+          movieDao.updateMovie(movie)
         }
+      }.suspendOnError {
+        error(message())
+      }.suspendOnException {
+        error(message())
       }
     }
     liveData.apply { postValue(keywords) }
@@ -68,20 +66,19 @@ class MovieRepository constructor(
     val movie = movieDao.getMovie(id)
     var videos = movie.videos
     if (videos.isNullOrEmpty()) {
-      movieService.fetchVideos(id).request { response ->
-        response.onSuccess {
+      val response = movieService.fetchVideos(id)
+        .suspendOnSuccess {
           data?.let { data ->
             videos = data.results
             movie.videos = videos
             liveData.postValue(videos)
             movieDao.updateMovie(movie)
           }
-        }.onError {
+        }.suspendOnError {
           error(message())
-        }.onException {
+        }.suspendOnException {
           error(message())
         }
-      }
     }
     liveData.apply { postValue(videos) }
   }
@@ -91,20 +88,19 @@ class MovieRepository constructor(
     val movie = movieDao.getMovie(id)
     var reviews = movie.reviews
     if (reviews.isNullOrEmpty()) {
-      movieService.fetchReviews(id).request { response ->
-        response.onSuccess {
+      val response = movieService.fetchReviews(id)
+        .suspendOnSuccess {
           data?.let { data ->
             reviews = data.results
             movie.reviews = reviews
             liveData.postValue(reviews)
             movieDao.updateMovie(movie)
           }
-        }.onError {
+        }.suspendOnError {
           error(message())
-        }.onException {
+        }.suspendOnException {
           error(message())
         }
-      }
     }
     liveData.apply { postValue(reviews) }
   }

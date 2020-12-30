@@ -16,9 +16,9 @@
 
 package com.skydoves.themovies2.api.service
 
+import com.skydoves.sandwich.ApiResponse
 import com.skydoves.themovies2.models.network.PeopleResponse
 import com.skydoves.themovies2.models.network.PersonDetail
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -34,7 +34,7 @@ interface PeopleService {
    * @return [PeopleResponse] response
    */
   @GET("/3/person/popular?language=en")
-  fun fetchPopularPeople(@Query("page") page: Int): Call<PeopleResponse>
+  suspend fun fetchPopularPeople(@Query("page") page: Int): ApiResponse<PeopleResponse>
 
   /**
    * [Person Detail](https://developers.themoviedb.org/3/people/get-person-details)
@@ -46,5 +46,5 @@ interface PeopleService {
    * @return [PersonDetail] response
    */
   @GET("/3/person/{person_id}")
-  fun fetchPersonDetail(@Path("person_id") id: Int): Call<PersonDetail>
+  suspend fun fetchPersonDetail(@Path("person_id") id: Int): ApiResponse<PersonDetail>
 }

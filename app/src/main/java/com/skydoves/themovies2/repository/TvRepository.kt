@@ -18,10 +18,9 @@ package com.skydoves.themovies2.repository
 
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onSuccess
-import com.skydoves.sandwich.request
+import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
+import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.TvService
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
@@ -44,19 +43,18 @@ class TvRepository constructor(
     val liveData = MutableLiveData<List<Keyword>>()
     val tv = tvDao.getTv(id)
     var keywords = tv.keywords
-    tvService.fetchKeywords(id).request { response ->
-      response.onSuccess {
-        data?.let { data ->
-          keywords = data.keywords
-          tv.keywords = keywords
-          liveData.postValue(keywords)
-          tvDao.updateTv(tv)
-        }
-      }.onError {
-        error(message())
-      }.onException {
-        error(message())
+    val response = tvService.fetchKeywords(id)
+    response.suspendOnSuccess {
+      data?.let { data ->
+        keywords = data.keywords
+        tv.keywords = keywords
+        liveData.postValue(keywords)
+        tvDao.updateTv(tv)
       }
+    }.suspendOnError {
+      error(message())
+    }.suspendOnException {
+      error(message())
     }
     liveData.apply { postValue(keywords) }
   }
@@ -65,19 +63,18 @@ class TvRepository constructor(
     val liveData = MutableLiveData<List<Video>>()
     val tv = tvDao.getTv(id)
     var videos = tv.videos
-    tvService.fetchVideos(id).request { response ->
-      response.onSuccess {
-        data?.let { data ->
-          videos = data.results
-          tv.videos = videos
-          liveData.postValue(videos)
-          tvDao.updateTv(tv)
-        }
-      }.onError {
-        error(message())
-      }.onException {
-        error(message())
+    val response = tvService.fetchVideos(id)
+    response.suspendOnSuccess {
+      data?.let { data ->
+        videos = data.results
+        tv.videos = videos
+        liveData.postValue(videos)
+        tvDao.updateTv(tv)
       }
+    }.suspendOnError {
+      error(message())
+    }.suspendOnException {
+      error(message())
     }
     liveData.apply { postValue(videos) }
   }
@@ -87,19 +84,18 @@ class TvRepository constructor(
     val tv = tvDao.getTv(id)
     var reviews = tv.reviews
     if (reviews.isNullOrEmpty()) {
-      tvService.fetchReviews(id).request { response ->
-        response.onSuccess {
-          data?.let { data ->
-            reviews = data.results
-            tv.reviews = reviews
-            liveData.postValue(reviews)
-            tvDao.updateTv(tv)
-          }
-        }.onError {
-          error(message())
-        }.onException {
-          error(message())
+      val response = tvService.fetchReviews(id)
+      response.suspendOnSuccess {
+        data?.let { data ->
+          reviews = data.results
+          tv.reviews = reviews
+          liveData.postValue(reviews)
+          tvDao.updateTv(tv)
         }
+      }.suspendOnError {
+        error(message())
+      }.suspendOnException {
+        error(message())
       }
     }
     liveData.apply { postValue(reviews) }

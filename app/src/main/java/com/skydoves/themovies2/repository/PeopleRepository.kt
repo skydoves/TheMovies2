@@ -18,10 +18,9 @@ package com.skydoves.themovies2.repository
 
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onSuccess
-import com.skydoves.sandwich.request
+import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
+import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.network.PersonDetail
@@ -43,19 +42,18 @@ class PeopleRepository constructor(
     val liveData = MutableLiveData<List<Person>>()
     var people = peopleDao.getPeople(page)
     if (people.isEmpty()) {
-      peopleService.fetchPopularPeople(page).request { response ->
-        response.onSuccess {
-          data?.let { data ->
-            people = data.results
-            people.forEach { it.page = page }
-            liveData.postValue(people)
-            peopleDao.insertPeople(people)
-          }
-        }.onError {
-          error(message())
-        }.onException {
-          error(message())
+      val response = peopleService.fetchPopularPeople(page)
+      response.suspendOnSuccess {
+        data?.let { data ->
+          people = data.results
+          people.forEach { it.page = page }
+          liveData.postValue(people)
+          peopleDao.insertPeople(people)
         }
+      }.suspendOnError {
+        error(message())
+      }.suspendOnException {
+        error(message())
       }
     }
     liveData.apply { postValue(people) }
@@ -66,19 +64,18 @@ class PeopleRepository constructor(
     val person = peopleDao.getPerson(id)
     var personDetail = person.personDetail
     if (personDetail == null) {
-      peopleService.fetchPersonDetail(id).request { response ->
-        response.onSuccess {
-          data?.let { data ->
-            personDetail = data
-            person.personDetail = personDetail
-            liveData.postValue(personDetail)
-            peopleDao.updatePerson(person)
-          }
-        }.onError {
-          error(message())
-        }.onException {
-          error(message())
+      val response = peopleService.fetchPersonDetail(id)
+      response.suspendOnSuccess {
+        data?.let { data ->
+          personDetail = data
+          person.personDetail = personDetail
+          liveData.postValue(personDetail)
+          peopleDao.updatePerson(person)
         }
+      }.suspendOnError {
+        error(message())
+      }.suspendOnException {
+        error(message())
       }
     }
     liveData.apply { postValue(person.personDetail) }

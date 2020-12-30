@@ -37,7 +37,7 @@ buildscript {
         // network
         retrofitVersion = '2.6.0'
         okhttpVersion = '4.1.0'
-        sandwichVersion = '1.0.0'
+        sandwichVersion = '1.0.5'
         gsonVersion = '2.8.5'
 
         // glide

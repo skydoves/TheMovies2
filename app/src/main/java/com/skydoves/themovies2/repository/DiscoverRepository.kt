@@ -18,10 +18,9 @@ package com.skydoves.themovies2.repository
 
 import androidx.lifecycle.MutableLiveData
 import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onSuccess
-import com.skydoves.sandwich.request
+import com.skydoves.sandwich.suspendOnError
+import com.skydoves.sandwich.suspendOnException
+import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.TheDiscoverService
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Tv
@@ -45,19 +44,18 @@ class DiscoverRepository constructor(
     val liveDate = MutableLiveData<List<Movie>>()
     var movies = movieDao.getMovieList(page)
     if (movies.isEmpty()) {
-      discoverService.fetchDiscoverMovie(page).request { response ->
-        response.onSuccess {
-          data?.let { data ->
-            movies = data.results
-            movies.forEach { it.page = page }
-            liveDate.postValue(movies)
-            movieDao.insertMovieList(movies)
-          }
-        }.onError {
-          error(message())
-        }.onException {
-          error(message())
+      val response = discoverService.fetchDiscoverMovie(page)
+      response.suspendOnSuccess {
+        data?.let { data ->
+          movies = data.results
+          movies.forEach { it.page = page }
+          liveDate.postValue(movies)
+          movieDao.insertMovieList(movies)
         }
+      }.suspendOnError {
+        error(message())
+      }.suspendOnException {
+        error(message())
       }
     }
     liveDate.apply { postValue(movies) }
@@ -67,19 +65,18 @@ class DiscoverRepository constructor(
     val liveDate = MutableLiveData<List<Tv>>()
     var tvs = tvDao.getTvList(page)
     if (tvs.isEmpty()) {
-      discoverService.fetchDiscoverTv(page).request { response ->
-        response.onSuccess {
-          data?.let { data ->
-            tvs = data.results
-            tvs.forEach { it.page = page }
-            liveDate.postValue(tvs)
-            tvDao.insertTv(tvs)
-          }
-        }.onError {
-          error(message())
-        }.onException {
-          error(message())
+      val response = discoverService.fetchDiscoverTv(page)
+      response.suspendOnSuccess {
+        data?.let { data ->
+          tvs = data.results
+          tvs.forEach { it.page = page }
+          liveDate.postValue(tvs)
+          tvDao.insertTv(tvs)
         }
+      }.suspendOnError {
+        error(message())
+      }.suspendOnException {
+        error(message())
       }
     }
     liveDate.apply { postValue(tvs) }
