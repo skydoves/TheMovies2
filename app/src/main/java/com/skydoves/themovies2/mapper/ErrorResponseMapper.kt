@@ -22,11 +22,18 @@ import com.skydoves.sandwich.message
 import com.skydoves.themovies2.models.network.TheMovieErrorResponse
 
 /**
- * Developed by skydoves on 2020-12-30.
- * Copyright (c) 2018 skydoves rights reserved.
+ * A mapper for mapping [ApiResponse.Failure.Error] response as custom [TheMovieErrorResponse] instance.
+ *
+ * @see [ApiErrorModelMapper](https://github.com/skydoves/sandwich#apierrormodelmapper)
  */
 object ErrorResponseMapper : ApiErrorModelMapper<TheMovieErrorResponse> {
 
+  /**
+   * maps the [ApiResponse.Failure.Error] to the [TheMovieErrorResponse] using the mapper.
+   *
+   * @param apiErrorResponse The [ApiResponse.Failure.Error] error response from the network request.
+   * @return A customized [TheMovieErrorResponse] error response.
+   */
   override fun map(apiErrorResponse: ApiResponse.Failure.Error<*>): TheMovieErrorResponse {
     return TheMovieErrorResponse(apiErrorResponse.statusCode.code, apiErrorResponse.message())
   }

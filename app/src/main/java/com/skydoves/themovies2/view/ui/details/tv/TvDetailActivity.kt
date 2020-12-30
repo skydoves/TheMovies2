@@ -22,14 +22,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.compose.ViewModelActivity
+import com.skydoves.themovies2.base.DataBindingActivity
 import com.skydoves.themovies2.databinding.ActivityTvDetailBinding
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
 import org.koin.android.viewmodel.ext.android.getViewModel
 
-class TvDetailActivity : ViewModelActivity() {
+class TvDetailActivity : DataBindingActivity() {
 
   private val binding: ActivityTvDetailBinding by binding(R.layout.activity_tv_detail)
 

@@ -17,8 +17,6 @@
 package com.skydoves.themovies2.api
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import java.io.IOException
-import java.nio.charset.StandardCharsets
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
@@ -33,6 +31,8 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
+import java.nio.charset.StandardCharsets
 
 @RunWith(JUnit4::class)
 abstract class ApiAbstract<T> {

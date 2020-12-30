@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
 
@@ -40,11 +40,8 @@ android {
     kapt {
         correctErrorTypes = true
     }
-    dataBinding {
-        enabled = true
-    }
-    androidExtensions {
-        experimental = true
+    buildFeatures {
+        dataBinding true
     }
     sourceSets {
         androidTest.java.srcDirs += "src/test-common/java"
@@ -58,12 +55,9 @@ android {
 }
 
 dependencies {
-    // kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
-
-    // support library
+    // androidx
     implementation "com.google.android.material:material:$materialVersion"
-    implementation "androidx.palette:palette:$androidxVersion"
+    implementation "androidx.palette:palette-ktx:$androidxVersion"
 
     // architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"

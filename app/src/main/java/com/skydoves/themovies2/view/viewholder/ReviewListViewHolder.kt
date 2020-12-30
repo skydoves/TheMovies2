@@ -18,12 +18,13 @@ package com.skydoves.themovies2.view.viewholder
 
 import android.view.View
 import com.skydoves.baserecyclerviewadapter.BaseViewHolder
+import com.skydoves.themovies2.databinding.ItemReviewBinding
 import com.skydoves.themovies2.models.Review
-import kotlinx.android.synthetic.main.item_review.view.*
 
 class ReviewListViewHolder(val view: View) : BaseViewHolder(view) {
 
   private lateinit var review: Review
+  private val binding: ItemReviewBinding by bindings(view)
 
   override fun bindData(data: Any) {
     if (data is Review) {
@@ -33,10 +34,8 @@ class ReviewListViewHolder(val view: View) : BaseViewHolder(view) {
   }
 
   private fun drawItem() {
-    itemView.run {
-      item_review_title.text = review.author
-      item_review_content.text = review.content
-    }
+    binding.review = this.review
+    binding.executePendingBindings()
   }
 
   override fun onClick(v: View?) = Unit

@@ -25,13 +25,13 @@ import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.compose.ViewModelActivity
+import com.skydoves.themovies2.base.DataBindingActivity
 import com.skydoves.themovies2.databinding.ActivityPersonDetailBinding
 import com.skydoves.themovies2.extension.checkIsMaterialVersion
 import com.skydoves.themovies2.models.entity.Person
 import org.koin.android.viewmodel.ext.android.getViewModel
 
-class PersonDetailActivity : ViewModelActivity() {
+class PersonDetailActivity : DataBindingActivity() {
 
   private val binding: ActivityPersonDetailBinding by binding(R.layout.activity_person_detail)
 
@@ -67,7 +67,8 @@ class PersonDetailActivity : ViewModelActivity() {
           }
         } else {
           context.startActivity(
-            Intent(context, PersonDetailActivity::class.java).putExtra(personId, person))
+            Intent(context, PersonDetailActivity::class.java).putExtra(personId, person)
+          )
         }
       }
     }

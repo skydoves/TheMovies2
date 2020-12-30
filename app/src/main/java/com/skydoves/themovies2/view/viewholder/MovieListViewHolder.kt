@@ -17,20 +17,17 @@
 package com.skydoves.themovies2.view.viewholder
 
 import android.view.View
-import com.bumptech.glide.Glide
-import com.github.florent37.glidepalette.BitmapPalette
-import com.github.florent37.glidepalette.GlidePalette
 import com.skydoves.baserecyclerviewadapter.BaseViewHolder
-import com.skydoves.themovies2.api.Api
+import com.skydoves.themovies2.databinding.ItemPosterBinding
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.view.ui.details.movie.MovieDetailActivity
-import kotlinx.android.synthetic.main.item_poster.view.*
 
 class MovieListViewHolder constructor(
   val view: View
 ) : BaseViewHolder(view) {
 
   private lateinit var movie: Movie
+  private val binding: ItemPosterBinding by bindings(view)
 
   @Throws(Exception::class)
   override fun bindData(data: Any) {
@@ -41,18 +38,8 @@ class MovieListViewHolder constructor(
   }
 
   private fun drawItem() {
-    itemView.run {
-      item_poster_title.text = movie.title
-      movie.poster_path?.let {
-        Glide.with(context)
-          .load(Api.getPosterPath(it))
-          .listener(GlidePalette.with(Api.getPosterPath(it))
-            .use(BitmapPalette.Profile.VIBRANT)
-            .intoBackground(item_poster_palette)
-            .crossfade(true))
-          .into(item_poster_post)
-      }
-    }
+    binding.movie = this.movie
+    binding.executePendingBindings()
   }
 
   override fun onClick(v: View?) = MovieDetailActivity.startActivityModel(context(), movie)

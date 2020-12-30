@@ -20,7 +20,7 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
-import com.skydoves.themovies2.compose.DispatchViewModel
+import com.skydoves.themovies2.base.DispatchViewModel
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video

@@ -19,7 +19,7 @@ package com.skydoves.themovies2.view.ui.details.tv
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
-import com.skydoves.themovies2.compose.DispatchViewModel
+import com.skydoves.themovies2.base.DispatchViewModel
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video

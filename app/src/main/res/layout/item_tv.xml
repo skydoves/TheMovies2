@@ -8,8 +8,8 @@
     <import type="com.skydoves.themovies2.api.Api" />
 
     <variable
-      name="movie"
-      type="com.skydoves.themovies2.models.entity.Movie" />
+      name="tv"
+      type="com.skydoves.themovies2.models.entity.Tv" />
   </data>
 
   <RelativeLayout
@@ -20,12 +20,12 @@
     tools:background="@color/background">
 
     <androidx.appcompat.widget.AppCompatImageView
-      android:id="@+id/item_poster_post"
+      android:id="@+id/item_tv_post"
       android:layout_width="match_parent"
       android:layout_height="240dp"
       android:scaleType="fitXY"
-      app:loadPaletteImage="@{Api.getPosterPath(movie.poster_path)}"
-      app:loadPaletteTarget="@{itemPosterPalette}"
+      app:loadPaletteImage="@{Api.getPosterPath(tv.poster_path)}"
+      app:loadPaletteTarget="@{itemTvPalette}"
       tools:src="@drawable/ic_star_white_24dp" />
 
     <RelativeLayout
@@ -36,19 +36,19 @@
       tools:background="@color/colorPrimaryDark">
 
       <LinearLayout
-        android:id="@+id/item_poster_palette"
+        android:id="@+id/item_tv_palette"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.7"
         android:orientation="vertical" />
 
       <TextView
-        android:id="@+id/item_poster_title"
+        android:id="@+id/item_tv_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:padding="3dp"
-        android:text="@{movie.title}"
+        android:text="@{tv.name}"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"

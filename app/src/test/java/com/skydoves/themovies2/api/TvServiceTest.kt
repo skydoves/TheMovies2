@@ -19,11 +19,11 @@ package com.skydoves.themovies2.api
 import com.skydoves.sandwich.ApiResponse
 import com.skydoves.sandwich.request
 import com.skydoves.themovies2.api.service.TvService
-import java.io.IOException
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
+import java.io.IOException
 
 class TvServiceTest : ApiAbstract<TvService>() {
 

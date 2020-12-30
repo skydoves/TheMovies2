@@ -19,7 +19,7 @@ package com.skydoves.themovies2.view.ui.details.person
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
-import com.skydoves.themovies2.compose.DispatchViewModel
+import com.skydoves.themovies2.base.DispatchViewModel
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.repository.PeopleRepository
 import timber.log.Timber
