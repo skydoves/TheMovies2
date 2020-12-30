@@ -16,11 +16,11 @@
 
 package com.skydoves.themovies2.view.ui.details.movie
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import com.skydoves.bundler.bundleNonNull
+import com.skydoves.bundler.intentOf
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.compose.ViewModelActivity
 import com.skydoves.themovies2.databinding.ActivityMovieDetailBinding
@@ -32,15 +32,15 @@ import org.koin.android.viewmodel.ext.android.getViewModel
 class MovieDetailActivity : ViewModelActivity() {
 
   private val binding: ActivityMovieDetailBinding by binding(R.layout.activity_movie_detail)
+  private val intentMovie: Movie by bundleNonNull(MOVIE_ID)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    val intentMovie = intent.getParcelableExtra<Movie>(movieId) as Movie
     with(binding) {
       activity = this@MovieDetailActivity
       lifecycleOwner = this@MovieDetailActivity
       viewModel =
-        getViewModel(MovieDetailViewModel::class).apply { postMovieId(intentMovie.id) }
+        getViewModel(MovieDetailViewModel::class).apply { getMovieListFromId(intentMovie.id) }
       movie = intentMovie
       videoListAdapter = VideoListAdapter()
       reviewListAdapter = ReviewListAdapter()
@@ -53,11 +53,10 @@ class MovieDetailActivity : ViewModelActivity() {
   }
 
   companion object {
-    private const val movieId = "movie"
+    private const val MOVIE_ID = "movie"
     fun startActivityModel(context: Context?, movie: Movie) {
-      if (context is Activity) {
-        context.startActivity(
-          Intent(context, MovieDetailActivity::class.java).putExtra(movieId, movie))
+      context?.intentOf<MovieDetailActivity> {
+        putExtra(MOVIE_ID, movie)
       }
     }
   }

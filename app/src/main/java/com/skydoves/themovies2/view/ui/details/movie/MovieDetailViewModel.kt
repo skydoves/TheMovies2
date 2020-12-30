@@ -16,52 +16,52 @@
 
 package com.skydoves.themovies2.view.ui.details.movie
 
+import androidx.annotation.MainThread
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
 import com.skydoves.themovies2.compose.DispatchViewModel
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.repository.MovieRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import timber.log.Timber
 
 class MovieDetailViewModel constructor(
   private val movieRepository: MovieRepository
 ) : DispatchViewModel() {
 
-  // TODO StateFlow
-  private val movieIdLiveData: MutableLiveData<Int> = MutableLiveData()
+  private val movieIdStateFlow: MutableStateFlow<Int> = MutableStateFlow(0)
 
-  val keywordListLiveData: LiveData<List<Keyword>>
-  val videoListLiveData: LiveData<List<Video>>
-  val reviewListLiveData: LiveData<List<Review>>
-
-  // TODO LiveData
-  val toastLiveData: MutableLiveData<String> = MutableLiveData()
+  val keywordListLiveData: LiveData<List<Keyword>?>
+  val videoListLiveData: LiveData<List<Video>?>
+  val reviewListLiveData: LiveData<List<Review>?>
 
   init {
     Timber.d("Injection MovieDetailViewModel")
 
-    this.keywordListLiveData = movieIdLiveData.switchMap { id ->
+    this.keywordListLiveData = movieIdStateFlow.asLiveData().switchMap { id ->
       launchOnViewModelScope {
-        movieRepository.loadKeywordList(id) { toastLiveData.postValue(it) }
+        movieRepository.loadKeywordList(id).asLiveData()
       }
     }
 
-    this.videoListLiveData = movieIdLiveData.switchMap { id ->
+    this.videoListLiveData = movieIdStateFlow.asLiveData().switchMap { id ->
       launchOnViewModelScope {
-        movieRepository.loadVideoList(id) { toastLiveData.postValue(it) }
+        movieRepository.loadVideoList(id).asLiveData()
       }
     }
 
-    this.reviewListLiveData = movieIdLiveData.switchMap { id ->
+    this.reviewListLiveData = movieIdStateFlow.asLiveData().switchMap { id ->
       launchOnViewModelScope {
-        movieRepository.loadReviewsList(id) { toastLiveData.postValue(it) }
+        movieRepository.loadReviewsList(id).asLiveData()
       }
     }
   }
 
-  // TODO
-  fun postMovieId(id: Int) = movieIdLiveData.postValue(id)
+  @MainThread
+  fun getMovieListFromId(id: Int) {
+    movieIdStateFlow.value = id
+  }
 }

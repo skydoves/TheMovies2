@@ -52,7 +52,6 @@
       app:adapter="@{videoListAdapter}"
       app:adapterVideoList="@{viewModel.videoListLiveData}"
       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-      app:toast="@{viewModel.toastLiveData}"
       tools:listitem="@layout/item_video"
       tools:visibility="visible" />
 

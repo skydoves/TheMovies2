@@ -78,8 +78,8 @@ class MovieDetailViewModelTest {
       val observer = mock<Observer<List<Keyword>>>()
       data.observeForever(observer)
 
-      viewModel.postMovieId(1)
-      viewModel.postMovieId(1)
+      viewModel.getMovieListFromId(1)
+      viewModel.getMovieListFromId(1)
 
       verify(movieDao, atLeastOnce()).getMovie(1)
       verify(service, atLeastOnce()).fetchKeywords(1)
@@ -101,8 +101,8 @@ class MovieDetailViewModelTest {
       val observer = mock<Observer<List<Video>>>()
       data.observeForever(observer)
 
-      viewModel.postMovieId(1)
-      viewModel.postMovieId(1)
+      viewModel.getMovieListFromId(1)
+      viewModel.getMovieListFromId(1)
 
       verify(movieDao, atLeastOnce()).getMovie(1)
       verify(service, atLeastOnce()).fetchVideos(1)
@@ -124,8 +124,8 @@ class MovieDetailViewModelTest {
       val observer = mock<Observer<List<Review>>>()
       data.observeForever(observer)
 
-      viewModel.postMovieId(1)
-      viewModel.postMovieId(1)
+      viewModel.getMovieListFromId(1)
+      viewModel.getMovieListFromId(1)
 
       verify(movieDao, atLeastOnce()).getMovie(1)
       verify(service, atLeastOnce()).fetchReviews(1)

@@ -16,21 +16,14 @@
 
 package com.skydoves.themovies2.repository
 
-import androidx.lifecycle.MutableLiveData
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.suspendOnError
-import com.skydoves.sandwich.suspendOnException
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.MovieService
-import com.skydoves.themovies2.models.Keyword
-import com.skydoves.themovies2.models.Review
-import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.room.MovieDao
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 
-// TODO Mapper and operator
 class MovieRepository constructor(
   private val movieService: MovieService,
   private val movieDao: MovieDao
@@ -40,9 +33,7 @@ class MovieRepository constructor(
     Timber.d("Injection MovieRepository")
   }
 
-  // TODO Flow
-  suspend fun loadKeywordList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<List<Keyword>>()
+  suspend fun loadKeywordList(id: Int) = flow {
     val movie = movieDao.getMovie(id)
     var keywords = movie.keywords
     if (keywords.isNullOrEmpty()) {
@@ -51,59 +42,48 @@ class MovieRepository constructor(
         data?.let { data ->
           keywords = data.keywords
           movie.keywords = keywords
-          liveData.postValue(keywords)
+          emit(keywords)
           movieDao.updateMovie(movie)
         }
-      }.suspendOnError {
-        error(message())
-      }.suspendOnException {
-        error(message())
       }
+    } else {
+      emit(keywords)
     }
-    liveData.apply { postValue(keywords) }
-  }
+  }.flowOn(Dispatchers.IO)
 
-  suspend fun loadVideoList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<List<Video>>()
+  suspend fun loadVideoList(id: Int) = flow {
     val movie = movieDao.getMovie(id)
     var videos = movie.videos
     if (videos.isNullOrEmpty()) {
-      val response = movieService.fetchVideos(id)
+      movieService.fetchVideos(id)
         .suspendOnSuccess {
           data?.let { data ->
             videos = data.results
             movie.videos = videos
-            liveData.postValue(videos)
             movieDao.updateMovie(movie)
+            emit(videos)
           }
-        }.suspendOnError {
-          error(message())
-        }.suspendOnException {
-          error(message())
         }
+    } else {
+      emit(videos)
     }
-    liveData.apply { postValue(videos) }
-  }
+  }.flowOn(Dispatchers.IO)
 
-  suspend fun loadReviewsList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<List<Review>>()
+  suspend fun loadReviewsList(id: Int) = flow {
     val movie = movieDao.getMovie(id)
     var reviews = movie.reviews
     if (reviews.isNullOrEmpty()) {
-      val response = movieService.fetchReviews(id)
+      movieService.fetchReviews(id)
         .suspendOnSuccess {
           data?.let { data ->
             reviews = data.results
             movie.reviews = reviews
-            liveData.postValue(reviews)
             movieDao.updateMovie(movie)
+            emit(reviews)
           }
-        }.suspendOnError {
-          error(message())
-        }.suspendOnException {
-          error(message())
         }
+    } else {
+      emit(reviews)
     }
-    liveData.apply { postValue(reviews) }
-  }
+  }.flowOn(Dispatchers.IO)
 }
