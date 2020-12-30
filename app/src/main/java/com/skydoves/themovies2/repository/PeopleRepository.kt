@@ -20,6 +20,7 @@ import androidx.annotation.WorkerThread
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.room.PeopleDao
+import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -40,7 +41,7 @@ class PeopleRepository constructor(
     if (people.isEmpty()) {
       val response = peopleService.fetchPopularPeople(page)
       response.suspendOnSuccess {
-        data?.let { data ->
+        data.whatIfNotNull { data ->
           people = data.results
           people.forEach { it.page = page }
           peopleDao.insertPeople(people)
@@ -61,7 +62,7 @@ class PeopleRepository constructor(
     if (personDetail == null) {
       val response = peopleService.fetchPersonDetail(id)
       response.suspendOnSuccess {
-        data?.let { data ->
+        data.whatIfNotNull { data ->
           personDetail = data
           person.personDetail = personDetail
           peopleDao.updatePerson(person)
