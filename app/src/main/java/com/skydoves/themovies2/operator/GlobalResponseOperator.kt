@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.models.network
+package com.skydoves.themovies2.operator
 
 import android.app.Application
 import android.widget.Toast
@@ -32,23 +32,23 @@ import timber.log.Timber
  * Developed by skydoves on 2020-12-30.
  * Copyright (c) 2018 skydoves rights reserved.
  */
-class GlobalOperator<T> constructor(
+class GlobalResponseOperator<T> constructor(
   private val application: Application
 ) : ApiResponseSuspendOperator<T>() {
 
   override suspend fun onError(apiResponse: ApiResponse.Failure.Error<T>) {
-    withContext(Dispatchers.Main) {
+    withContext(Dispatchers.IO) {
       apiResponse.run {
         Timber.d(message())
 
         when (statusCode) {
           StatusCode.InternalServerError -> toast("InternalServerError")
           StatusCode.BadGateway -> toast("BadGateway")
-          else -> toast("$statusCode(${statusCode.code}: ${message()})")
+          else -> toast("$statusCode: ${statusCode.code}: ${statusCode.name}")
         }
 
         map(ErrorResponseMapper) {
-          Timber.d("[Code: $code]: $message")
+          Timber.d(message())
         }
       }
     }

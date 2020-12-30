@@ -23,7 +23,7 @@ import com.skydoves.themovies2.di.networkModule
 import com.skydoves.themovies2.di.persistenceModule
 import com.skydoves.themovies2.di.repositoryModule
 import com.skydoves.themovies2.di.viewModelModule
-import com.skydoves.themovies2.models.network.GlobalOperator
+import com.skydoves.themovies2.operator.GlobalResponseOperator
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -42,8 +42,8 @@ class TheMoviesApplication : Application() {
       modules(viewModelModule)
     }
 
-    // initialize global sandwich operator
-    SandwichInitializer.sandwichOperator = GlobalOperator<Any>(this)
+    // initialize global sandwich opertator
+    SandwichInitializer.sandwichOperator = GlobalResponseOperator<Any>(this)
 
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
