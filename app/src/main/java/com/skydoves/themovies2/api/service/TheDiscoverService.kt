@@ -16,9 +16,9 @@
 
 package com.skydoves.themovies2.api.service
 
+import com.skydoves.sandwich.ApiResponse
 import com.skydoves.themovies2.models.network.DiscoverMovieResponse
 import com.skydoves.themovies2.models.network.DiscoverTvResponse
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -34,7 +34,7 @@ interface TheDiscoverService {
    *  @return [DiscoverMovieResponse] response
    */
   @GET("/3/discover/movie?language=en&sort_by=popularity.desc")
-  fun fetchDiscoverMovie(@Query("page") page: Int): Call<DiscoverMovieResponse>
+  suspend fun fetchDiscoverMovie(@Query("page") page: Int): ApiResponse<DiscoverMovieResponse>
 
   /**
    * [Tv Discover](https://developers.themoviedb.org/3/discover/tv-discover)
@@ -46,5 +46,5 @@ interface TheDiscoverService {
    *  @return [DiscoverTvResponse] response
    */
   @GET("/3/discover/tv?language=en&sort_by=popularity.desc")
-  fun fetchDiscoverTv(@Query("page") page: Int): Call<DiscoverTvResponse>
+  suspend fun fetchDiscoverTv(@Query("page") page: Int): ApiResponse<DiscoverTvResponse>
 }

@@ -16,19 +16,14 @@
 
 package com.skydoves.themovies2.repository
 
-import androidx.lifecycle.MutableLiveData
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onSuccess
-import com.skydoves.sandwich.request
+import androidx.annotation.WorkerThread
+import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.TvService
-import com.skydoves.themovies2.models.Keyword
-import com.skydoves.themovies2.models.Review
-import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.room.TvDao
+import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 
 class TvRepository constructor(
@@ -40,68 +35,60 @@ class TvRepository constructor(
     Timber.d("Injection TvRepository")
   }
 
-  suspend fun loadKeywordList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<List<Keyword>>()
+  @WorkerThread
+  suspend fun loadKeywordList(id: Int) = flow {
     val tv = tvDao.getTv(id)
     var keywords = tv.keywords
-    tvService.fetchKeywords(id).request { response ->
-      response.onSuccess {
-        data?.let { data ->
+    if (keywords.isNullOrEmpty()) {
+      val response = tvService.fetchKeywords(id)
+      response.suspendOnSuccess {
+        data.whatIfNotNull { data ->
           keywords = data.keywords
           tv.keywords = keywords
-          liveData.postValue(keywords)
           tvDao.updateTv(tv)
+          emit(keywords)
         }
-      }.onError {
-        error(message())
-      }.onException {
-        error(message())
       }
+    } else {
+      emit(keywords)
     }
-    liveData.apply { postValue(keywords) }
-  }
+  }.flowOn(Dispatchers.IO)
 
-  suspend fun loadVideoList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<List<Video>>()
+  @WorkerThread
+  suspend fun loadVideoList(id: Int) = flow {
     val tv = tvDao.getTv(id)
     var videos = tv.videos
-    tvService.fetchVideos(id).request { response ->
-      response.onSuccess {
-        data?.let { data ->
+    if (videos.isNullOrEmpty()) {
+      val response = tvService.fetchVideos(id)
+      response.suspendOnSuccess {
+        data.whatIfNotNull { data ->
           videos = data.results
           tv.videos = videos
-          liveData.postValue(videos)
           tvDao.updateTv(tv)
+          emit(videos)
         }
-      }.onError {
-        error(message())
-      }.onException {
-        error(message())
       }
+    } else {
+      emit(videos)
     }
-    liveData.apply { postValue(videos) }
-  }
+  }.flowOn(Dispatchers.IO)
 
-  suspend fun loadReviewsList(id: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveData = MutableLiveData<List<Review>>()
+  @WorkerThread
+  suspend fun loadReviewsList(id: Int) = flow {
     val tv = tvDao.getTv(id)
     var reviews = tv.reviews
     if (reviews.isNullOrEmpty()) {
-      tvService.fetchReviews(id).request { response ->
-        response.onSuccess {
-          data?.let { data ->
-            reviews = data.results
-            tv.reviews = reviews
-            liveData.postValue(reviews)
-            tvDao.updateTv(tv)
-          }
-        }.onError {
-          error(message())
-        }.onException {
-          error(message())
+      val response = tvService.fetchReviews(id)
+      response.suspendOnSuccess {
+        data.whatIfNotNull { data ->
+          reviews = data.results
+          tv.reviews = reviews
+          tvDao.updateTv(tv)
+          emit(reviews)
         }
       }
+    } else {
+      emit(reviews)
     }
-    liveData.apply { postValue(reviews) }
-  }
+  }.flowOn(Dispatchers.IO)
 }

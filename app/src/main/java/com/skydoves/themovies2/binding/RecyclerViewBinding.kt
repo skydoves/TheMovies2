@@ -38,119 +38,143 @@ import com.skydoves.themovies2.view.adapter.TvListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
 import com.skydoves.themovies2.view.ui.main.MainActivityViewModel
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullAs
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 
-@BindingAdapter("adapter")
-fun bindAdapter(view: RecyclerView, baseAdapter: BaseAdapter) {
-  view.adapter = baseAdapter
-}
+object RecyclerViewBinding {
 
-@BindingAdapter("adapterMovieList")
-fun bindAdapterMovieList(view: RecyclerView, movies: List<Movie>?) {
-  movies.whatIfNotNull {
-    (view.adapter as? MovieListAdapter)?.addMovieList(it)
+  @JvmStatic
+  @BindingAdapter("adapter")
+  fun bindAdapter(view: RecyclerView, baseAdapter: BaseAdapter) {
+    view.adapter = baseAdapter
   }
-}
 
-@BindingAdapter("paginationMovieList")
-fun paginationMovieList(view: RecyclerView, viewModel: MainActivityViewModel) {
-  RecyclerViewPaginator(
-    recyclerView = view,
-    isLoading = { false },
-    loadMore = { viewModel.postMoviePage(it) },
-    onLast = { false }
-  ).run {
-    threshold = 4
-    currentPage = 1
-  }
-}
-
-@BindingAdapter("adapterPersonList")
-fun bindAdapterPersonList(view: RecyclerView, people: List<Person>?) {
-  people.whatIfNotNull {
-    (view.adapter as? PeopleAdapter)?.addPeople(it)
-  }
-}
-
-@BindingAdapter("paginationPersonList")
-fun paginationPersonList(view: RecyclerView, viewModel: MainActivityViewModel) {
-  RecyclerViewPaginator(
-    recyclerView = view,
-    isLoading = { false },
-    loadMore = { viewModel.postPeoplePage(it) },
-    onLast = { false }
-  ).run {
-    threshold = 4
-    currentPage = 1
-  }
-}
-
-@BindingAdapter("adapterTvList")
-fun bindAdapterTvList(view: RecyclerView, tvs: List<Tv>?) {
-  tvs.whatIfNotNull {
-    (view.adapter as? TvListAdapter)?.addTvList(it)
-  }
-}
-
-@BindingAdapter("paginationTvList")
-fun paginationTvList(view: RecyclerView, viewModel: MainActivityViewModel) {
-  RecyclerViewPaginator(
-    recyclerView = view,
-    isLoading = { false },
-    loadMore = { viewModel.postTvPage(it) },
-    onLast = { false }
-  ).run {
-    threshold = 4
-    currentPage = 1
-  }
-}
-
-@BindingAdapter("adapterVideoList")
-fun bindAdapterVideoList(view: RecyclerView, videos: List<Video>?) {
-  videos.whatIfNotNullOrEmpty {
-    (view.adapter as? VideoListAdapter)?.addVideoList(it)
-    view.visible()
-  }
-}
-
-@BindingAdapter("adapterReviewList")
-fun bindAdapterReviewList(view: RecyclerView, reviews: List<Review>?) {
-  view.setHasFixedSize(true)
-  reviews.whatIfNotNullOrEmpty {
-    (view.adapter as? ReviewListAdapter)?.addReviewList(it)
-    view.visible()
-  }
-}
-
-@BindingAdapter("mapKeywordList")
-fun bindMapKeywordList(chipGroup: ChipGroup, keywords: List<Keyword>?) {
-  keywords.whatIfNotNullOrEmpty {
-    chipGroup.visible()
-    for (keyword in it) {
-      chipGroup.addView(
-        Chip(chipGroup.context).apply {
-          text = keyword.name
-          isCheckable = false
-          setTextAppearanceResource(R.style.ChipTextStyle)
-          setChipBackgroundColorResource(R.color.colorPrimary)
-        })
+  @JvmStatic
+  @BindingAdapter("adapterMovieList")
+  fun bindAdapterMovieList(view: RecyclerView, movies: List<Movie>?) {
+    movies.whatIfNotNull {
+      (view.adapter as? MovieListAdapter)?.addMovieList(it)
     }
   }
-}
 
-@BindingAdapter("mapNameTagList")
-fun bindTags(chipGroup: ChipGroup, personDetail: PersonDetail?) {
-  personDetail?.also_known_as?.whatIfNotNull {
-    chipGroup.visible()
-    for (nameTag in it) {
-      chipGroup.addView(
-        Chip(chipGroup.context).apply {
-          text = nameTag
-          isCheckable = false
-          setTextAppearanceResource(R.style.ChipTextStyle)
-          setChipBackgroundColorResource(R.color.colorPrimary)
-        }
-      )
+  @JvmStatic
+  @BindingAdapter("paginationMovieList")
+  fun paginationMovieList(view: RecyclerView, viewModel: MainActivityViewModel) {
+    RecyclerViewPaginator(
+      recyclerView = view,
+      isLoading = { viewModel.isMovieListLoading.get() },
+      loadMore = { viewModel.postMoviePage(it) },
+      onLast = { false }
+    ).run {
+      threshold = 4
+      currentPage = 1
+    }
+  }
+
+  @JvmStatic
+  @BindingAdapter("adapterPersonList")
+  fun bindAdapterPersonList(view: RecyclerView, people: List<Person>?) {
+    people.whatIfNotNull { items ->
+      view.adapter.whatIfNotNullAs<PeopleAdapter> {
+        it.addPeople(items)
+      }
+    }
+  }
+
+  @JvmStatic
+  @BindingAdapter("paginationPersonList")
+  fun paginationPersonList(view: RecyclerView, viewModel: MainActivityViewModel) {
+    RecyclerViewPaginator(
+      recyclerView = view,
+      isLoading = { viewModel.isPeopleListLoading.get() },
+      loadMore = { viewModel.postPeoplePage(it) },
+      onLast = { false }
+    ).run {
+      threshold = 4
+      currentPage = 1
+    }
+  }
+
+  @JvmStatic
+  @BindingAdapter("adapterTvList")
+  fun bindAdapterTvList(view: RecyclerView, tvs: List<Tv>?) {
+    tvs.whatIfNotNull { items ->
+      view.adapter.whatIfNotNullAs<TvListAdapter> {
+        it.addTvList(items)
+      }
+    }
+  }
+
+  @JvmStatic
+  @BindingAdapter("paginationTvList")
+  fun paginationTvList(view: RecyclerView, viewModel: MainActivityViewModel) {
+    RecyclerViewPaginator(
+      recyclerView = view,
+      isLoading = { viewModel.isTvListLoading.get() },
+      loadMore = { viewModel.postTvPage(it) },
+      onLast = { false }
+    ).run {
+      threshold = 4
+      currentPage = 1
+    }
+  }
+
+  @JvmStatic
+  @BindingAdapter("adapterVideoList")
+  fun bindAdapterVideoList(view: RecyclerView, videos: List<Video>?) {
+    videos.whatIfNotNullOrEmpty { items ->
+      view.adapter.whatIfNotNullAs<VideoListAdapter> {
+        it.addVideoList(items)
+        view.visible()
+      }
+    }
+  }
+
+  @JvmStatic
+  @BindingAdapter("adapterReviewList")
+  fun bindAdapterReviewList(view: RecyclerView, reviews: List<Review>?) {
+    view.setHasFixedSize(true)
+    reviews.whatIfNotNullOrEmpty { items ->
+      view.adapter.whatIfNotNullAs<ReviewListAdapter> {
+        it.addReviewList(items)
+        view.visible()
+      }
+    }
+  }
+
+  @JvmStatic
+  @BindingAdapter("mapKeywordList")
+  fun bindMapKeywordList(chipGroup: ChipGroup, keywords: List<Keyword>?) {
+    keywords.whatIfNotNullOrEmpty {
+      chipGroup.visible()
+      for (keyword in it) {
+        chipGroup.addView(
+          Chip(chipGroup.context).apply {
+            text = keyword.name
+            isCheckable = false
+            setTextAppearanceResource(R.style.ChipTextStyle)
+            setChipBackgroundColorResource(R.color.colorPrimary)
+          }
+        )
+      }
+    }
+  }
+
+  @JvmStatic
+  @BindingAdapter("mapNameTagList")
+  fun bindTags(chipGroup: ChipGroup, personDetail: PersonDetail?) {
+    personDetail?.also_known_as.whatIfNotNull {
+      chipGroup.visible()
+      for (nameTag in it) {
+        chipGroup.addView(
+          Chip(chipGroup.context).apply {
+            text = nameTag
+            isCheckable = false
+            setTextAppearanceResource(R.style.ChipTextStyle)
+            setChipBackgroundColorResource(R.color.colorPrimary)
+          }
+        )
+      }
     }
   }
 }

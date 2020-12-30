@@ -17,18 +17,15 @@
 package com.skydoves.themovies2.view.viewholder
 
 import android.view.View
-import com.bumptech.glide.Glide
-import com.github.florent37.glidepalette.BitmapPalette
-import com.github.florent37.glidepalette.GlidePalette
 import com.skydoves.baserecyclerviewadapter.BaseViewHolder
-import com.skydoves.themovies2.api.Api
+import com.skydoves.themovies2.databinding.ItemTvBinding
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.view.ui.details.tv.TvDetailActivity
-import kotlinx.android.synthetic.main.item_poster.view.*
 
 class TvListViewHolder(val view: View) : BaseViewHolder(view) {
 
   private lateinit var tv: Tv
+  private val binding: ItemTvBinding by bindings(view)
 
   @Throws(Exception::class)
   override fun bindData(data: Any) {
@@ -39,18 +36,8 @@ class TvListViewHolder(val view: View) : BaseViewHolder(view) {
   }
 
   private fun drawItem() {
-    itemView.run {
-      item_poster_title.text = tv.name
-      tv.poster_path?.let {
-        Glide.with(context)
-          .load(Api.getPosterPath(it))
-          .listener(GlidePalette.with(Api.getPosterPath(it))
-            .use(BitmapPalette.Profile.VIBRANT)
-            .intoBackground(item_poster_palette)
-            .crossfade(true))
-          .into(item_poster_post)
-      }
-    }
+    binding.tv = this.tv
+    binding.executePendingBindings()
   }
 
   override fun onClick(v: View?) = TvDetailActivity.startActivityModel(context(), tv)

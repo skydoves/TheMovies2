@@ -24,21 +24,25 @@ import com.skydoves.themovies2.R
 import com.skydoves.themovies2.extension.checkIsMaterialVersion
 import com.skydoves.themovies2.extension.getStatusBarSize
 
-fun AppCompatActivity.simpleToolbarWithHome(toolbar: MaterialToolbar, title_: String = "") {
-  setSupportActionBar(toolbar)
-  supportActionBar?.run {
-    setDisplayHomeAsUpEnabled(true)
-    setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
-    title = title_
-  }
-  if (checkIsMaterialVersion() && toolbar.layoutParams is CollapsingToolbarLayout.LayoutParams) {
-    toolbar.layoutParams = (toolbar.layoutParams as CollapsingToolbarLayout.LayoutParams).apply {
-      topMargin = getStatusBarSize()
+object ActivityBinding {
+
+  private fun AppCompatActivity.simpleToolbarWithHome(toolbar: MaterialToolbar, title_: String = "") {
+    setSupportActionBar(toolbar)
+    supportActionBar?.run {
+      setDisplayHomeAsUpEnabled(true)
+      setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
+      title = title_
+    }
+    if (checkIsMaterialVersion() && toolbar.layoutParams is CollapsingToolbarLayout.LayoutParams) {
+      toolbar.layoutParams = (toolbar.layoutParams as CollapsingToolbarLayout.LayoutParams).apply {
+        topMargin = getStatusBarSize()
+      }
     }
   }
-}
 
-@BindingAdapter("simpleToolbarWithHome", "simpleToolbarTitle")
-fun bindToolbarWithTitle(toolbar: MaterialToolbar, activity: AppCompatActivity, title: String) {
-  activity.simpleToolbarWithHome(toolbar, title)
+  @JvmStatic
+  @BindingAdapter("simpleToolbarWithHome", "simpleToolbarTitle")
+  fun bindToolbarWithTitle(toolbar: MaterialToolbar, activity: AppCompatActivity, title: String) {
+    activity.simpleToolbarWithHome(toolbar, title)
+  }
 }

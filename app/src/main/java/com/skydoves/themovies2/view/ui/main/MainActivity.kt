@@ -17,22 +17,22 @@
 package com.skydoves.themovies2.view.ui.main
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.skydoves.themovies2.R
-import kotlinx.android.synthetic.main.activity_main.main_bottom_navigation
-import kotlinx.android.synthetic.main.activity_main.main_viewpager
+import com.skydoves.themovies2.base.DataBindingActivity
+import com.skydoves.themovies2.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DataBindingActivity() {
+
+  private val binding: ActivityMainBinding by binding(R.layout.activity_main)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
     initializeUI()
   }
 
   private fun initializeUI() {
-    with(main_viewpager) {
+    with(binding.mainViewpager) {
       adapter = MainPagerAdapter(supportFragmentManager)
       offscreenPageLimit = 3
       addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -44,10 +44,10 @@ class MainActivity : AppCompatActivity() {
         ) = Unit
 
         override fun onPageSelected(position: Int) {
-          main_bottom_navigation.menu.getItem(position).isChecked = true
+          binding.mainBottomNavigation.menu.getItem(position).isChecked = true
         }
       })
-      main_bottom_navigation.setOnNavigationItemSelectedListener {
+      binding.mainBottomNavigation.setOnNavigationItemSelectedListener {
         when (it.itemId) {
           R.id.action_one -> currentItem = 0
           R.id.action_two -> currentItem = 1

@@ -31,8 +31,9 @@ class PeopleAdapter : BaseAdapter() {
 
   fun addPeople(people: List<Person>) {
     val section = sections()[0]
+    val previousItemSize = section.size
     section.addAll(people)
-    notifyItemRangeInserted(section.size + 1, section.size + people.size)
+    notifyItemRangeInserted(previousItemSize, people.size)
   }
 
   override fun layout(sectionRow: SectionRow) = R.layout.item_person

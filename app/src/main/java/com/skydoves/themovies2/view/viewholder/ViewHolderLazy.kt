@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.models.network
+package com.skydoves.themovies2.view.viewholder
 
-import android.os.Parcelable
-import com.skydoves.themovies2.models.NetworkResponseModel
-import kotlinx.parcelize.Parcelize
+import android.view.View
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 
-@Parcelize
-data class PersonDetail(
-  val birthday: String?,
-  val known_for_department: String,
-  val place_of_birth: String?,
-  val also_known_as: List<String>?,
-  val biography: String
-) : Parcelable, NetworkResponseModel
+inline fun <reified T : ViewDataBinding> bindings(view: View): Lazy<T> =
+  lazy(LazyThreadSafetyMode.NONE) {
+    requireNotNull(DataBindingUtil.bind<T>(view)) { "cannot find the matched view to layout." }
+  }

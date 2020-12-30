@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.compose
+package com.skydoves.themovies2.base
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 
-abstract class ViewModelActivity : AppCompatActivity() {
+open class DispatchViewModel : ViewModel() {
 
-  protected inline fun <reified T : ViewDataBinding> binding(resId: Int): Lazy<T> =
-    lazy { DataBindingUtil.setContentView<T>(this, resId) }
+  internal fun <T> launchOnViewModelScope(block: suspend () -> LiveData<T>): LiveData<T> {
+    return liveData(viewModelScope.coroutineContext + Dispatchers.IO) {
+      emitSource(block())
+    }
+  }
 }

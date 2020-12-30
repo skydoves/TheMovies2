@@ -16,10 +16,12 @@
 
 package com.skydoves.themovies2.view.ui.main
 
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
-import com.skydoves.themovies2.compose.DispatchViewModel
+import com.skydoves.themovies2.base.DispatchViewModel
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
@@ -41,26 +43,37 @@ class MainActivityViewModel constructor(
   private var peoplePageLiveData: MutableLiveData<Int> = MutableLiveData()
   val peopleLiveData: LiveData<List<Person>>
 
-  val toastLiveData: MutableLiveData<String> = MutableLiveData()
+  val isMovieListLoading: ObservableBoolean = ObservableBoolean(false)
+  val isTvListLoading: ObservableBoolean = ObservableBoolean(false)
+  val isPeopleListLoading: ObservableBoolean = ObservableBoolean(false)
 
   init {
     Timber.d("injection MainActivityViewModel")
 
     this.movieListLiveData = moviePageLiveData.switchMap { page ->
+      isMovieListLoading.set(true)
       launchOnViewModelScope {
-        discoverRepository.loadMovies(page) { toastLiveData.postValue(it) }
+        discoverRepository.loadMovies(page) {
+          isMovieListLoading.set(false)
+        }.asLiveData()
       }
     }
 
     this.tvListLiveData = tvPageLiveData.switchMap { page ->
+      isTvListLoading.set(true)
       launchOnViewModelScope {
-        discoverRepository.loadTvs(page) { toastLiveData.postValue(it) }
+        discoverRepository.loadTvs(page) {
+          isTvListLoading.set(false)
+        }.asLiveData()
       }
     }
 
     this.peopleLiveData = peoplePageLiveData.switchMap { page ->
+      isPeopleListLoading.set(true)
       launchOnViewModelScope {
-        peopleRepository.loadPeople(page) { toastLiveData.postValue(it) }
+        peopleRepository.loadPeople(page) {
+          isPeopleListLoading.set(false)
+        }.asLiveData()
       }
     }
   }

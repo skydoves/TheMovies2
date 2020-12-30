@@ -1,10 +1,24 @@
+///*
+// * Designed and developed by 2019 skydoves (Jaewoong Eum)
+// *
+// * Licensed under the Apache License, Version 2.0 (the "License");
+// * you may not use this file except in compliance with the License.
+// * You may obtain a copy of the License at
+// *
+// * http://www.apache.org/licenses/LICENSE-2.0
+// *
+// * Unless required by applicable law or agreed to in writing, software
+// * distributed under the License is distributed on an "AS IS" BASIS,
+// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// * See the License for the specific language governing permissions and
+// * limitations under the License.
+// */
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'jacoco'
-
-apply from: '../jacoco.gradle'
 
 def getProperty(String filename, String propName) {
     def propsFile = rootProject.file(filename)
@@ -42,11 +56,8 @@ android {
     kapt {
         correctErrorTypes = true
     }
-    dataBinding {
-        enabled = true
-    }
-    androidExtensions {
-        experimental = true
+    buildFeatures {
+        dataBinding true
     }
     sourceSets {
         androidTest.java.srcDirs += "src/test-common/java"
@@ -55,17 +66,15 @@ android {
     testOptions {
         unitTests {
             includeAndroidResources = true
+            returnDefaultValues = true
         }
     }
 }
 
 dependencies {
-    // kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
-
-    // support library
+    // androidx
     implementation "com.google.android.material:material:$materialVersion"
-    implementation "androidx.palette:palette:$androidxVersion"
+    implementation "androidx.palette:palette-ktx:$androidxVersion"
 
     // architecture components
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
@@ -90,11 +99,14 @@ dependencies {
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 
     // network
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
-    implementation "com.google.code.gson:gson:$retrofitVersion"
     implementation "com.github.skydoves:sandwich:$sandwichVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
+
+    // bundler
+    implementation "com.github.skydoves:bundler:$bundlerVersion"
 
     // glide
     implementation "com.github.bumptech.glide:glide:$glideVersion"

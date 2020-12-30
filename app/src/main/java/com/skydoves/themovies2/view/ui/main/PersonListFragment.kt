@@ -21,20 +21,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.compose.ViewModelFragment
+import com.skydoves.themovies2.base.DataBindingFragment
 import com.skydoves.themovies2.databinding.MainFragmentStarBinding
 import com.skydoves.themovies2.view.adapter.PeopleAdapter
 import org.koin.android.viewmodel.ext.android.getViewModel
 
-class PersonListFragment : ViewModelFragment() {
+class PersonListFragment : DataBindingFragment() {
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
-    return binding<MainFragmentStarBinding>(inflater, R.layout.main_fragment_star,
-      container).apply {
+  ): View {
+    return binding<MainFragmentStarBinding>(
+      inflater, R.layout.main_fragment_star,
+      container
+    ).apply {
       viewModel = getViewModel<MainActivityViewModel>().apply { postPeoplePage(1) }
       lifecycleOwner = this@PersonListFragment
       adapter = PeopleAdapter()

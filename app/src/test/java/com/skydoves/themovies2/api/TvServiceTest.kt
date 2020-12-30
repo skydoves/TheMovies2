@@ -17,13 +17,13 @@
 package com.skydoves.themovies2.api
 
 import com.skydoves.sandwich.ApiResponse
-import com.skydoves.sandwich.request
 import com.skydoves.themovies2.api.service.TvService
-import java.io.IOException
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
+import java.io.IOException
 
 class TvServiceTest : ApiAbstract<TvService>() {
 
@@ -36,45 +36,39 @@ class TvServiceTest : ApiAbstract<TvService>() {
 
   @Throws(IOException::class)
   @Test
-  fun fetchTvKeywordsTest() {
+  fun fetchTvKeywordsTest() = runBlocking {
     enqueueResponse("/tmdb_movie_keywords.json")
-    this.service.fetchKeywords(1).request {
-      when (it) {
-        is ApiResponse.Success -> {
-          assertThat(it.data?.id, `is`(550))
-          assertThat(it.data?.keywords?.get(0)?.id, `is`(825))
-          assertThat(it.data?.keywords?.get(0)?.name, `is`("support group"))
-        }
+    when (val response = service.fetchKeywords(1)) {
+      is ApiResponse.Success -> {
+        assertThat(response.data?.id, `is`(550))
+        assertThat(response.data?.keywords?.get(0)?.id, `is`(825))
+        assertThat(response.data?.keywords?.get(0)?.name, `is`("support group"))
       }
     }
   }
 
   @Throws(IOException::class)
   @Test
-  fun fetchTvVideosTest() {
+  fun fetchTvVideosTest() = runBlocking {
     enqueueResponse("/tmdb_movie_videos.json")
-    this.service.fetchVideos(1).request {
-      when (it) {
-        is ApiResponse.Success -> {
-          assertThat(it.data?.id, `is`(550))
-          assertThat(it.data?.results?.get(0)?.id, `is`("533ec654c3a36854480003eb"))
-          assertThat(it.data?.results?.get(0)?.key, `is`("SUXWAEX2jlg"))
-        }
+    when (val response = service.fetchVideos(1)) {
+      is ApiResponse.Success -> {
+        assertThat(response.data?.id, `is`(550))
+        assertThat(response.data?.results?.get(0)?.id, `is`("533ec654c3a36854480003eb"))
+        assertThat(response.data?.results?.get(0)?.key, `is`("SUXWAEX2jlg"))
       }
     }
   }
 
   @Throws(IOException::class)
   @Test
-  fun fetchTvReviewsTest() {
+  fun fetchTvReviewsTest() = runBlocking {
     enqueueResponse("/tmdb_movie_reviews.json")
-    this.service.fetchReviews(1).request {
-      when (it) {
-        is ApiResponse.Success -> {
-          assertThat(it.data?.id, `is`(297761))
-          assertThat(it.data?.results?.get(0)?.id, `is`("57a814dc9251415cfb00309a"))
-          assertThat(it.data?.results?.get(0)?.author, `is`("Frank Ochieng"))
-        }
+    when (val response = service.fetchReviews(1)) {
+      is ApiResponse.Success -> {
+        assertThat(response.data?.id, `is`(297761))
+        assertThat(response.data?.results?.get(0)?.id, `is`("57a814dc9251415cfb00309a"))
+        assertThat(response.data?.results?.get(0)?.author, `is`("Frank Ochieng"))
       }
     }
   }

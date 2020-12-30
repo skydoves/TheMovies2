@@ -16,10 +16,12 @@
 
 package com.skydoves.themovies2.view.ui.details.person
 
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.switchMap
-import com.skydoves.themovies2.compose.DispatchViewModel
+import com.skydoves.themovies2.base.DispatchViewModel
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.repository.PeopleRepository
 import timber.log.Timber
@@ -29,15 +31,19 @@ class PersonDetailViewModel constructor(
 ) : DispatchViewModel() {
 
   private val personIdLiveData: MutableLiveData<Int> = MutableLiveData()
-  val personLiveData: LiveData<PersonDetail>
-  val toastLiveData: MutableLiveData<String> = MutableLiveData()
+  val personLiveData: LiveData<PersonDetail?>
+
+  private val isLoading: ObservableBoolean = ObservableBoolean(false)
 
   init {
     Timber.d("Injection : PersonDetailViewModel")
 
     this.personLiveData = personIdLiveData.switchMap { id ->
       launchOnViewModelScope {
-        peopleRepository.loadPersonDetail(id) { toastLiveData.postValue(it) }
+        isLoading.set(true)
+        peopleRepository.loadPersonDetail(id) {
+          isLoading.set(false)
+        }.asLiveData()
       }
     }
   }

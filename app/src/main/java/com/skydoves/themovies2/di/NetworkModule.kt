@@ -17,6 +17,7 @@
 package com.skydoves.themovies2.di
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.skydoves.sandwich.coroutines.CoroutinesResponseCallAdapterFactory
 import com.skydoves.themovies2.api.RequestInterceptor
 import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.api.service.PeopleService
@@ -40,6 +41,7 @@ val networkModule = module {
       .client(get<OkHttpClient>())
       .baseUrl("https://api.themoviedb.org/")
       .addConverterFactory(GsonConverterFactory.create())
+      .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
       .build()
   }
 

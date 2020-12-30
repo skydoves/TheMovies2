@@ -28,10 +28,16 @@ import com.skydoves.themovies2.room.converters.ReviewListConverter
 import com.skydoves.themovies2.room.converters.StringListConverter
 import com.skydoves.themovies2.room.converters.VideoListConverter
 
-@Database(entities = [(Movie::class), (Tv::class), (Person::class)],
-  version = 3, exportSchema = false)
-@TypeConverters(value = [(StringListConverter::class), (IntegerListConverter::class),
-  (KeywordListConverter::class), (VideoListConverter::class), (ReviewListConverter::class)])
+@Database(
+  entities = [(Movie::class), (Tv::class), (Person::class)],
+  version = 3, exportSchema = false
+)
+@TypeConverters(
+  value = [
+    (StringListConverter::class), (IntegerListConverter::class),
+    (KeywordListConverter::class), (VideoListConverter::class), (ReviewListConverter::class)
+  ]
+)
 abstract class AppDatabase : RoomDatabase() {
   abstract fun movieDao(): MovieDao
   abstract fun tvDao(): TvDao

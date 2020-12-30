@@ -16,19 +16,15 @@
 
 package com.skydoves.themovies2.repository
 
-import androidx.lifecycle.MutableLiveData
-import com.skydoves.sandwich.message
-import com.skydoves.sandwich.onError
-import com.skydoves.sandwich.onException
-import com.skydoves.sandwich.onSuccess
-import com.skydoves.sandwich.request
+import androidx.annotation.WorkerThread
+import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.TheDiscoverService
-import com.skydoves.themovies2.models.entity.Movie
-import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.room.MovieDao
 import com.skydoves.themovies2.room.TvDao
+import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
 
 class DiscoverRepository constructor(
@@ -41,47 +37,43 @@ class DiscoverRepository constructor(
     Timber.d("Injection DiscoverRepository")
   }
 
-  suspend fun loadMovies(page: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveDate = MutableLiveData<List<Movie>>()
+  @WorkerThread
+  suspend fun loadMovies(page: Int, success: () -> Unit) = flow {
     var movies = movieDao.getMovieList(page)
     if (movies.isEmpty()) {
-      discoverService.fetchDiscoverMovie(page).request { response ->
-        response.onSuccess {
-          data?.let { data ->
-            movies = data.results
-            movies.forEach { it.page = page }
-            liveDate.postValue(movies)
-            movieDao.insertMovieList(movies)
-          }
-        }.onError {
-          error(message())
-        }.onException {
-          error(message())
+      val response = discoverService.fetchDiscoverMovie(page)
+      response.suspendOnSuccess {
+        data.whatIfNotNull { data ->
+          movies = data.results
+          movies.forEach { it.page = page }
+          movieDao.insertMovieList(movies)
+          emit(movies)
+          success()
         }
       }
+    } else {
+      emit(movies)
+      success()
     }
-    liveDate.apply { postValue(movies) }
-  }
+  }.flowOn(Dispatchers.IO)
 
-  suspend fun loadTvs(page: Int, error: (String) -> Unit) = withContext(Dispatchers.IO) {
-    val liveDate = MutableLiveData<List<Tv>>()
+  @WorkerThread
+  suspend fun loadTvs(page: Int, success: () -> Unit) = flow {
     var tvs = tvDao.getTvList(page)
     if (tvs.isEmpty()) {
-      discoverService.fetchDiscoverTv(page).request { response ->
-        response.onSuccess {
-          data?.let { data ->
-            tvs = data.results
-            tvs.forEach { it.page = page }
-            liveDate.postValue(tvs)
-            tvDao.insertTv(tvs)
-          }
-        }.onError {
-          error(message())
-        }.onException {
-          error(message())
+      val response = discoverService.fetchDiscoverTv(page)
+      response.suspendOnSuccess {
+        data.whatIfNotNull { data ->
+          tvs = data.results
+          tvs.forEach { it.page = page }
+          tvDao.insertTv(tvs)
+          emit(tvs)
+          success()
         }
       }
+    } else {
+      emit(tvs)
+      success()
     }
-    liveDate.apply { postValue(tvs) }
-  }
+  }.flowOn(Dispatchers.IO)
 }

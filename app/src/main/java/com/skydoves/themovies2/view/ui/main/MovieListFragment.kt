@@ -21,20 +21,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.compose.ViewModelFragment
+import com.skydoves.themovies2.base.DataBindingFragment
 import com.skydoves.themovies2.databinding.MainFragmentMovieBinding
 import com.skydoves.themovies2.view.adapter.MovieListAdapter
 import org.koin.android.viewmodel.ext.android.getViewModel
 
-class MovieListFragment : ViewModelFragment() {
+class MovieListFragment : DataBindingFragment() {
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
-    return binding<MainFragmentMovieBinding>(inflater, R.layout.main_fragment_movie,
-      container).apply {
+  ): View {
+    return binding<MainFragmentMovieBinding>(
+      inflater, R.layout.main_fragment_movie,
+      container
+    ).apply {
       viewModel = getViewModel<MainActivityViewModel>().apply { postMoviePage(1) }
       lifecycleOwner = this@MovieListFragment
       adapter = MovieListAdapter()

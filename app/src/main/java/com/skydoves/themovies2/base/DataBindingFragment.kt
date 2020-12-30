@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.skydoves.themovies2.compose
+package com.skydoves.themovies2.base
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -22,7 +22,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 
-abstract class ViewModelFragment : Fragment() {
+abstract class DataBindingFragment : Fragment() {
 
   protected inline fun <reified T : ViewDataBinding> binding(
     inflater: LayoutInflater,

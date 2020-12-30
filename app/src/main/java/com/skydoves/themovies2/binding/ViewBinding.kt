@@ -21,10 +21,13 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.github.florent37.glidepalette.BitmapPalette
+import com.github.florent37.glidepalette.GlidePalette
 import com.skydoves.themovies2.api.Api
 import com.skydoves.themovies2.extension.requestGlideListener
 import com.skydoves.themovies2.extension.visible
@@ -33,75 +36,118 @@ import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.whatif.whatIfNotNull
+import com.skydoves.whatif.whatIfNotNullOrEmpty
 
-@BindingAdapter("toast")
-fun bindToast(view: View, text: LiveData<String>) {
-  text.value.whatIfNotNull {
-    Toast.makeText(view.context, it, Toast.LENGTH_SHORT).show()
-  }
-}
+object ViewBinding {
 
-@BindingAdapter("visibilityByResource")
-fun bindVisibilityByResource(view: View, anyList: List<Any>?) {
-  anyList.whatIfNotNull {
-    view.visible()
-  }
-}
-
-@BindingAdapter("biography")
-fun bindBiography(view: TextView, personDetail: PersonDetail?) {
-  view.text = personDetail?.biography
-}
-
-@SuppressLint("SetTextI18n")
-@BindingAdapter("bindReleaseDate")
-fun bindReleaseDate(view: TextView, movie: Movie) {
-  view.text = "Release Date : ${movie.release_date}"
-}
-
-@SuppressLint("SetTextI18n")
-@BindingAdapter("bindAirDate")
-fun bindAirDate(view: TextView, tv: Tv) {
-  view.text = "First Air Date : ${tv.first_air_date}"
-}
-
-@BindingAdapter("bindBackDrop")
-fun bindBackDrop(view: ImageView, movie: Movie) {
-  movie.backdrop_path.whatIfNotNull(
-    whatIf = {
-      Glide.with(view.context).load(Api.getBackdropPath(it))
-        .listener(view.requestGlideListener())
-        .into(view)
-    },
-    whatIfNot = {
-      Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
-        .listener(view.requestGlideListener())
-        .into(view)
+  @JvmStatic
+  @BindingAdapter("toast")
+  fun bindToast(view: View, text: LiveData<String>) {
+    text.value.whatIfNotNull {
+      Toast.makeText(view.context, it, Toast.LENGTH_SHORT).show()
     }
-  )
-}
+  }
 
-@BindingAdapter("bindBackDrop")
-fun bindBackDrop(view: ImageView, tv: Tv) {
-  tv.backdrop_path.whatIfNotNull(
-    whatIf = {
-      Glide.with(view.context).load(Api.getBackdropPath(it))
-        .listener(view.requestGlideListener())
-        .into(view)
-    },
-    whatIfNot = {
-      Glide.with(view.context).load(Api.getBackdropPath(tv.poster_path))
-        .listener(view.requestGlideListener())
-        .into(view)
-    }
-  )
-}
+  @JvmStatic
+  @BindingAdapter("loadImage")
+  fun bindLoadImage(view: AppCompatImageView, url: String) {
+    Glide.with(view.context)
+      .load(url)
+      .into(view)
+  }
 
-@BindingAdapter("bindBackDrop")
-fun bindBackDrop(view: ImageView, person: Person) {
-  person.profile_path.whatIfNotNull {
-    Glide.with(view.context).load(Api.getBackdropPath(it))
+  @JvmStatic
+  @BindingAdapter("loadCircleImage")
+  fun bindLoadCircleImage(view: AppCompatImageView, url: String) {
+    Glide.with(view.context)
+      .load(url)
       .apply(RequestOptions().circleCrop())
       .into(view)
+  }
+
+  @JvmStatic
+  @BindingAdapter("loadPaletteImage", "loadPaletteTarget")
+  fun bindLoadImage(view: AppCompatImageView, url: String, targetView: View) {
+    Glide.with(view)
+      .load(url)
+      .listener(
+        GlidePalette.with(url)
+          .use(BitmapPalette.Profile.VIBRANT)
+          .intoBackground(targetView)
+          .crossfade(true)
+      )
+      .into(view)
+  }
+
+  @JvmStatic
+  @BindingAdapter("visibilityByResource")
+  fun bindVisibilityByResource(view: View, anyList: List<Any>?) {
+    anyList.whatIfNotNullOrEmpty {
+      view.visible()
+    }
+  }
+
+  @JvmStatic
+  @BindingAdapter("biography")
+  fun bindBiography(view: TextView, personDetail: PersonDetail?) {
+    view.text = personDetail?.biography
+  }
+
+  @JvmStatic
+  @SuppressLint("SetTextI18n")
+  @BindingAdapter("bindReleaseDate")
+  fun bindReleaseDate(view: TextView, movie: Movie) {
+    view.text = "Release Date : ${movie.release_date}"
+  }
+
+  @JvmStatic
+  @SuppressLint("SetTextI18n")
+  @BindingAdapter("bindAirDate")
+  fun bindAirDate(view: TextView, tv: Tv) {
+    view.text = "First Air Date : ${tv.first_air_date}"
+  }
+
+  @JvmStatic
+  @BindingAdapter("bindBackDrop")
+  fun bindBackDrop(view: ImageView, movie: Movie) {
+    movie.backdrop_path.whatIfNotNull(
+      whatIf = {
+        Glide.with(view.context).load(Api.getBackdropPath(it))
+          .listener(view.requestGlideListener())
+          .into(view)
+      },
+      whatIfNot = {
+        Glide.with(view.context).load(Api.getBackdropPath(movie.poster_path))
+          .listener(view.requestGlideListener())
+          .into(view)
+      }
+    )
+  }
+
+  @JvmStatic
+  @BindingAdapter("bindBackDrop")
+  fun bindBackDrop(view: ImageView, tv: Tv) {
+    tv.backdrop_path.whatIfNotNull(
+      whatIf = {
+        Glide.with(view.context).load(Api.getBackdropPath(it))
+          .listener(view.requestGlideListener())
+          .into(view)
+      },
+      whatIfNot = {
+        Glide.with(view.context).load(Api.getBackdropPath(tv.poster_path))
+          .listener(view.requestGlideListener())
+          .into(view)
+      }
+    )
+  }
+
+  @JvmStatic
+  @BindingAdapter("bindBackDrop")
+  fun bindBackDrop(view: ImageView, person: Person) {
+    person.profile_path.whatIfNotNull {
+      Glide.with(view.context).load(Api.getBackdropPath(it))
+        .apply(RequestOptions().circleCrop())
+        .into(view)
+    }
   }
 }

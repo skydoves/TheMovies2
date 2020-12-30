@@ -21,7 +21,7 @@ import androidx.room.Entity
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 @Entity(primaryKeys = [("id")])

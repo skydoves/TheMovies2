@@ -17,13 +17,13 @@
 package com.skydoves.themovies2.api
 
 import com.skydoves.sandwich.ApiResponse
-import com.skydoves.sandwich.request
 import com.skydoves.themovies2.api.service.TheDiscoverService
-import java.io.IOException
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
+import java.io.IOException
 
 class TheDiscoverServiceTest : ApiAbstract<TheDiscoverService>() {
 
@@ -36,30 +36,26 @@ class TheDiscoverServiceTest : ApiAbstract<TheDiscoverService>() {
 
   @Throws(IOException::class)
   @Test
-  fun fetchMovieListTest() {
+  fun fetchMovieListTest() = runBlocking {
     enqueueResponse("/tmdb_movie.json")
-    this.service.fetchDiscoverMovie(1).request {
-      when (it) {
-        is ApiResponse.Success -> {
-          assertThat(it.data?.results?.get(0)?.id, `is`(164558))
-          assertThat(it.data?.total_results, `is`(61))
-          assertThat(it.data?.total_pages, `is`(4))
-        }
+    when (val response = service.fetchDiscoverMovie(1)) {
+      is ApiResponse.Success -> {
+        assertThat(response.data?.results?.get(0)?.id, `is`(164558))
+        assertThat(response.data?.total_results, `is`(61))
+        assertThat(response.data?.total_pages, `is`(4))
       }
     }
   }
 
   @Throws(IOException::class)
   @Test
-  fun fetchTvListTest() {
+  fun fetchTvListTest() = runBlocking {
     enqueueResponse("/tmdb_tv.json")
-    this.service.fetchDiscoverTv(1).request {
-      when (it) {
-        is ApiResponse.Success -> {
-          assertThat(it.data?.results?.get(0)?.id, `is`(61889))
-          assertThat(it.data?.total_results, `is`(61470))
-          assertThat(it.data?.total_pages, `is`(3074))
-        }
+    when (val response = service.fetchDiscoverTv(1)) {
+      is ApiResponse.Success -> {
+        assertThat(response.data?.results?.get(0)?.id, `is`(61889))
+        assertThat(response.data?.total_results, `is`(61470))
+        assertThat(response.data?.total_pages, `is`(3074))
       }
     }
   }
