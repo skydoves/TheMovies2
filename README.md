@@ -34,6 +34,7 @@ tmdb_api_key=YOUR_API_KEY
 - [Glide](https://github.com/bumptech/glide) - loading images
 - [BaseRecyclerViewAdapter](https://github.com/skydoves/BaseRecyclerViewAdapter) - implementing adapters and viewHolders
 - [WhatIf](https://github.com/skydoves/whatif) - checking nullable object and empty collections more fluently
+- [Bundler](https://github.com/skydoves/bundler) - Android Intent & Bundle extensions that insert and retrieve values elegantly.
 - [Mockito-kotlin](https://github.com/nhaarman/mockito-kotlin) - Junit mock test
 - [Timber](https://github.com/JakeWharton/timber) - logging
 - [Stetho](https://github.com/facebook/stetho) - debugging persistence data & network packets
