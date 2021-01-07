@@ -24,24 +24,18 @@ import com.skydoves.themovies2.view.ui.details.person.PersonDetailActivity
 
 class PeopleViewHolder(val view: View) : BaseViewHolder(view) {
 
-  private lateinit var person: Person
   private val binding: ItemPersonBinding by bindings(view)
 
   @Throws(Exception::class)
   override fun bindData(data: Any) {
     if (data is Person) {
-      person = data
-      drawItem()
+      binding.person = data
+      binding.executePendingBindings()
     }
   }
 
-  private fun drawItem() {
-    binding.person = this.person
-    binding.executePendingBindings()
-  }
-
   override fun onClick(p0: View?) =
-    PersonDetailActivity.startActivity(context(), person, binding.itemPersonProfile)
+    PersonDetailActivity.startActivity(context(), binding.person, binding.itemPersonProfile)
 
   override fun onLongClick(p0: View?) = false
 }

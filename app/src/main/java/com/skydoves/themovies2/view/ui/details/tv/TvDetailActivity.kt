@@ -54,9 +54,9 @@ class TvDetailActivity : DataBindingActivity() {
 
   companion object {
     private const val TV_ID = "tv"
-    fun startActivityModel(context: Context?, tv: Tv) {
+    fun startActivityModel(context: Context?, tv: Tv?) {
       context?.intentOf<TvDetailActivity> {
-        putExtra(TV_ID, tv)
+        putExtra(TV_ID to tv)
         startActivity(context)
       }
     }

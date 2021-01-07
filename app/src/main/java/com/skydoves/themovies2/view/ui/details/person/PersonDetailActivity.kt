@@ -56,12 +56,12 @@ class PersonDetailActivity : DataBindingActivity() {
     const val PERSON_ID = "person"
     private const val intent_requestCode = 1000
 
-    fun startActivity(context: Context, person: Person, view: View) {
+    fun startActivity(context: Context, person: Person?, view: View) {
       if (context is Activity) {
         context.intentOf<PersonDetailActivity> {
           ViewCompat.getTransitionName(view)?.let {
             val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, it)
-            putExtra(PERSON_ID, person)
+            putExtra(PERSON_ID to person)
             context.startActivityForResult(intent, intent_requestCode, options.toBundle())
           }
         }

@@ -26,23 +26,17 @@ import com.skydoves.themovies2.models.Video
 
 class VideoListViewHolder(val view: View) : BaseViewHolder(view) {
 
-  private lateinit var video: Video
   private val binding: ItemVideoBinding by bindings(view)
 
   override fun bindData(data: Any) {
     if (data is Video) {
-      video = data
-      drawItem()
+      binding.video = data
+      binding.executePendingBindings()
     }
   }
 
-  private fun drawItem() {
-    binding.video = this.video
-    binding.executePendingBindings()
-  }
-
   override fun onClick(v: View?) {
-    val playVideoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(video.key)))
+    val playVideoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(binding.video?.key)))
     context().startActivity(playVideoIntent)
   }
 

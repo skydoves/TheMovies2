@@ -24,23 +24,17 @@ import com.skydoves.themovies2.view.ui.details.tv.TvDetailActivity
 
 class TvListViewHolder(val view: View) : BaseViewHolder(view) {
 
-  private lateinit var tv: Tv
   private val binding: ItemTvBinding by bindings(view)
 
   @Throws(Exception::class)
   override fun bindData(data: Any) {
     if (data is Tv) {
-      tv = data
-      drawItem()
+      binding.tv = data
+      binding.executePendingBindings()
     }
   }
 
-  private fun drawItem() {
-    binding.tv = this.tv
-    binding.executePendingBindings()
-  }
-
-  override fun onClick(v: View?) = TvDetailActivity.startActivityModel(context(), tv)
+  override fun onClick(v: View?) = TvDetailActivity.startActivityModel(context(), binding.tv)
 
   override fun onLongClick(p0: View?) = false
 }

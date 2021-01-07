@@ -23,19 +23,13 @@ import com.skydoves.themovies2.models.Review
 
 class ReviewListViewHolder(val view: View) : BaseViewHolder(view) {
 
-  private lateinit var review: Review
   private val binding: ItemReviewBinding by bindings(view)
 
   override fun bindData(data: Any) {
     if (data is Review) {
-      review = data
-      drawItem()
+      binding.review = data
+      binding.executePendingBindings()
     }
-  }
-
-  private fun drawItem() {
-    binding.review = this.review
-    binding.executePendingBindings()
   }
 
   override fun onClick(v: View?) = Unit

@@ -26,23 +26,17 @@ class MovieListViewHolder constructor(
   val view: View
 ) : BaseViewHolder(view) {
 
-  private lateinit var movie: Movie
   private val binding: ItemPosterBinding by bindings(view)
 
   @Throws(Exception::class)
   override fun bindData(data: Any) {
     if (data is Movie) {
-      movie = data
-      drawItem()
+      binding.movie = data
+      binding.executePendingBindings()
     }
   }
 
-  private fun drawItem() {
-    binding.movie = this.movie
-    binding.executePendingBindings()
-  }
-
-  override fun onClick(v: View?) = MovieDetailActivity.startActivityModel(context(), movie)
+  override fun onClick(v: View?) = MovieDetailActivity.startActivityModel(context(), binding.movie)
 
   override fun onLongClick(v: View?) = false
 }
