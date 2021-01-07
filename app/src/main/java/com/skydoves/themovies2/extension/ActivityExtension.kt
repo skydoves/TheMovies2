@@ -20,7 +20,6 @@ package com.skydoves.themovies2.extension
 
 import android.app.Activity
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.view.View
 import android.view.ViewAnimationUtils
 import androidx.appcompat.app.AppCompatActivity
@@ -33,14 +32,12 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.skydoves.themovies2.R
 
-fun checkIsMaterialVersion() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-
 fun Activity.circularRevealedAtCenter(view: View) {
   val cx = (view.left + view.right) / 2
   val cy = (view.top + view.bottom) / 2
   val finalRadius = view.width.coerceAtLeast(view.height)
 
-  if (checkIsMaterialVersion() && view.isAttachedToWindow) {
+  if (view.isAttachedToWindow) {
     ViewAnimationUtils.createCircularReveal(view, cx, cy, 0f, finalRadius.toFloat())
       .apply {
         view.visible()
@@ -85,10 +82,8 @@ fun AppCompatActivity.simpleToolbarWithHome(toolbar: Toolbar, title_: String = "
 }
 
 fun AppCompatActivity.applyToolbarMargin(toolbar: Toolbar) {
-  if (checkIsMaterialVersion()) {
-    toolbar.layoutParams = (toolbar.layoutParams as CollapsingToolbarLayout.LayoutParams).apply {
-      topMargin = getStatusBarSize()
-    }
+  toolbar.layoutParams = (toolbar.layoutParams as CollapsingToolbarLayout.LayoutParams).apply {
+    topMargin = getStatusBarSize()
   }
 }
 

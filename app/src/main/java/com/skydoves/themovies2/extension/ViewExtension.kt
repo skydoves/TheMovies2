@@ -61,7 +61,7 @@ fun View.circularRevealedAtCenter() {
   val cy = (view.top + view.bottom) / 2
   val finalRadius = max(view.width, view.height)
 
-  if (checkIsMaterialVersion() && view.isAttachedToWindow) {
+  if (view.isAttachedToWindow) {
     ViewAnimationUtils.createCircularReveal(view, cx, cy, 0f, finalRadius.toFloat())
       .apply {
         view.visible()

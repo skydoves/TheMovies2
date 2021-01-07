@@ -21,7 +21,6 @@ import androidx.databinding.BindingAdapter
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.extension.checkIsMaterialVersion
 import com.skydoves.themovies2.extension.getStatusBarSize
 
 object ActivityBinding {
@@ -33,7 +32,7 @@ object ActivityBinding {
       setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_24dp)
       title = title_
     }
-    if (checkIsMaterialVersion() && toolbar.layoutParams is CollapsingToolbarLayout.LayoutParams) {
+    if (toolbar.layoutParams is CollapsingToolbarLayout.LayoutParams) {
       toolbar.layoutParams = (toolbar.layoutParams as CollapsingToolbarLayout.LayoutParams).apply {
         topMargin = getStatusBarSize()
       }
