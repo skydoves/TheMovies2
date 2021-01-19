@@ -36,7 +36,7 @@ class MovieRepository constructor(
   }
 
   @WorkerThread
-  suspend fun loadKeywordList(id: Int) = flow {
+  fun loadKeywordList(id: Int) = flow {
     val movie = movieDao.getMovie(id)
     var keywords = movie.keywords
     if (keywords.isNullOrEmpty()) {
@@ -55,7 +55,7 @@ class MovieRepository constructor(
   }.flowOn(Dispatchers.IO)
 
   @WorkerThread
-  suspend fun loadVideoList(id: Int) = flow {
+  fun loadVideoList(id: Int) = flow {
     val movie = movieDao.getMovie(id)
     var videos = movie.videos
     if (videos.isNullOrEmpty()) {
@@ -74,7 +74,7 @@ class MovieRepository constructor(
   }.flowOn(Dispatchers.IO)
 
   @WorkerThread
-  suspend fun loadReviewsList(id: Int) = flow {
+  fun loadReviewsList(id: Int) = flow {
     val movie = movieDao.getMovie(id)
     var reviews = movie.reviews
     if (reviews.isNullOrEmpty()) {

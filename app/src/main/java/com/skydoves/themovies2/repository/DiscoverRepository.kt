@@ -38,7 +38,7 @@ class DiscoverRepository constructor(
   }
 
   @WorkerThread
-  suspend fun loadMovies(page: Int, success: () -> Unit) = flow {
+  fun loadMovies(page: Int, success: () -> Unit) = flow {
     var movies = movieDao.getMovieList(page)
     if (movies.isEmpty()) {
       val response = discoverService.fetchDiscoverMovie(page)
@@ -58,7 +58,7 @@ class DiscoverRepository constructor(
   }.flowOn(Dispatchers.IO)
 
   @WorkerThread
-  suspend fun loadTvs(page: Int, success: () -> Unit) = flow {
+  fun loadTvs(page: Int, success: () -> Unit) = flow {
     var tvs = tvDao.getTvList(page)
     if (tvs.isEmpty()) {
       val response = discoverService.fetchDiscoverTv(page)

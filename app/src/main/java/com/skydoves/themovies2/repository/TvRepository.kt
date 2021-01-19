@@ -36,7 +36,7 @@ class TvRepository constructor(
   }
 
   @WorkerThread
-  suspend fun loadKeywordList(id: Int) = flow {
+  fun loadKeywordList(id: Int) = flow {
     val tv = tvDao.getTv(id)
     var keywords = tv.keywords
     if (keywords.isNullOrEmpty()) {
@@ -55,7 +55,7 @@ class TvRepository constructor(
   }.flowOn(Dispatchers.IO)
 
   @WorkerThread
-  suspend fun loadVideoList(id: Int) = flow {
+  fun loadVideoList(id: Int) = flow {
     val tv = tvDao.getTv(id)
     var videos = tv.videos
     if (videos.isNullOrEmpty()) {
@@ -74,7 +74,7 @@ class TvRepository constructor(
   }.flowOn(Dispatchers.IO)
 
   @WorkerThread
-  suspend fun loadReviewsList(id: Int) = flow {
+  fun loadReviewsList(id: Int) = flow {
     val tv = tvDao.getTv(id)
     var reviews = tv.reviews
     if (reviews.isNullOrEmpty()) {

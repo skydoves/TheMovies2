@@ -36,7 +36,7 @@ class PeopleRepository constructor(
   }
 
   @WorkerThread
-  suspend fun loadPeople(page: Int, success: () -> Unit) = flow {
+  fun loadPeople(page: Int, success: () -> Unit) = flow {
     var people = peopleDao.getPeople(page)
     if (people.isEmpty()) {
       val response = peopleService.fetchPopularPeople(page)
@@ -56,7 +56,7 @@ class PeopleRepository constructor(
   }.flowOn(Dispatchers.IO)
 
   @WorkerThread
-  suspend fun loadPersonDetail(id: Int, success: () -> Unit) = flow {
+  fun loadPersonDetail(id: Int, success: () -> Unit) = flow {
     val person = peopleDao.getPerson(id)
     var personDetail = person.personDetail
     if (personDetail == null) {
