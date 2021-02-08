@@ -36,7 +36,7 @@ class MovieListViewHolder constructor(
     }
   }
 
-  override fun onClick(v: View?) = MovieDetailActivity.startActivityModel(context(), binding.movie)
+  override fun onClick(v: View?) = MovieDetailActivity.startActivityModel(context, binding.movie)
 
   override fun onLongClick(v: View?) = false
 }

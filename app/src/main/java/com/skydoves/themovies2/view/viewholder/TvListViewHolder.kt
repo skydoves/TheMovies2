@@ -34,7 +34,7 @@ class TvListViewHolder(val view: View) : BaseViewHolder(view) {
     }
   }
 
-  override fun onClick(v: View?) = TvDetailActivity.startActivityModel(context(), binding.tv)
+  override fun onClick(v: View?) = TvDetailActivity.startActivityModel(context, binding.tv)
 
   override fun onLongClick(p0: View?) = false
 }

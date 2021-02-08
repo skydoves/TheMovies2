@@ -37,7 +37,7 @@ class VideoListViewHolder(val view: View) : BaseViewHolder(view) {
 
   override fun onClick(v: View?) {
     val playVideoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(binding.video?.key)))
-    context().startActivity(playVideoIntent)
+    context.startActivity(playVideoIntent)
   }
 
   override fun onLongClick(v: View?) = false

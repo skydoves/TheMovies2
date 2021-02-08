@@ -35,7 +35,7 @@ class PeopleViewHolder(val view: View) : BaseViewHolder(view) {
   }
 
   override fun onClick(p0: View?) =
-    PersonDetailActivity.startActivity(context(), binding.person, binding.itemPersonProfile)
+    PersonDetailActivity.startActivity(context, binding.person, binding.itemPersonProfile)
 
   override fun onLongClick(p0: View?) = false
 }
