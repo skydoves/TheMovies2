@@ -84,6 +84,9 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
     testImplementation "androidx.arch.core:core-testing:$archCompomentVersion"
 
+    // binding
+    implementation "com.github.skydoves:bindables:$bindablesVersion"
+
     // koin
     implementation "org.koin:koin-android:$koinVersion"
     implementation "org.koin:koin-android-scope:$koinVersion"

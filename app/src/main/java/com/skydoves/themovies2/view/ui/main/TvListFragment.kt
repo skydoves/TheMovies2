@@ -20,20 +20,22 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.skydoves.bindables.BindingFragment
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.base.DataBindingFragment
 import com.skydoves.themovies2.databinding.MainFragmentTvBinding
 import com.skydoves.themovies2.view.adapter.TvListAdapter
 import org.koin.android.viewmodel.ext.android.getViewModel
 
-class TvListFragment : DataBindingFragment() {
+class TvListFragment :
+  BindingFragment<MainFragmentTvBinding>(R.layout.main_fragment_tv) {
 
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
-    return binding<MainFragmentTvBinding>(inflater, R.layout.main_fragment_tv, container).apply {
+    super.onCreateView(inflater, container, savedInstanceState)
+    return binding {
       viewModel = getViewModel<MainActivityViewModel>().apply { postTvPage(1) }
       lifecycleOwner = this@TvListFragment
       adapter = TvListAdapter()

@@ -16,26 +16,36 @@
 
 package com.skydoves.themovies2.view.adapter
 
-import android.view.View
-import com.skydoves.baserecyclerviewadapter.BaseAdapter
-import com.skydoves.baserecyclerviewadapter.SectionRow
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.skydoves.bindables.binding
 import com.skydoves.themovies2.R
+import com.skydoves.themovies2.databinding.ItemReviewBinding
 import com.skydoves.themovies2.models.Review
-import com.skydoves.themovies2.view.viewholder.ReviewListViewHolder
 
-class ReviewListAdapter : BaseAdapter() {
+class ReviewListAdapter : RecyclerView.Adapter<ReviewListAdapter.ReviewListViewHolder>() {
 
-  init {
-    addSection(ArrayList<Review>())
+  private val items: MutableList<Review> = arrayListOf()
+
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewListViewHolder {
+    val binding = parent.binding<ItemReviewBinding>(R.layout.item_review)
+    return ReviewListViewHolder(binding)
   }
+
+  override fun onBindViewHolder(holder: ReviewListViewHolder, position: Int) {
+    with(holder.binding) {
+      review = items[position]
+      executePendingBindings()
+    }
+  }
+
+  override fun getItemCount(): Int = items.size
 
   fun addReviewList(reviews: List<Review>) {
-    val section = sections()[0]
-    section.addAll(reviews)
-    notifyItemRangeInserted(section.size + 1, reviews.size)
+    items.addAll(reviews)
+    notifyItemRangeInserted(items.size + 1, reviews.size)
   }
 
-  override fun layout(sectionRow: SectionRow) = R.layout.item_review
-
-  override fun viewHolder(layout: Int, view: View) = ReviewListViewHolder(view)
+  class ReviewListViewHolder(val binding: ItemReviewBinding) :
+    RecyclerView.ViewHolder(binding.root)
 }

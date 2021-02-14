@@ -18,13 +18,11 @@ package com.skydoves.themovies2.view.ui.main
 
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
+import com.skydoves.bindables.BindingActivity
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.base.DataBindingActivity
 import com.skydoves.themovies2.databinding.ActivityMainBinding
 
-class MainActivity : DataBindingActivity() {
-
-  private val binding: ActivityMainBinding by binding(R.layout.activity_main)
+class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

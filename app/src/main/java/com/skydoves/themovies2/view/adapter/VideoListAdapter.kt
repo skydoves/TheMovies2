@@ -16,26 +16,46 @@
 
 package com.skydoves.themovies2.view.adapter
 
-import android.view.View
-import com.skydoves.baserecyclerviewadapter.BaseAdapter
-import com.skydoves.baserecyclerviewadapter.SectionRow
+import android.content.Intent
+import android.net.Uri
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.skydoves.bindables.binding
 import com.skydoves.themovies2.R
+import com.skydoves.themovies2.api.Api
+import com.skydoves.themovies2.databinding.ItemVideoBinding
 import com.skydoves.themovies2.models.Video
-import com.skydoves.themovies2.view.viewholder.VideoListViewHolder
 
-class VideoListAdapter : BaseAdapter() {
+class VideoListAdapter : RecyclerView.Adapter<VideoListAdapter.VideoListViewHolder>() {
 
-  init {
-    addSection(ArrayList<Video>())
+  private val items: MutableList<Video> = arrayListOf()
+
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoListViewHolder {
+    val binding = parent.binding<ItemVideoBinding>(R.layout.item_video)
+    return VideoListViewHolder(binding).apply {
+      binding.root.setOnClickListener {
+        val video = adapterPosition.takeIf { it != RecyclerView.NO_POSITION }
+          ?: return@setOnClickListener
+        val playVideoIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Api.getYoutubeVideoPath(items[video].key)))
+        it.context.startActivity(playVideoIntent)
+      }
+    }
   }
+
+  override fun onBindViewHolder(holder: VideoListViewHolder, position: Int) {
+    with(holder.binding) {
+      video = items[position]
+      executePendingBindings()
+    }
+  }
+
+  override fun getItemCount(): Int = items.size
 
   fun addVideoList(videos: List<Video>) {
-    val section = sections()[0]
-    sections()[0].addAll(videos)
-    notifyItemRangeInserted(section.size + 1, videos.size)
+    items.addAll(videos)
+    notifyItemRangeInserted(items.size + 1, videos.size)
   }
 
-  override fun layout(sectionRow: SectionRow) = R.layout.item_video
-
-  override fun viewHolder(layout: Int, view: View) = VideoListViewHolder(view)
+  class VideoListViewHolder(val binding: ItemVideoBinding) :
+    RecyclerView.ViewHolder(binding.root)
 }

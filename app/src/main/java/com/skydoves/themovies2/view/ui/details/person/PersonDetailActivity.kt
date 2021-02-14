@@ -23,23 +23,23 @@ import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
+import com.skydoves.bindables.BindingActivity
 import com.skydoves.bundler.bundleNonNull
 import com.skydoves.bundler.intentOf
 import com.skydoves.themovies2.R
-import com.skydoves.themovies2.base.DataBindingActivity
 import com.skydoves.themovies2.databinding.ActivityPersonDetailBinding
 import com.skydoves.themovies2.models.entity.Person
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class PersonDetailActivity : DataBindingActivity() {
+class PersonDetailActivity :
+  BindingActivity<ActivityPersonDetailBinding>(R.layout.activity_person_detail) {
 
-  private val binding: ActivityPersonDetailBinding by binding(R.layout.activity_person_detail)
   private val vm: PersonDetailViewModel by viewModel()
   private val intentPerson: Person by bundleNonNull(PERSON_ID)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    with(binding) {
+    binding {
       activity = this@PersonDetailActivity
       lifecycleOwner = this@PersonDetailActivity
       viewModel = vm.apply { postPersonId(intentPerson.id) }

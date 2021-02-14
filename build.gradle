@@ -43,6 +43,9 @@ buildscript {
         lifecycleVersion = '2.2.0'
         roomVersion = '2.2.6'
 
+        // binding
+        bindablesVersion = '1.0.2'
+
         // koin
         koinVersion = '2.0.1'
 

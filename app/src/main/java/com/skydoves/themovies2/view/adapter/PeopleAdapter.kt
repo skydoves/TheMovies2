@@ -16,27 +16,44 @@
 
 package com.skydoves.themovies2.view.adapter
 
-import android.view.View
-import com.skydoves.baserecyclerviewadapter.BaseAdapter
-import com.skydoves.baserecyclerviewadapter.SectionRow
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.skydoves.bindables.binding
 import com.skydoves.themovies2.R
+import com.skydoves.themovies2.databinding.ItemPersonBinding
 import com.skydoves.themovies2.models.entity.Person
-import com.skydoves.themovies2.view.viewholder.PeopleViewHolder
+import com.skydoves.themovies2.view.ui.details.person.PersonDetailActivity
 
-class PeopleAdapter : BaseAdapter() {
+class PeopleAdapter : RecyclerView.Adapter<PeopleAdapter.PeopleViewHolder>() {
 
-  init {
-    addSection(ArrayList<Person>())
+  private val items: MutableList<Person> = arrayListOf()
+
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeopleViewHolder {
+    val binding = parent.binding<ItemPersonBinding>(R.layout.item_person)
+    return PeopleViewHolder(binding).apply {
+      binding.root.setOnClickListener {
+        val person = adapterPosition.takeIf { it != RecyclerView.NO_POSITION }
+          ?: return@setOnClickListener
+        PersonDetailActivity.startActivity(it.context, items[person], binding.itemPersonProfile)
+      }
+    }
   }
 
+  override fun onBindViewHolder(holder: PeopleViewHolder, position: Int) {
+    with(holder.binding) {
+      person = items[position]
+      executePendingBindings()
+    }
+  }
+
+  override fun getItemCount(): Int = items.size
+
   fun addPeople(people: List<Person>) {
-    val section = sections()[0]
-    val previousItemSize = section.size
-    section.addAll(people)
+    val previousItemSize = items.size
+    items.addAll(people)
     notifyItemRangeInserted(previousItemSize, people.size)
   }
 
-  override fun layout(sectionRow: SectionRow) = R.layout.item_person
-
-  override fun viewHolder(layout: Int, view: View) = PeopleViewHolder(view)
+  class PeopleViewHolder(val binding: ItemPersonBinding) :
+    RecyclerView.ViewHolder(binding.root)
 }
