@@ -17,7 +17,7 @@
 package com.skydoves.themovies2.view.ui.main
 
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.skydoves.bindables.BindingActivity
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.databinding.ActivityMainBinding
@@ -31,9 +31,9 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
   private fun initializeUI() {
     with(binding.mainViewpager) {
-      adapter = MainPagerAdapter(supportFragmentManager)
+      adapter = MainPagerAdapter(supportFragmentManager, lifecycle)
       offscreenPageLimit = 3
-      addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+      registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
         override fun onPageScrollStateChanged(state: Int) = Unit
         override fun onPageScrolled(
           position: Int,
