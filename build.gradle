@@ -29,14 +29,14 @@ buildscript {
         targetSdkVersion = 30
 
         // build tool
-        gradleBuildTool = '4.1.1'
+        gradleBuildTool = '4.1.3'
 
         // support library
         androidxVersion = '1.0.0'
         materialVersion = '1.3.0-beta01'
 
         // kotlin
-        kotlinVersion = '1.4.20'
+        kotlinVersion = '1.4.31'
 
         // architecture components
         archCompomentVersion = '2.0.0'
@@ -44,29 +44,29 @@ buildscript {
         roomVersion = '2.2.6'
 
         // binding
-        bindablesVersion = '1.0.5'
+        bindablesVersion = '1.0.8'
 
         // koin
         koinVersion = '2.0.1'
 
         // coroutines
-        coroutinesVersion = '1.4.1'
+        coroutinesVersion = '1.4.3'
 
         // network
         retrofitVersion = '2.9.0'
         okhttpVersion = '4.9.0'
-        sandwichVersion = '1.0.9'
+        sandwichVersion = '1.2.0'
         gsonVersion = '2.8.5'
 
         // bundler
-        bundlerVersion = '1.0.3'
+        bundlerVersion = '1.0.4'
 
         // glide
         glideVersion = '4.12.0'
         glidePaletteVersion = '2.1.2'
 
         // whatIf
-        whatIfVersion = '1.0.9'
+        whatIfVersion = '1.1.0'
 
         // adapter
         baseAdapterVersion = '1.0.4'
@@ -90,7 +90,7 @@ buildscript {
         jacocoVersion = '0.8.4'
 
         // plugins
-        spotlessVersion = '5.8.2'
+        spotlessVersion = '5.14.0'
         versionPlugin  = '0.23.0'
     }
 
