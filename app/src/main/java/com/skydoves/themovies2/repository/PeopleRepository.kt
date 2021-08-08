@@ -20,10 +20,10 @@ import androidx.annotation.WorkerThread
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.room.PeopleDao
-import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
 import timber.log.Timber
 
 class PeopleRepository constructor(
@@ -41,19 +41,15 @@ class PeopleRepository constructor(
     if (people.isEmpty()) {
       val response = peopleService.fetchPopularPeople(page)
       response.suspendOnSuccess {
-        data.whatIfNotNull { data ->
-          people = data.results
-          people.forEach { it.page = page }
-          peopleDao.insertPeople(people)
-          emit(people)
-          success()
-        }
+        people = data.results
+        people.forEach { it.page = page }
+        peopleDao.insertPeople(people)
+        emit(people)
       }
     } else {
       emit(people)
-      success()
     }
-  }.flowOn(Dispatchers.IO)
+  }.onCompletion { success() }.flowOn(Dispatchers.IO)
 
   @WorkerThread
   fun loadPersonDetail(id: Int, success: () -> Unit) = flow {
@@ -62,17 +58,13 @@ class PeopleRepository constructor(
     if (personDetail == null) {
       val response = peopleService.fetchPersonDetail(id)
       response.suspendOnSuccess {
-        data.whatIfNotNull { data ->
-          personDetail = data
-          person.personDetail = personDetail
-          peopleDao.updatePerson(person)
-          emit(personDetail)
-          success()
-        }
+        personDetail = data
+        person.personDetail = personDetail
+        peopleDao.updatePerson(person)
+        emit(personDetail)
       }
     } else {
       emit(personDetail)
-      success()
     }
-  }.flowOn(Dispatchers.IO)
+  }.onCompletion { success() }.flowOn(Dispatchers.IO)
 }

@@ -21,10 +21,10 @@ import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.TheDiscoverService
 import com.skydoves.themovies2.room.MovieDao
 import com.skydoves.themovies2.room.TvDao
-import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
 import timber.log.Timber
 
 class DiscoverRepository constructor(
@@ -43,19 +43,15 @@ class DiscoverRepository constructor(
     if (movies.isEmpty()) {
       val response = discoverService.fetchDiscoverMovie(page)
       response.suspendOnSuccess {
-        data.whatIfNotNull { data ->
-          movies = data.results
-          movies.forEach { it.page = page }
-          movieDao.insertMovieList(movies)
-          emit(movies)
-          success()
-        }
+        movies = data.results
+        movies.forEach { it.page = page }
+        movieDao.insertMovieList(movies)
+        emit(movies)
       }
     } else {
       emit(movies)
-      success()
     }
-  }.flowOn(Dispatchers.IO)
+  }.onCompletion { success() }.flowOn(Dispatchers.IO)
 
   @WorkerThread
   fun loadTvs(page: Int, success: () -> Unit) = flow {
@@ -63,17 +59,13 @@ class DiscoverRepository constructor(
     if (tvs.isEmpty()) {
       val response = discoverService.fetchDiscoverTv(page)
       response.suspendOnSuccess {
-        data.whatIfNotNull { data ->
-          tvs = data.results
-          tvs.forEach { it.page = page }
-          tvDao.insertTv(tvs)
-          emit(tvs)
-          success()
-        }
+        tvs = data.results
+        tvs.forEach { it.page = page }
+        tvDao.insertTv(tvs)
+        emit(tvs)
       }
     } else {
       emit(tvs)
-      success()
     }
-  }.flowOn(Dispatchers.IO)
+  }.onCompletion { success() }.flowOn(Dispatchers.IO)
 }
