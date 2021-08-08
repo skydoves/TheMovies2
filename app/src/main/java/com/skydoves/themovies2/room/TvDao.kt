@@ -32,7 +32,7 @@ interface TvDao {
   fun updateTv(tv: Tv)
 
   @Query("SELECT * FROM Tv WHERE id = :id_")
-  fun getTv(id_: Int): Tv
+  fun getTv(id_: Int): Tv?
 
   @Query("SELECT * FROM Tv WHERE page = :page_")
   fun getTvList(page_: Int): List<Tv>

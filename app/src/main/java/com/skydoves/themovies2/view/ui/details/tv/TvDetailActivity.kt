@@ -39,7 +39,6 @@ class TvDetailActivity :
     super.onCreate(savedInstanceState)
     binding {
       activity = this@TvDetailActivity
-      lifecycleOwner = this@TvDetailActivity
       viewModel = vm.apply { postTvId(intentTv.id) }
       tv = intentTv
       videoAdapter = VideoListAdapter()

@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewAnimationUtils
 import androidx.core.content.ContextCompat
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
@@ -70,4 +71,17 @@ fun View.circularRevealedAtCenter() {
         start()
       }
   }
+}
+
+fun ViewPager2.applyOnPageSelected(onPageSelected: (Int) -> Unit) {
+  registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+    override fun onPageScrollStateChanged(state: Int) = Unit
+    override fun onPageScrolled(
+      position: Int,
+      positionOffset: Float,
+      positionOffsetPixels: Int
+    ) = Unit
+
+    override fun onPageSelected(position: Int) = onPageSelected.invoke(position)
+  })
 }

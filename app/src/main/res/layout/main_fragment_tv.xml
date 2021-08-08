@@ -38,7 +38,7 @@
       android:layout_height="match_parent"
       android:clipToPadding="false"
       app:adapter="@{adapter}"
-      app:adapterTvList="@{viewModel.tvListLiveData}"
+      app:adapterTvList="@{viewModel.tvList}"
       app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
       app:paginationTvList="@{viewModel}"
       app:spanCount="2"

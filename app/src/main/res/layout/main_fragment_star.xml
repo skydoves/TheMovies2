@@ -38,10 +38,12 @@
       android:layout_height="match_parent"
       android:clipToPadding="false"
       app:adapter="@{adapter}"
-      app:adapterPersonList="@{viewModel.peopleLiveData}"
+      app:adapterPersonList="@{viewModel.peopleList}"
       app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
       app:paginationPersonList="@{viewModel}"
       app:spanCount="2"
       tools:listitem="@layout/item_person" />
+
   </RelativeLayout>
+
 </layout>

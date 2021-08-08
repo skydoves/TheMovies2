@@ -53,7 +53,7 @@
       android:textSize="20sp"
       android:textStyle="bold"
       android:visibility="gone"
-      app:visibilityByResource="@{viewModel.videoListLiveData}"
+      app:visibilityByResource="@{viewModel.videoList}"
       tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -64,7 +64,7 @@
       android:orientation="horizontal"
       android:visibility="gone"
       app:adapter="@{videoAdapter}"
-      app:adapterVideoList="@{viewModel.videoListLiveData}"
+      app:adapterVideoList="@{viewModel.videoList}"
       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
       tools:listitem="@layout/item_video"
       tools:visibility="visible" />
@@ -95,7 +95,7 @@
       android:layout_marginTop="15dp"
       android:padding="10dp"
       android:visibility="gone"
-      app:mapKeywordList="@{viewModel.keywordListLiveData}"
+      app:mapKeywordList="@{viewModel.keywordList}"
       app:singleLine="false"
       tools:visibility="visible" />
 
@@ -109,7 +109,7 @@
       android:textSize="20sp"
       android:textStyle="bold"
       android:visibility="gone"
-      app:visibilityByResource="@{viewModel.reviewListLiveData}"
+      app:visibilityByResource="@{viewModel.reviewList}"
       tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -121,7 +121,7 @@
       android:orientation="vertical"
       android:visibility="gone"
       app:adapter="@{reviewAdapter}"
-      app:adapterReviewList="@{viewModel.reviewListLiveData}"
+      app:adapterReviewList="@{viewModel.reviewList}"
       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
       tools:ignore="UnusedAttribute"
       tools:listitem="@layout/item_review"

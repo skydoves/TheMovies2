@@ -36,8 +36,7 @@ class MovieListFragment :
   ): View {
     super.onCreateView(inflater, container, savedInstanceState)
     return binding {
-      viewModel = getViewModel<MainActivityViewModel>().apply { postMoviePage(1) }
-      lifecycleOwner = this@MovieListFragment
+      viewModel = getViewModel<MainActivityViewModel>()
       adapter = MovieListAdapter()
     }.root
   }

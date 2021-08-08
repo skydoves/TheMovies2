@@ -27,9 +27,9 @@ import kotlinx.parcelize.Parcelize
 @Entity(primaryKeys = [("id")])
 data class Tv(
   var page: Int,
-  var keywords: List<Keyword>? = ArrayList(),
-  var videos: List<Video>? = ArrayList(),
-  var reviews: List<Review>? = ArrayList(),
+  var keywords: List<Keyword>? = emptyList(),
+  var videos: List<Video>? = emptyList(),
+  var reviews: List<Review>? = emptyList(),
   val poster_path: String?,
   val popularity: Float,
   val id: Int,
