@@ -16,71 +16,78 @@
 
 package com.skydoves.themovies2.view.ui.main
 
-import androidx.databinding.ObservableBoolean
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.switchMap
-import com.skydoves.themovies2.base.DispatchViewModel
+import androidx.databinding.Bindable
+import androidx.lifecycle.viewModelScope
+import com.skydoves.bindables.BindingViewModel
+import com.skydoves.bindables.asBindingProperty
+import com.skydoves.bindables.bindingProperty
+import com.skydoves.themovies2.extension.applyValue
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.repository.DiscoverRepository
 import com.skydoves.themovies2.repository.PeopleRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import timber.log.Timber
 
 class MainActivityViewModel constructor(
   private val discoverRepository: DiscoverRepository,
   private val peopleRepository: PeopleRepository
-) : DispatchViewModel() {
+) : BindingViewModel() {
 
-  private var moviePageLiveData: MutableLiveData<Int> = MutableLiveData()
-  val movieListLiveData: LiveData<List<Movie>>
+  @get:Bindable
+  var isMovieListLoading: Boolean by bindingProperty(false)
+    private set
 
-  private var tvPageLiveData: MutableLiveData<Int> = MutableLiveData()
-  val tvListLiveData: LiveData<List<Tv>>
+  @get:Bindable
+  var isTvListLoading: Boolean by bindingProperty(false)
+    private set
 
-  private var peoplePageLiveData: MutableLiveData<Int> = MutableLiveData()
-  val peopleLiveData: LiveData<List<Person>>
+  @get:Bindable
+  var isPeopleListLoading: Boolean by bindingProperty(false)
+    private set
 
-  val isMovieListLoading: ObservableBoolean = ObservableBoolean(false)
-  val isTvListLoading: ObservableBoolean = ObservableBoolean(false)
-  val isPeopleListLoading: ObservableBoolean = ObservableBoolean(false)
-
-  init {
-    Timber.d("injection MainActivityViewModel")
-
-    this.movieListLiveData = moviePageLiveData.switchMap { page ->
-      isMovieListLoading.set(true)
-      launchOnViewModelScope {
-        discoverRepository.loadMovies(page) {
-          isMovieListLoading.set(false)
-        }.asLiveData()
-      }
-    }
-
-    this.tvListLiveData = tvPageLiveData.switchMap { page ->
-      isTvListLoading.set(true)
-      launchOnViewModelScope {
-        discoverRepository.loadTvs(page) {
-          isTvListLoading.set(false)
-        }.asLiveData()
-      }
-    }
-
-    this.peopleLiveData = peoplePageLiveData.switchMap { page ->
-      isPeopleListLoading.set(true)
-      launchOnViewModelScope {
-        peopleRepository.loadPeople(page) {
-          isPeopleListLoading.set(false)
-        }.asLiveData()
-      }
+  private val moviePageStateFlow: MutableStateFlow<Int> = MutableStateFlow(1)
+  private val movieListFlow = moviePageStateFlow.flatMapLatest {
+    isMovieListLoading = true
+    discoverRepository.loadMovies(it) {
+      isMovieListLoading = false
     }
   }
 
-  fun postMoviePage(page: Int) = moviePageLiveData.postValue(page)
+  @get:Bindable
+  val movieList: List<Movie> by movieListFlow.asBindingProperty(viewModelScope, emptyList())
 
-  fun postTvPage(page: Int) = tvPageLiveData.postValue(page)
+  private val tvPageStateFlow: MutableStateFlow<Int> = MutableStateFlow(1)
+  private val tvListFlow = tvPageStateFlow.flatMapLatest {
+    isTvListLoading = true
+    discoverRepository.loadTvs(it) {
+      isTvListLoading = false
+    }
+  }
 
-  fun postPeoplePage(page: Int) = peoplePageLiveData.postValue(page)
+  @get:Bindable
+  val tvList: List<Tv> by tvListFlow.asBindingProperty(viewModelScope, emptyList())
+
+  private val peoplePageStateFlow: MutableStateFlow<Int> = MutableStateFlow(1)
+  private val peopleListFlow = peoplePageStateFlow.flatMapLatest {
+    isPeopleListLoading = true
+    peopleRepository.loadPeople(it) {
+      isPeopleListLoading = false
+    }
+  }
+
+  @get:Bindable
+  val peopleList: List<Person> by peopleListFlow.asBindingProperty(viewModelScope, emptyList())
+
+  init {
+    Timber.d("injection MainActivityViewModel")
+  }
+
+  fun postMoviePage(page: Int) = moviePageStateFlow.applyValue(page)
+
+  fun postTvPage(page: Int) = tvPageStateFlow.applyValue(page)
+
+  fun postPeoplePage(page: Int) = peoplePageStateFlow.applyValue(page)
 }

@@ -36,8 +36,7 @@ class TvListFragment :
   ): View {
     super.onCreateView(inflater, container, savedInstanceState)
     return binding {
-      viewModel = getViewModel<MainActivityViewModel>().apply { postTvPage(1) }
-      lifecycleOwner = this@TvListFragment
+      viewModel = getViewModel<MainActivityViewModel>()
       adapter = TvListAdapter()
     }.root
   }

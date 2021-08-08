@@ -36,8 +36,7 @@ class PersonListFragment :
   ): View {
     super.onCreateView(inflater, container, savedInstanceState)
     return binding {
-      viewModel = getViewModel<MainActivityViewModel>().apply { postPeoplePage(1) }
-      lifecycleOwner = this@PersonListFragment
+      viewModel = getViewModel<MainActivityViewModel>()
       adapter = PeopleAdapter()
     }.root
   }
