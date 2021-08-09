@@ -16,47 +16,49 @@
 
 package com.skydoves.themovies2.view.ui.details.tv
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.switchMap
-import com.skydoves.themovies2.base.DispatchViewModel
+import androidx.databinding.Bindable
+import androidx.lifecycle.viewModelScope
+import com.skydoves.bindables.BindingViewModel
+import com.skydoves.bindables.asBindingProperty
+import com.skydoves.themovies2.extension.applyValue
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.repository.TvRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import timber.log.Timber
 
 class TvDetailViewModel constructor(
   private val tvRepository: TvRepository
-) : DispatchViewModel() {
+) : BindingViewModel() {
 
-  private val tvIdLiveData: MutableLiveData<Int> = MutableLiveData()
-  val keywordListLiveData: LiveData<List<Keyword>?>
-  val videoListLiveData: LiveData<List<Video>?>
-  val reviewListLiveData: LiveData<List<Review>?>
+  private val tvIdStateFlow: MutableStateFlow<Int> = MutableStateFlow(-1)
+
+  private val keywordListFlow = tvIdStateFlow.flatMapLatest {
+    tvRepository.loadKeywordList(it)
+  }
+
+  @get:Bindable
+  val keywordList: List<Keyword>? by keywordListFlow.asBindingProperty(viewModelScope, null)
+
+  private val videoListFlow = tvIdStateFlow.flatMapLatest {
+    tvRepository.loadVideoList(it)
+  }
+
+  @get:Bindable
+  val videoList: List<Video>? by videoListFlow.asBindingProperty(viewModelScope, null)
+
+  private val reviewListFlow = tvIdStateFlow.flatMapLatest {
+    tvRepository.loadReviewsList(it)
+  }
+
+  @get:Bindable
+  val reviewList: List<Review>? by reviewListFlow.asBindingProperty(viewModelScope, null)
 
   init {
     Timber.d("Injection TvDetailViewModel")
-
-    this.keywordListLiveData = tvIdLiveData.switchMap { id ->
-      launchOnViewModelScope {
-        tvRepository.loadKeywordList(id).asLiveData()
-      }
-    }
-
-    this.videoListLiveData = tvIdLiveData.switchMap { id ->
-      launchOnViewModelScope {
-        tvRepository.loadVideoList(id).asLiveData()
-      }
-    }
-
-    this.reviewListLiveData = tvIdLiveData.switchMap { id ->
-      launchOnViewModelScope {
-        tvRepository.loadReviewsList(id).asLiveData()
-      }
-    }
   }
 
-  fun postTvId(id: Int) = tvIdLiveData.postValue(id)
+  fun postTvId(id: Int) = tvIdStateFlow.applyValue(id)
 }

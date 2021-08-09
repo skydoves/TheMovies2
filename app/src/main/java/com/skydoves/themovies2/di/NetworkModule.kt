@@ -41,7 +41,7 @@ val networkModule = module {
       .client(get<OkHttpClient>())
       .baseUrl("https://api.themoviedb.org/")
       .addConverterFactory(GsonConverterFactory.create())
-      .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory())
+      .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory.create())
       .build()
   }
 

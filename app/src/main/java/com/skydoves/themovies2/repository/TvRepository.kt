@@ -20,7 +20,6 @@ import androidx.annotation.WorkerThread
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.TvService
 import com.skydoves.themovies2.room.TvDao
-import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -37,17 +36,15 @@ class TvRepository constructor(
 
   @WorkerThread
   fun loadKeywordList(id: Int) = flow {
-    val tv = tvDao.getTv(id)
+    val tv = tvDao.getTv(id) ?: return@flow
     var keywords = tv.keywords
     if (keywords.isNullOrEmpty()) {
       val response = tvService.fetchKeywords(id)
       response.suspendOnSuccess {
-        data.whatIfNotNull { data ->
-          keywords = data.keywords
-          tv.keywords = keywords
-          tvDao.updateTv(tv)
-          emit(keywords)
-        }
+        keywords = data.keywords
+        tv.keywords = keywords
+        tvDao.updateTv(tv)
+        emit(keywords)
       }
     } else {
       emit(keywords)
@@ -56,17 +53,15 @@ class TvRepository constructor(
 
   @WorkerThread
   fun loadVideoList(id: Int) = flow {
-    val tv = tvDao.getTv(id)
+    val tv = tvDao.getTv(id) ?: return@flow
     var videos = tv.videos
     if (videos.isNullOrEmpty()) {
       val response = tvService.fetchVideos(id)
       response.suspendOnSuccess {
-        data.whatIfNotNull { data ->
-          videos = data.results
-          tv.videos = videos
-          tvDao.updateTv(tv)
-          emit(videos)
-        }
+        videos = data.results
+        tv.videos = videos
+        tvDao.updateTv(tv)
+        emit(videos)
       }
     } else {
       emit(videos)
@@ -75,17 +70,15 @@ class TvRepository constructor(
 
   @WorkerThread
   fun loadReviewsList(id: Int) = flow {
-    val tv = tvDao.getTv(id)
+    val tv = tvDao.getTv(id) ?: return@flow
     var reviews = tv.reviews
     if (reviews.isNullOrEmpty()) {
       val response = tvService.fetchReviews(id)
       response.suspendOnSuccess {
-        data.whatIfNotNull { data ->
-          reviews = data.results
-          tv.reviews = reviews
-          tvDao.updateTv(tv)
-          emit(reviews)
-        }
+        reviews = data.results
+        tv.reviews = reviews
+        tvDao.updateTv(tv)
+        emit(reviews)
       }
     } else {
       emit(reviews)

@@ -62,7 +62,7 @@ object RecyclerViewBinding {
   fun paginationMovieList(view: RecyclerView, viewModel: MainActivityViewModel) {
     RecyclerViewPaginator(
       recyclerView = view,
-      isLoading = { viewModel.isMovieListLoading.get() },
+      isLoading = { viewModel.isMovieListLoading },
       loadMore = { viewModel.postMoviePage(it) },
       onLast = { false }
     ).run {
@@ -86,7 +86,7 @@ object RecyclerViewBinding {
   fun paginationPersonList(view: RecyclerView, viewModel: MainActivityViewModel) {
     RecyclerViewPaginator(
       recyclerView = view,
-      isLoading = { viewModel.isPeopleListLoading.get() },
+      isLoading = { viewModel.isPeopleListLoading },
       loadMore = { viewModel.postPeoplePage(it) },
       onLast = { false }
     ).run {
@@ -110,7 +110,7 @@ object RecyclerViewBinding {
   fun paginationTvList(view: RecyclerView, viewModel: MainActivityViewModel) {
     RecyclerViewPaginator(
       recyclerView = view,
-      isLoading = { viewModel.isTvListLoading.get() },
+      isLoading = { viewModel.isTvListLoading },
       loadMore = { viewModel.postTvPage(it) },
       onLast = { false }
     ).run {

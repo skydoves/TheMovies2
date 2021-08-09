@@ -38,7 +38,7 @@
       android:layout_height="match_parent"
       android:clipToPadding="false"
       app:adapter="@{adapter}"
-      app:adapterMovieList="@{viewModel.movieListLiveData}"
+      app:adapterMovieList="@{viewModel.movieList}"
       app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
       app:paginationMovieList="@{viewModel}"
       app:spanCount="2"

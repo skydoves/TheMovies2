@@ -17,10 +17,10 @@
 package com.skydoves.themovies2.view.ui.main
 
 import android.os.Bundle
-import androidx.viewpager2.widget.ViewPager2
 import com.skydoves.bindables.BindingActivity
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.databinding.ActivityMainBinding
+import com.skydoves.themovies2.extension.applyOnPageSelected
 
 class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 
@@ -33,18 +33,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
     with(binding.mainViewpager) {
       adapter = MainPagerAdapter(supportFragmentManager, lifecycle)
       offscreenPageLimit = 3
-      registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-        override fun onPageScrollStateChanged(state: Int) = Unit
-        override fun onPageScrolled(
-          position: Int,
-          positionOffset: Float,
-          positionOffsetPixels: Int
-        ) = Unit
-
-        override fun onPageSelected(position: Int) {
-          binding.mainBottomNavigation.menu.getItem(position).isChecked = true
-        }
-      })
+      applyOnPageSelected { binding.mainBottomNavigation.menu.getItem(it).isChecked = true }
       binding.mainBottomNavigation.setOnNavigationItemSelectedListener {
         when (it.itemId) {
           R.id.action_one -> currentItem = 0
