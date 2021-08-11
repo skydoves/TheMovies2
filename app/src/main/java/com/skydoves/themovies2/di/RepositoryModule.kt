@@ -16,15 +16,61 @@
 
 package com.skydoves.themovies2.di
 
+import com.skydoves.themovies2.api.service.MovieService
+import com.skydoves.themovies2.api.service.PeopleService
+import com.skydoves.themovies2.api.service.TheDiscoverService
+import com.skydoves.themovies2.api.service.TvService
 import com.skydoves.themovies2.repository.DiscoverRepository
 import com.skydoves.themovies2.repository.MovieRepository
 import com.skydoves.themovies2.repository.PeopleRepository
 import com.skydoves.themovies2.repository.TvRepository
-import org.koin.dsl.module
+import com.skydoves.themovies2.room.MovieDao
+import com.skydoves.themovies2.room.PeopleDao
+import com.skydoves.themovies2.room.TvDao
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
-val repositoryModule = module {
-  single { DiscoverRepository(get(), get(), get()) }
-  single { MovieRepository(get(), get()) }
-  single { PeopleRepository(get(), get()) }
-  single { TvRepository(get(), get()) }
+@Module
+@InstallIn(ViewModelComponent::class)
+object RepositoryModule {
+
+  @Provides
+  @ViewModelScoped
+  fun provideDiscoverRepository(
+    discoverService: TheDiscoverService,
+    movieDao: MovieDao,
+    tvDao: TvDao
+  ): DiscoverRepository {
+    return DiscoverRepository(discoverService, movieDao, tvDao)
+  }
+
+  @Provides
+  @ViewModelScoped
+  fun provideMovieRepository(
+    movieService: MovieService,
+    movieDao: MovieDao
+  ): MovieRepository {
+    return MovieRepository(movieService, movieDao)
+  }
+
+  @Provides
+  @ViewModelScoped
+  fun providePeopleRepository(
+    peopleService: PeopleService,
+    peopleDao: PeopleDao
+  ): PeopleRepository {
+    return PeopleRepository(peopleService, peopleDao)
+  }
+
+  @Provides
+  @ViewModelScoped
+  fun provideTvRepository(
+    tvService: TvService,
+    tvDao: TvDao
+  ): TvRepository {
+    return TvRepository(tvService, tvDao)
+  }
 }
