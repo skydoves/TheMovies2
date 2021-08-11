@@ -23,12 +23,15 @@ import com.skydoves.bindables.asBindingProperty
 import com.skydoves.bindables.bindingProperty
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.repository.PeopleRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import timber.log.Timber
+import javax.inject.Inject
 
-class PersonDetailViewModel constructor(
+@HiltViewModel
+class PersonDetailViewModel @Inject constructor(
   private val peopleRepository: PeopleRepository
 ) : BindingViewModel() {
 

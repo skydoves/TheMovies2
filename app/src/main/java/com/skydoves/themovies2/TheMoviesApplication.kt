@@ -19,28 +19,15 @@ package com.skydoves.themovies2
 import android.app.Application
 import com.facebook.stetho.Stetho
 import com.skydoves.sandwich.SandwichInitializer
-import com.skydoves.themovies2.di.networkModule
-import com.skydoves.themovies2.di.persistenceModule
-import com.skydoves.themovies2.di.repositoryModule
-import com.skydoves.themovies2.di.viewModelModule
 import com.skydoves.themovies2.operator.GlobalResponseOperator
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
-@Suppress("unused")
+@HiltAndroidApp
 class TheMoviesApplication : Application() {
 
   override fun onCreate() {
     super.onCreate()
-
-    startKoin {
-      androidContext(this@TheMoviesApplication)
-      modules(networkModule)
-      modules(persistenceModule)
-      modules(repositoryModule)
-      modules(viewModelModule)
-    }
 
     // initialize global sandwich operator
     SandwichInitializer.sandwichOperator = GlobalResponseOperator<Any>(this)

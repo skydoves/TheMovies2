@@ -20,14 +20,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import com.skydoves.bindables.BindingFragment
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.databinding.MainFragmentTvBinding
 import com.skydoves.themovies2.view.adapter.TvListAdapter
-import org.koin.android.viewmodel.ext.android.getViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class TvListFragment :
   BindingFragment<MainFragmentTvBinding>(R.layout.main_fragment_tv) {
+
+  private val vm: MainActivityViewModel by viewModels()
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -36,8 +40,8 @@ class TvListFragment :
   ): View {
     super.onCreateView(inflater, container, savedInstanceState)
     return binding {
-      viewModel = getViewModel<MainActivityViewModel>()
       adapter = TvListAdapter()
+      viewModel = vm
     }.root
   }
 }

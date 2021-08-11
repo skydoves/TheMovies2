@@ -16,25 +16,23 @@
 
 package com.skydoves.themovies2.view.ui.details.person
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.view.ViewCompat
+import androidx.activity.viewModels
 import com.skydoves.bindables.BindingActivity
 import com.skydoves.bundler.bundleNonNull
 import com.skydoves.bundler.intentOf
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.databinding.ActivityPersonDetailBinding
 import com.skydoves.themovies2.models.entity.Person
-import org.koin.android.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PersonDetailActivity :
   BindingActivity<ActivityPersonDetailBinding>(R.layout.activity_person_detail) {
 
-  private val vm: PersonDetailViewModel by viewModel()
+  private val vm: PersonDetailViewModel by viewModels()
   private val intentPerson: Person by bundleNonNull(PERSON_ID)
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,17 +51,11 @@ class PersonDetailActivity :
 
   companion object {
     const val PERSON_ID = "person"
-    private const val intent_requestCode = 1000
 
-    fun startActivity(context: Context, person: Person?, view: View) {
-      if (context is Activity) {
-        context.intentOf<PersonDetailActivity> {
-          ViewCompat.getTransitionName(view)?.let {
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(context, view, it)
-            putExtra(PERSON_ID to person)
-            context.startActivityForResult(intent, intent_requestCode, options.toBundle())
-          }
-        }
+    fun startActivity(context: Context, person: Person?) {
+      context.intentOf<PersonDetailActivity> {
+        putExtra(PERSON_ID to person)
+        startActivity(context)
       }
     }
   }

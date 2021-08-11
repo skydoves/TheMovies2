@@ -34,7 +34,7 @@ class PeopleAdapter : RecyclerView.Adapter<PeopleAdapter.PeopleViewHolder>() {
       binding.root.setOnClickListener {
         val person = adapterPosition.takeIf { it != RecyclerView.NO_POSITION }
           ?: return@setOnClickListener
-        PersonDetailActivity.startActivity(it.context, items[person], binding.itemPersonProfile)
+        PersonDetailActivity.startActivity(it.context, items[person])
       }
     }
   }

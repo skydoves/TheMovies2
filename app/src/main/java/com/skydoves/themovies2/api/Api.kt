@@ -17,6 +17,7 @@
 package com.skydoves.themovies2.api
 
 object Api {
+  const val BASE_URL = "https://api.themoviedb.org/"
   private const val BASE_POSTER_PATH = "https://image.tmdb.org/t/p/w342"
   private const val BASE_BACKDROP_PATH = "https://image.tmdb.org/t/p/w780"
   private const val YOUTUBE_VIDEO_URL = "https://www.youtube.com/watch?v="

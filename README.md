@@ -25,7 +25,7 @@ tmdb_api_key=YOUR_API_KEY
 - Architecture
   - MVVM Architecture (View - DataBinding - ViewModel - Model)
   - Repository pattern
-  - [Koin](https://github.com/InsertKoinIO/koin) - dependency injection
+  - Hilt - dependency injection
   - DataBinding with [Bindables](https://github.com/skydoves/bindables) - Android DataBinding kit for notifying data changes to UI layers.
 - Material Design & Animations
 - [Retrofit2 & Gson](https://github.com/square/retrofit) - constructing the REST API
