@@ -16,37 +16,41 @@
 
 package com.skydoves.themovies2.view.ui.details.person
 
-import androidx.databinding.ObservableBoolean
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.switchMap
-import com.skydoves.themovies2.base.DispatchViewModel
+import androidx.databinding.Bindable
+import androidx.lifecycle.viewModelScope
+import com.skydoves.bindables.BindingViewModel
+import com.skydoves.bindables.asBindingProperty
+import com.skydoves.bindables.bindingProperty
 import com.skydoves.themovies2.models.network.PersonDetail
 import com.skydoves.themovies2.repository.PeopleRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import timber.log.Timber
 
 class PersonDetailViewModel constructor(
   private val peopleRepository: PeopleRepository
-) : DispatchViewModel() {
+) : BindingViewModel() {
 
-  private val personIdLiveData: MutableLiveData<Int> = MutableLiveData()
-  val personLiveData: LiveData<PersonDetail?>
+  @get:Bindable
+  var isLoading: Boolean by bindingProperty(false)
+    private set
 
-  private val isLoading: ObservableBoolean = ObservableBoolean(false)
+  private val personIdSharedFlow: MutableSharedFlow<Int> = MutableSharedFlow(replay = 1)
 
-  init {
-    Timber.d("Injection : PersonDetailViewModel")
-
-    this.personLiveData = personIdLiveData.switchMap { id ->
-      launchOnViewModelScope {
-        isLoading.set(true)
-        peopleRepository.loadPersonDetail(id) {
-          isLoading.set(false)
-        }.asLiveData()
-      }
+  private val personFlow: Flow<PersonDetail?> = personIdSharedFlow.flatMapLatest {
+    isLoading = true
+    peopleRepository.loadPersonDetail(it) {
+      isLoading = false
     }
   }
 
-  fun postPersonId(id: Int) = personIdLiveData.postValue(id)
+  @get:Bindable
+  val person: PersonDetail? by personFlow.asBindingProperty(viewModelScope, null)
+
+  init {
+    Timber.d("Injection : PersonDetailViewModel")
+  }
+
+  fun postPersonId(id: Int) = personIdSharedFlow.tryEmit(id)
 }

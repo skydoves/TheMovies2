@@ -41,7 +41,6 @@ class PersonDetailActivity :
     super.onCreate(savedInstanceState)
     binding {
       activity = this@PersonDetailActivity
-      lifecycleOwner = this@PersonDetailActivity
       viewModel = vm.apply { postPersonId(intentPerson.id) }
       person = intentPerson
     }

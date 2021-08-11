@@ -20,7 +20,6 @@ import androidx.annotation.WorkerThread
 import com.skydoves.sandwich.suspendOnSuccess
 import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.room.MovieDao
-import com.skydoves.whatif.whatIfNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -42,12 +41,10 @@ class MovieRepository constructor(
     if (keywords.isNullOrEmpty()) {
       val response = movieService.fetchKeywords(id)
       response.suspendOnSuccess {
-        data.whatIfNotNull { data ->
-          keywords = data.keywords
-          movie.keywords = keywords
-          emit(keywords)
-          movieDao.updateMovie(movie)
-        }
+        keywords = data.keywords
+        movie.keywords = keywords
+        emit(keywords)
+        movieDao.updateMovie(movie)
       }
     } else {
       emit(keywords)
@@ -61,12 +58,10 @@ class MovieRepository constructor(
     if (videos.isNullOrEmpty()) {
       movieService.fetchVideos(id)
         .suspendOnSuccess {
-          data.whatIfNotNull { data ->
-            videos = data.results
-            movie.videos = videos
-            movieDao.updateMovie(movie)
-            emit(videos)
-          }
+          videos = data.results
+          movie.videos = videos
+          movieDao.updateMovie(movie)
+          emit(videos)
         }
     } else {
       emit(videos)
@@ -80,12 +75,10 @@ class MovieRepository constructor(
     if (reviews.isNullOrEmpty()) {
       movieService.fetchReviews(id)
         .suspendOnSuccess {
-          data.whatIfNotNull { data ->
-            reviews = data.results
-            movie.reviews = reviews
-            movieDao.updateMovie(movie)
-            emit(reviews)
-          }
+          reviews = data.results
+          movie.reviews = reviews
+          movieDao.updateMovie(movie)
+          emit(reviews)
         }
     } else {
       emit(reviews)

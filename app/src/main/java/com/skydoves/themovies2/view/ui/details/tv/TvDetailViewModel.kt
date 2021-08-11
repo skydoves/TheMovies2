@@ -20,12 +20,11 @@ import androidx.databinding.Bindable
 import androidx.lifecycle.viewModelScope
 import com.skydoves.bindables.BindingViewModel
 import com.skydoves.bindables.asBindingProperty
-import com.skydoves.themovies2.extension.applyValue
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.repository.TvRepository
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import timber.log.Timber
 
@@ -33,23 +32,23 @@ class TvDetailViewModel constructor(
   private val tvRepository: TvRepository
 ) : BindingViewModel() {
 
-  private val tvIdStateFlow: MutableStateFlow<Int> = MutableStateFlow(-1)
+  private val tvIdSharedFlow: MutableSharedFlow<Int> = MutableSharedFlow(replay = 1)
 
-  private val keywordListFlow = tvIdStateFlow.flatMapLatest {
+  private val keywordListFlow = tvIdSharedFlow.flatMapLatest {
     tvRepository.loadKeywordList(it)
   }
 
   @get:Bindable
   val keywordList: List<Keyword>? by keywordListFlow.asBindingProperty(viewModelScope, null)
 
-  private val videoListFlow = tvIdStateFlow.flatMapLatest {
+  private val videoListFlow = tvIdSharedFlow.flatMapLatest {
     tvRepository.loadVideoList(it)
   }
 
   @get:Bindable
   val videoList: List<Video>? by videoListFlow.asBindingProperty(viewModelScope, null)
 
-  private val reviewListFlow = tvIdStateFlow.flatMapLatest {
+  private val reviewListFlow = tvIdSharedFlow.flatMapLatest {
     tvRepository.loadReviewsList(it)
   }
 
@@ -60,5 +59,5 @@ class TvDetailViewModel constructor(
     Timber.d("Injection TvDetailViewModel")
   }
 
-  fun postTvId(id: Int) = tvIdStateFlow.applyValue(id)
+  fun postTvId(id: Int) = tvIdSharedFlow.tryEmit(id)
 }

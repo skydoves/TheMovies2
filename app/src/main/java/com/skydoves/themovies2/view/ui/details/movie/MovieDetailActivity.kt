@@ -39,7 +39,6 @@ class MovieDetailActivity :
     super.onCreate(savedInstanceState)
     binding {
       activity = this@MovieDetailActivity
-      lifecycleOwner = this@MovieDetailActivity
       viewModel = vm.apply { getMovieListFromId(intentMovie.id) }
       movie = intentMovie
       videoListAdapter = VideoListAdapter()

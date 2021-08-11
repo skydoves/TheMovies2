@@ -21,7 +21,6 @@ import androidx.lifecycle.viewModelScope
 import com.skydoves.bindables.BindingViewModel
 import com.skydoves.bindables.asBindingProperty
 import com.skydoves.bindables.bindingProperty
-import com.skydoves.themovies2.extension.applyValue
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
@@ -85,9 +84,9 @@ class MainActivityViewModel constructor(
     Timber.d("injection MainActivityViewModel")
   }
 
-  fun postMoviePage(page: Int) = moviePageStateFlow.applyValue(page)
+  fun postMoviePage(page: Int) = moviePageStateFlow.tryEmit(page)
 
-  fun postTvPage(page: Int) = tvPageStateFlow.applyValue(page)
+  fun postTvPage(page: Int) = tvPageStateFlow.tryEmit(page)
 
-  fun postPeoplePage(page: Int) = peoplePageStateFlow.applyValue(page)
+  fun postPeoplePage(page: Int) = peoplePageStateFlow.tryEmit(page)
 }
