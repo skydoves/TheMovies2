@@ -17,51 +17,49 @@
 package com.skydoves.themovies2.view.ui.details.movie
 
 import androidx.annotation.MainThread
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.switchMap
-import com.skydoves.themovies2.base.DispatchViewModel
+import androidx.databinding.Bindable
+import androidx.lifecycle.viewModelScope
+import com.skydoves.bindables.BindingViewModel
+import com.skydoves.bindables.asBindingProperty
 import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.repository.MovieRepository
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import timber.log.Timber
 
 class MovieDetailViewModel constructor(
   private val movieRepository: MovieRepository
-) : DispatchViewModel() {
+) : BindingViewModel() {
 
-  private val movieIdStateFlow: MutableStateFlow<Int> = MutableStateFlow(0)
+  private val movieIdSharedFlow: MutableSharedFlow<Int> = MutableSharedFlow(replay = 1)
 
-  val keywordListLiveData: LiveData<List<Keyword>?>
-  val videoListLiveData: LiveData<List<Video>?>
-  val reviewListLiveData: LiveData<List<Review>?>
+  private val keywordListFlow = movieIdSharedFlow.flatMapLatest {
+    movieRepository.loadKeywordList(it)
+  }
+
+  @get:Bindable
+  val keywordList: List<Keyword>? by keywordListFlow.asBindingProperty(viewModelScope, null)
+
+  private val videoListFlow = movieIdSharedFlow.flatMapLatest {
+    movieRepository.loadVideoList(it)
+  }
+
+  @get:Bindable
+  val videoList: List<Video>? by videoListFlow.asBindingProperty(viewModelScope, null)
+
+  private val reviewListFlow = movieIdSharedFlow.flatMapLatest {
+    movieRepository.loadReviewsList(it)
+  }
+
+  @get:Bindable
+  val reviewList: List<Review>? by reviewListFlow.asBindingProperty(viewModelScope, null)
 
   init {
     Timber.d("Injection MovieDetailViewModel")
-
-    this.keywordListLiveData = movieIdStateFlow.asLiveData().switchMap { id ->
-      launchOnViewModelScope {
-        movieRepository.loadKeywordList(id).asLiveData()
-      }
-    }
-
-    this.videoListLiveData = movieIdStateFlow.asLiveData().switchMap { id ->
-      launchOnViewModelScope {
-        movieRepository.loadVideoList(id).asLiveData()
-      }
-    }
-
-    this.reviewListLiveData = movieIdStateFlow.asLiveData().switchMap { id ->
-      launchOnViewModelScope {
-        movieRepository.loadReviewsList(id).asLiveData()
-      }
-    }
   }
 
   @MainThread
-  fun getMovieListFromId(id: Int) {
-    movieIdStateFlow.value = id
-  }
+  fun getMovieListFromId(id: Int) = movieIdSharedFlow.tryEmit(id)
 }

@@ -20,10 +20,8 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
-import androidx.lifecycle.LiveData
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.github.florent37.glidepalette.BitmapPalette
@@ -39,22 +37,6 @@ import com.skydoves.whatif.whatIfNotNull
 import com.skydoves.whatif.whatIfNotNullOrEmpty
 
 object ViewBinding {
-
-  @JvmStatic
-  @BindingAdapter("toast")
-  fun bindToast(view: View, text: LiveData<String>) {
-    text.value.whatIfNotNull {
-      Toast.makeText(view.context, it, Toast.LENGTH_SHORT).show()
-    }
-  }
-
-  @JvmStatic
-  @BindingAdapter("loadImage")
-  fun bindLoadImage(view: AppCompatImageView, url: String) {
-    Glide.with(view.context)
-      .load(url)
-      .into(view)
-  }
 
   @JvmStatic
   @BindingAdapter("loadCircleImage")

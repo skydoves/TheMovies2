@@ -106,7 +106,7 @@
               android:padding="10dp"
               android:textColor="@color/white"
               android:textSize="13sp"
-              app:biography="@{viewModel.personLiveData}" />
+              app:biography="@{viewModel.person}" />
           </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -118,7 +118,7 @@
           android:visibility="gone"
           app:chipSpacingHorizontal="5dp"
           app:chipSpacingVertical="6dp"
-          app:mapNameTagList="@{viewModel.personLiveData}"
+          app:mapNameTagList="@{viewModel.person}"
           app:singleLine="false"
           tools:visibility="visible" />
       </LinearLayout>
