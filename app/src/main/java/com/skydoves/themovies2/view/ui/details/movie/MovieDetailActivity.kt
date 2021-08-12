@@ -19,6 +19,7 @@ package com.skydoves.themovies2.view.ui.details.movie
 import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import com.skydoves.bindables.BindingActivity
 import com.skydoves.bundler.bundleNonNull
 import com.skydoves.bundler.intentOf
@@ -27,12 +28,13 @@ import com.skydoves.themovies2.databinding.ActivityMovieDetailBinding
 import com.skydoves.themovies2.models.entity.Movie
 import com.skydoves.themovies2.view.adapter.ReviewListAdapter
 import com.skydoves.themovies2.view.adapter.VideoListAdapter
-import org.koin.android.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MovieDetailActivity :
   BindingActivity<ActivityMovieDetailBinding>(R.layout.activity_movie_detail) {
 
-  private val vm: MovieDetailViewModel by viewModel()
+  private val vm: MovieDetailViewModel by viewModels()
   private val intentMovie: Movie by bundleNonNull(MOVIE_ID)
 
   override fun onCreate(savedInstanceState: Bundle?) {

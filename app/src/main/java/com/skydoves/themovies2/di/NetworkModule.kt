@@ -18,46 +18,66 @@ package com.skydoves.themovies2.di
 
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.skydoves.sandwich.coroutines.CoroutinesResponseCallAdapterFactory
+import com.skydoves.themovies2.api.Api
 import com.skydoves.themovies2.api.RequestInterceptor
 import com.skydoves.themovies2.api.service.MovieService
 import com.skydoves.themovies2.api.service.PeopleService
 import com.skydoves.themovies2.api.service.TheDiscoverService
 import com.skydoves.themovies2.api.service.TvService
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
-val networkModule = module {
-  single {
-    OkHttpClient.Builder()
+@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
+
+  @Provides
+  @Singleton
+  fun provideOkHttpClient(): OkHttpClient {
+    return OkHttpClient.Builder()
       .addInterceptor(RequestInterceptor())
       .addNetworkInterceptor(StethoInterceptor())
       .build()
   }
 
-  single {
-    Retrofit.Builder()
-      .client(get<OkHttpClient>())
-      .baseUrl("https://api.themoviedb.org/")
+  @Provides
+  @Singleton
+  fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    return Retrofit.Builder()
+      .client(okHttpClient)
+      .baseUrl(Api.BASE_URL)
       .addConverterFactory(GsonConverterFactory.create())
       .addCallAdapterFactory(CoroutinesResponseCallAdapterFactory.create())
       .build()
   }
 
-  single {
-    get<Retrofit>().create(TheDiscoverService::class.java)
+  @Provides
+  @Singleton
+  fun provideTheDiscoverService(retrofit: Retrofit): TheDiscoverService {
+    return retrofit.create(TheDiscoverService::class.java)
   }
 
-  single {
-    get<Retrofit>().create(PeopleService::class.java)
+  @Provides
+  @Singleton
+  fun providePeopleService(retrofit: Retrofit): PeopleService {
+    return retrofit.create(PeopleService::class.java)
   }
 
-  single {
-    get<Retrofit>().create(MovieService::class.java)
+  @Provides
+  @Singleton
+  fun provideMovieService(retrofit: Retrofit): MovieService {
+    return retrofit.create(MovieService::class.java)
   }
 
-  single {
-    get<Retrofit>().create(TvService::class.java)
+  @Provides
+  @Singleton
+  fun provideTvService(retrofit: Retrofit): TvService {
+    return retrofit.create(TvService::class.java)
   }
 }

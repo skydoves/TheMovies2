@@ -21,7 +21,9 @@ import com.skydoves.bindables.BindingActivity
 import com.skydoves.themovies2.R
 import com.skydoves.themovies2.databinding.ActivityMainBinding
 import com.skydoves.themovies2.extension.applyOnPageSelected
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main) {
 
   override fun onCreate(savedInstanceState: Bundle?) {

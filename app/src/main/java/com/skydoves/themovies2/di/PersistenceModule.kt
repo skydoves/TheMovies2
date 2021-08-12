@@ -16,20 +16,47 @@
 
 package com.skydoves.themovies2.di
 
+import android.content.Context
 import androidx.room.Room
 import com.skydoves.themovies2.room.AppDatabase
-import org.koin.android.ext.koin.androidApplication
-import org.koin.dsl.module
+import com.skydoves.themovies2.room.MovieDao
+import com.skydoves.themovies2.room.PeopleDao
+import com.skydoves.themovies2.room.TvDao
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-val persistenceModule = module {
-  single {
-    Room
-      .databaseBuilder(androidApplication(), AppDatabase::class.java, "TheMovies.db")
+@Module
+@InstallIn(SingletonComponent::class)
+object PersistenceModule {
+
+  @Provides
+  @Singleton
+  fun provideRoomDataBase(@ApplicationContext context: Context): AppDatabase {
+    return Room
+      .databaseBuilder(context, AppDatabase::class.java, "TheMovies.db")
       .allowMainThreadQueries()
       .build()
   }
 
-  single { get<AppDatabase>().movieDao() }
-  single { get<AppDatabase>().tvDao() }
-  single { get<AppDatabase>().peopleDao() }
+  @Provides
+  @Singleton
+  fun provideMovieDao(appDatabase: AppDatabase): MovieDao {
+    return appDatabase.movieDao()
+  }
+
+  @Provides
+  @Singleton
+  fun provideTvDao(appDatabase: AppDatabase): TvDao {
+    return appDatabase.tvDao()
+  }
+
+  @Provides
+  @Singleton
+  fun providePeopleDao(appDatabase: AppDatabase): PeopleDao {
+    return appDatabase.peopleDao()
+  }
 }

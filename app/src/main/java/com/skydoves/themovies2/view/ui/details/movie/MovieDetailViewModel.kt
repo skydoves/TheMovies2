@@ -25,11 +25,14 @@ import com.skydoves.themovies2.models.Keyword
 import com.skydoves.themovies2.models.Review
 import com.skydoves.themovies2.models.Video
 import com.skydoves.themovies2.repository.MovieRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import timber.log.Timber
+import javax.inject.Inject
 
-class MovieDetailViewModel constructor(
+@HiltViewModel
+class MovieDetailViewModel @Inject constructor(
   private val movieRepository: MovieRepository
 ) : BindingViewModel() {
 

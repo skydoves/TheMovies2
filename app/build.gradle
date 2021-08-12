@@ -18,6 +18,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'jacoco'
 
 def getProperty(String filename, String propName) {
@@ -45,6 +46,16 @@ android {
         versionName "1.0"
         testInstrumentationRunner "com.skydoves.themovies2.runner.AndroidJunitTestRunner"
         buildConfigField "String", "TMDB_API_KEY", "\"${getProperty("local.properties", "tmdb_api_key")}\""
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation" : "$projectDir/schemas".toString()]
+            }
+        }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments["dagger.hilt.disableModulesHaveInstallInCheck"] = "true"
+            }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -81,6 +92,7 @@ dependencies {
     implementation "androidx.palette:palette-ktx:$androidxVersion"
 
     // architecture components
+    implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
@@ -91,10 +103,12 @@ dependencies {
     // binding
     implementation "com.github.skydoves:bindables:$bindablesVersion"
 
-    // koin
-    implementation "org.koin:koin-android:$koinVersion"
-    implementation "org.koin:koin-android-scope:$koinVersion"
-    implementation "org.koin:koin-android-viewmodel:$koinVersion"
+    // hilt
+    implementation "com.google.dagger:hilt-android:$hiltCoreVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltCoreVersion"
+    kapt "androidx.hilt:hilt-compiler:$hiltVersion"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hiltCoreVersion"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:$hiltCoreVersion"
 
     // whatIf
     implementation "com.github.skydoves:whatif:$whatIfVersion"

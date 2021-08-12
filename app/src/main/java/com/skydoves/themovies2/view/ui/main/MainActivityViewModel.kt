@@ -26,11 +26,14 @@ import com.skydoves.themovies2.models.entity.Person
 import com.skydoves.themovies2.models.entity.Tv
 import com.skydoves.themovies2.repository.DiscoverRepository
 import com.skydoves.themovies2.repository.PeopleRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import timber.log.Timber
+import javax.inject.Inject
 
-class MainActivityViewModel constructor(
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(
   private val discoverRepository: DiscoverRepository,
   private val peopleRepository: PeopleRepository
 ) : BindingViewModel() {
